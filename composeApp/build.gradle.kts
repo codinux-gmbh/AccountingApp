@@ -1,4 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.compose.desktop.tasks.AbstractJarsFlattenTask
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -147,4 +148,59 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+}
+
+
+gradle.taskGraph.whenReady {
+    tasks.named<AbstractJarsFlattenTask>("flattenJars") {
+        removeThirdPartySignaturesFromJar()
+    }
+
+    tasks.named<AbstractJarsFlattenTask>("flattenReleaseJars") {
+        removeThirdPartySignaturesFromJar()
+    }
+}
+
+// Signatures of third party libraries get copied to output jar's META-INF folder so that java -jar refuses to run created uber jar:
+// Error: A JNI error has occurred, please check your installation and try again
+// Exception in thread "main" java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
+//        at java.base/sun.security.util.SignatureFileVerifier.processImpl(SignatureFileVerifier.java:340)
+//        at java.base/sun.security.util.SignatureFileVerifier.process(SignatureFileVerifier.java:282)
+//        at java.base/java.util.jar.JarVerifier.processEntry(JarVerifier.java:276)
+//
+// -> remove signatures of third party libraries from jar's META-INF folder
+fun AbstractJarsFlattenTask.removeThirdPartySignaturesFromJar() {
+    val outputJar = (this.flattenedJar as? FileSystemLocationProperty<*>)?.asFile?.get()
+
+    doLast {
+        if (outputJar != null && outputJar.exists()) {
+            val extractedFilesFolder = File(outputJar.parentFile, "extracted").also { it.mkdirs() }
+            extractedFilesFolder.deleteRecursively()
+
+            project.copy { // unzip jar file
+                from(project.zipTree(outputJar))
+                into(extractedFilesFolder)
+            }
+
+            // Remove unwanted META-INF files (*.SF, *.DSA, *.RSA)
+            project.fileTree(extractedFilesFolder.resolve("META-INF")).matching {
+                include("*.SF", "*.DSA", "*.RSA")
+            }.forEach {
+                it.delete() // Delete the matching signature files
+            }
+
+            outputJar.delete() // Remove the original JAR
+
+            // Zip the modified content back into a new JAR using Ant
+            ant.withGroovyBuilder {
+                "zip"(
+                    "destfile" to outputJar,
+                    "basedir" to extractedFilesFolder
+                )
+            }
+
+            // Clean up the temporary directory
+            extractedFilesFolder.deleteRecursively()
+        }
+    }
 }

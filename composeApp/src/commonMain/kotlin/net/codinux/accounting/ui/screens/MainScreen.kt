@@ -1,39 +1,30 @@
 package net.codinux.accounting.ui.screens
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.Button
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import net.codinux.accounting.Greeting
-import net.codinux.accounting.resources.Res
-import net.codinux.accounting.resources.compose_multiplatform
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import net.codinux.accounting.ui.appskeleton.BottomToolbar
-import org.jetbrains.compose.resources.painterResource
+import net.codinux.accounting.ui.config.Colors
+import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.tabs.*
+
+private val uiState = DI.uiState
 
 @Composable
 fun MainScreen() {
 
+    val selectedTab = uiState.selectedMainScreenTab.collectAsState().value
+
+
     Scaffold(
-        bottomBar = { BottomToolbar() }
+        bottomBar = { BottomToolbar(selectedTab) },
+        backgroundColor = Colors.Zinc100,
     ) {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
-            }
+        when (selectedTab) {
+            MainScreenTab.Postings -> PostingsTab()
+            MainScreenTab.BankAccounts -> BankAccountsTab()
+            MainScreenTab.Invoices -> InvoicesTab()
+            MainScreenTab.Mails -> MailsTab()
         }
     }
 }

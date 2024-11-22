@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.tabs.MainScreenTab
 
 @Composable
@@ -22,7 +23,7 @@ fun ToolbarButton(tab: MainScreenTab, selectedTab: MainScreenTab, icon: ImageVec
                 Icon(icon, label, Modifier.size(24.dp), color)
             }
 
-            Text(label, color = color, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(label, color = color, fontSize = Style.ToolbarButtonFontSize, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 

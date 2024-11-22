@@ -99,6 +99,12 @@ compose.desktop {
             packageName = "net.codinux.accounting"
             packageVersion = "1.0.0"
         }
+
+        // disable Proguard, it causes that Uber Jar generation fails
+        buildTypes.release.proguard {
+            isEnabled = false
+            version = "7.4.2"
+        }
     }
 }
 

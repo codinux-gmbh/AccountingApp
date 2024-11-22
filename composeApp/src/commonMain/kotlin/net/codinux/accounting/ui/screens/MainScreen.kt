@@ -13,13 +13,14 @@ import androidx.compose.ui.Modifier
 import net.codinux.accounting.Greeting
 import net.codinux.accounting.resources.Res
 import net.codinux.accounting.resources.compose_multiplatform
+import net.codinux.accounting.ui.appskeleton.BottomToolbar
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MainScreen() {
 
     Scaffold(
-
+        bottomBar = { BottomToolbar() }
     ) {
         var showContent by remember { mutableStateOf(false) }
         Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {

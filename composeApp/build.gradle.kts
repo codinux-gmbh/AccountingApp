@@ -60,6 +60,8 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.invoicing)
+
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
 
@@ -70,6 +72,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -91,6 +94,8 @@ kotlin {
         }
         
         androidMain.dependencies {
+            implementation(libs.pdfBoxAndroid)
+
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
         }
@@ -155,6 +160,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    configurations {
+        implementation {
+            // remove dependency on PDFBox, which was included by codinx:invoicing -> mustang, as it
+            // makes use of java.awt and therefore doesn't run on Android
+            exclude(group = "org.apache.pdfbox", module = "pdfbox")
+        }
     }
 }
 

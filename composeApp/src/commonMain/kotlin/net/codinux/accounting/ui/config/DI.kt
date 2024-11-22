@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import net.codinux.accounting.domain.bookkeeping.service.InvoiceService
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.MailService
+import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.service.FormatUtil
 import net.codinux.accounting.ui.state.UiState
+import net.codinux.invoicing.mail.MailReader
 
 object DI {
 
@@ -22,6 +24,8 @@ object DI {
     }
 
 
-    val mailService = MailService(MailRepository(jsonMapper))
+    val invoiceReader = PlatformDependencies.invoiceReader
+
+    val mailService = MailService(MailReader(invoiceReader), MailRepository(jsonMapper))
 
 }

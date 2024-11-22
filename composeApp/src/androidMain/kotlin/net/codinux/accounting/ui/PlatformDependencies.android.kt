@@ -1,5 +1,8 @@
 package net.codinux.accounting.ui
 
+import net.codinux.accounting.domain.billing.service.EInvoiceReaderAndroid
+import net.codinux.accounting.domain.billing.service.PdfAttachmentReaderAndWriterAndroid
+import net.codinux.invoicing.reader.EInvoiceReader
 import java.io.File
 
 actual object PlatformDependencies {
@@ -7,5 +10,9 @@ actual object PlatformDependencies {
     actual val storageDir = File(AndroidContext.applicationContext.filesDir, "storage").also {
         it.mkdirs()
     }
+
+    private val attachmentReaderAndWriter = PdfAttachmentReaderAndWriterAndroid(AndroidContext.applicationContext)
+
+    actual val invoiceReader: EInvoiceReader = EInvoiceReaderAndroid(attachmentReaderAndWriter)
 
 }

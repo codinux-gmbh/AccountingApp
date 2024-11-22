@@ -25,6 +25,10 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        mavenLocal()
+        maven {
+            setUrl("https://maven.dankito.net/api/packages/codinux/maven")
+        }
     }
 }
 

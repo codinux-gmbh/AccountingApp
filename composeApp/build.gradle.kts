@@ -85,6 +85,11 @@ kotlin {
 }
 
 
+compose.resources {
+    packageOfResClass = "net.codinux.accounting.resources"
+}
+
+
 compose.desktop {
     application {
         mainClass = "net.codinux.accounting.MainKt"
@@ -110,7 +115,13 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            pickFirsts += "META-INF/LICENSE.md"
+            pickFirsts += "/META-INF/{AL2.0,LGPL2.1}"
+            pickFirsts += "META-INF/NOTICE.md"
+            pickFirsts += "META-INF/DEPENDENCIES"
+            pickFirsts += "META-INF/buildinfo.xml"
+            pickFirsts += "META-INF/sun-jaxb.episode"
+            pickFirsts += "translation/translatable-texts.xml"
         }
     }
     buildTypes {

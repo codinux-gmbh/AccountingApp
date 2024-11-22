@@ -1,4 +1,4 @@
-package net.codinux.accounting.domain.billing.service
+package net.codinux.accounting.domain.invoice.service
 
 import android.content.Context
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader

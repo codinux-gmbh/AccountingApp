@@ -1,4 +1,4 @@
-package net.codinux.accounting.domain.billing.service
+package net.codinux.accounting.domain.invoice.service
 
 import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.reader.EInvoiceReader

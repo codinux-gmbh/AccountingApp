@@ -1,7 +1,7 @@
 package net.codinux.accounting.ui
 
-import net.codinux.accounting.domain.billing.service.EInvoiceReaderAndroid
-import net.codinux.accounting.domain.billing.service.PdfAttachmentReaderAndWriterAndroid
+import net.codinux.accounting.domain.invoice.service.EInvoiceReaderAndroid
+import net.codinux.accounting.domain.invoice.service.PdfAttachmentReaderAndWriterAndroid
 import net.codinux.invoicing.reader.EInvoiceReader
 import java.io.File
 

@@ -2,6 +2,11 @@
 kotlin = "2.0.21"
 kotlinx-coroutines = "1.9.0"
 
+jackson="2.18.1"
+
+klf = "1.6.2"
+
+
 compose-multiplatform = "1.7.1"
 
 agp = "8.5.2"
@@ -15,6 +20,12 @@ androidx-lifecycle = "2.8.4"
 
 [libraries]
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+
+jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
+jackson-datetime = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson" }
+
+klf = { group = "net.codinux.log", name = "klf", version.ref = "klf" }
+
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }

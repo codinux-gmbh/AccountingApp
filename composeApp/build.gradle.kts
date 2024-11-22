@@ -11,6 +11,13 @@ plugins {
 }
 
 kotlin {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        // suppresses compiler warning: [EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING] 'expect'/'actual' classes (including interfaces, objects, annotations, enums, and 'actual' typealiases) are in Beta.
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
+
     jvm("desktop")
 
     androidTarget {
@@ -53,6 +60,13 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
+            implementation(libs.jackson.kotlin)
+            implementation(libs.jackson.datetime)
+
+
+            implementation(libs.klf)
+
+            // UI
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)

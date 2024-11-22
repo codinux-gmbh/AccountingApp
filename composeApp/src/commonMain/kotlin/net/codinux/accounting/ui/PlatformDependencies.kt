@@ -2,7 +2,7 @@ package net.codinux.accounting.ui
 
 import java.io.File
 
-expect object InstanceCreator {
+expect object PlatformDependencies {
 
     val storageDir: File
 

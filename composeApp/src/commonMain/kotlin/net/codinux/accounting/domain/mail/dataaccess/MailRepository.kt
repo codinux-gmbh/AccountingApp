@@ -2,14 +2,14 @@ package net.codinux.accounting.domain.mail.dataaccess
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import net.codinux.accounting.ui.InstanceCreator
+import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.config.DI
 import net.codinux.invoicing.mail.MailWithInvoice
 import java.io.File
 
 class MailRepository(
     private val jsonMapper: ObjectMapper = DI.jsonMapper,
-    storageDirectory: File = InstanceCreator.storageDir
+    storageDirectory: File = PlatformDependencies.storageDir
 ) {
 
     private val mailsFile = File(storageDirectory, "mails.json")

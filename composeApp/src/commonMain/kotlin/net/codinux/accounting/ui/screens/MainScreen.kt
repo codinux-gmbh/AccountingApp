@@ -1,8 +1,12 @@
 package net.codinux.accounting.ui.screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import net.codinux.accounting.ui.appskeleton.BottomToolbar
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
@@ -19,12 +23,14 @@ fun MainScreen() {
     Scaffold(
         bottomBar = { BottomToolbar(selectedTab) },
         backgroundColor = Colors.Zinc100,
-    ) {
-        when (selectedTab) {
-            MainScreenTab.Postings -> PostingsTab()
-            MainScreenTab.BankAccounts -> BankAccountsTab()
-            MainScreenTab.Invoices -> InvoicesTab()
-            MainScreenTab.Mails -> MailsTab()
+    ) { scaffoldPadding ->
+        Column(Modifier.fillMaxWidth().padding(scaffoldPadding)) {
+            when (selectedTab) {
+                MainScreenTab.Postings -> PostingsTab()
+                MainScreenTab.BankAccounts -> BankAccountsTab()
+                MainScreenTab.Invoices -> InvoicesTab()
+                MainScreenTab.Mails -> MailsTab()
+            }
         }
     }
 }

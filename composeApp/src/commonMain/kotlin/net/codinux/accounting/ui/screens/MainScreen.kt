@@ -26,7 +26,7 @@ fun MainScreen() {
         backgroundColor = Colors.Zinc100,
     ) { scaffoldPadding -> // scaffoldPadding contains e.g. the size of the bottom toolbar
 
-        Column(Modifier.fillMaxWidth().padding(scaffoldPadding).padding(all = 10.dp)) {
+        Column(Modifier.fillMaxWidth().padding(scaffoldPadding).padding(horizontal = 10.dp)) {
             when (selectedTab) {
                 MainScreenTab.Postings -> PostingsTab()
                 MainScreenTab.BankAccounts -> BankAccountsTab()

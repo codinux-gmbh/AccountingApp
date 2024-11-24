@@ -1,6 +1,53 @@
 <resources>
+    <!-- tabs -->
     <string name="postings">Buchungen</string>
     <string name="bank_accounts">Konto</string>
     <string name="invoices">Rechnungen</string>
     <string name="mails">E-Mail</string>
+
+
+    <!-- common -->
+    <string name="copy">Kopieren</string>
+    <string name="create">Erstellen</string>
+
+    <string name="name">Name</string>
+
+
+    <!-- invoice -->
+    <string name="invoice_details">Rechnungsdaten</string>
+    <string name="invoice_date">Rechnungsdatum</string>
+    <string name="invoice_number">Rechnungsnummer</string>
+
+    <string name="issuer">Leistungserbringer</string>
+    <string name="recipient">Leistungsempfänger</string>
+
+    <string name="street">Straße</string>
+    <string name="additional_address_line">Zusätzliche Adresszeile</string>
+    <string name="postal_code">Postleitzahl</string>
+    <string name="city">Ort</string>
+    <string name="country">Land</string>
+    <string name="email">E-Mail</string>
+
+    <string name="vat_id_or_tax_number">USt-IdNr. oder Steuernummer</string>
+    <string name="tax_exempt">Steuerbefreit</string>
+    <string name="small_business_regulation">Kleinunternehmerregelung</string>
+
+    <string name="description_of_services">Leistungsbeschreibung</string>
+    <string name="delivery_date">Lieferdatum</string>
+    <string name="service_date">Leistungsdatum</string>
+    <string name="service_period">Leistungszeitraum</string>
+    <string name="delivered_goods_or_provided_services">Gelieferte Gegenstände oder erbrachten Leistungen</string>
+    <string name="quantity">Menge</string>
+    <string name="unit">Einheit</string>
+    <string name="unit_price">Einzelpreis</string>
+    <string name="vat_rate">Mwst. %</string>
+    <string name="net_amount">Netto</string>
+    <string name="vat_amount">Mwst.</string>
+    <string name="total_amount">Gesamt</string>
+
+    <string name="bank_details">Bankverbindung</string>
+    <string name="account_holder_if_different">Kontoinhaber (falls abweichend)</string>
+    <string name="name_of_financial_institution">Bankname</string>
+    <string name="iban">IBAN</string>
+    <string name="bic">BIC</string>
 </resources>

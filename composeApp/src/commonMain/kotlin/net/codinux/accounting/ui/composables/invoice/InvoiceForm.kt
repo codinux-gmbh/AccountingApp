@@ -28,6 +28,7 @@ import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.*
 import net.codinux.invoicing.model.*
+import net.codinux.log.Log
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import java.math.BigDecimal
@@ -83,17 +84,23 @@ fun InvoiceForm() {
 
     fun generateEInvoice() {
         coroutineScope.launch(Dispatchers.Default) {
-            val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: issuerName.value, nullable(bankName))
-            else null
-            val invoice = Invoice(
-                invoiceNumber.value, LocalDate.parse(invoiceDate.value),
-                Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable((issuerEmail)), bankDetails = bankDetails),
-                Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail)),
-                listOf(InvoiceItem(itemName.value, BigDecimal(itemQuantity.value), itemUnit.value, BigDecimal(itemUnitPrice.value), BigDecimal(itemVatRate.value)))
-            )
+            try {
+                val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: issuerName.value, nullable(bankName))
+                else null
+                val invoice = Invoice(
+                    invoiceNumber.value, LocalDate.parse(invoiceDate.value),
+                    Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable((issuerEmail)), bankDetails = bankDetails),
+                    Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail)),
+                    listOf(InvoiceItem(itemName.value, BigDecimal(itemQuantity.value), itemUnit.value, BigDecimal(itemUnitPrice.value), BigDecimal(itemVatRate.value)))
+                )
 
-            // TODO: care for iOS display bug of long texts
-            generatedEInvoiceXml = DI.invoiceService.createEInvoiceXml(invoice)
+                // TODO: care for iOS display bug of long texts
+                generatedEInvoiceXml = DI.invoiceService.createEInvoiceXml(invoice)
+            } catch (e: Throwable) {
+                Log.error(e) { "Could not create eInvoice" }
+
+                // TODO: show error message to user
+            }
         }
     }
 

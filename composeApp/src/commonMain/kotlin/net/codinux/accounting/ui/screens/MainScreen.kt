@@ -1,8 +1,6 @@
 package net.codinux.accounting.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,13 +24,31 @@ fun MainScreen() {
         backgroundColor = Colors.Zinc100,
     ) { scaffoldPadding -> // scaffoldPadding contains e.g. the size of the bottom toolbar
 
-        Column(Modifier.fillMaxWidth().padding(scaffoldPadding).padding(horizontal = 10.dp)) {
-            when (selectedTab) {
-                MainScreenTab.Postings -> PostingsTab()
-                MainScreenTab.BankAccounts -> BankAccountsTab()
-                MainScreenTab.Invoices -> InvoicesTab()
-                MainScreenTab.Mails -> MailsTab()
-            }
+        // when removing tabs from composition tree, than tab's state, e.g. entered data, gets
+        // deleted when switching tabs. To retain data don't remove tab from composition tree but
+        // make it invisible by e.g. shrinking tab height to 0 dp
+
+        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Postings, selectedTab)) {
+            PostingsTab()
+        }
+        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.BankAccounts, selectedTab)) {
+            BankAccountsTab()
+        }
+        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Invoices, selectedTab)) {
+            InvoicesTab()
+        }
+        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
+            MailsTab()
         }
     }
 }
+
+@Composable
+private fun Modifier.showIfSelected(tab: MainScreenTab, selectedTab: MainScreenTab) = when (tab == selectedTab) {
+    true -> this.fillMaxHeight()
+    false -> this.height(0.dp)
+}
+
+@Composable
+private fun Modifier.tabDefaults(scaffoldPadding: PaddingValues) =
+    this.fillMaxWidth().padding(scaffoldPadding).padding(horizontal = 10.dp)

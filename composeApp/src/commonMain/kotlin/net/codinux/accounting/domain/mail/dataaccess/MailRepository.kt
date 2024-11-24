@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.config.DI
 import net.codinux.invoicing.mail.MailWithInvoice
+import net.codinux.log.Log
 import java.io.File
 
 class MailRepository(
@@ -19,8 +20,13 @@ class MailRepository(
 
     fun loadMails(): List<MailWithInvoice> =
         if (mailsFile.exists()) {
-            jsonMapper.readValue<List<MailWithInvoice>>(mailsFile).also {
-                storedMails = it
+            try {
+                jsonMapper.readValue<List<MailWithInvoice>>(mailsFile).also {
+                    storedMails = it
+                }
+            } catch (e: Throwable) {
+                Log.error(e) { "Could not deserialize mails" }
+                emptyList()
             }
         } else { // mails have not been persisted yet
             emptyList()

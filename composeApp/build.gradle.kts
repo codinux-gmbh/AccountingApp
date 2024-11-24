@@ -69,6 +69,8 @@ kotlin {
             implementation(libs.klf)
 
             // UI
+            implementation(libs.filekit)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -116,6 +118,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "net.codinux.accounting"
             packageVersion = "1.0.0"
+
+            linux {
+                modules("jdk.security.auth") // required by FileKit
+            }
         }
 
         // disable Proguard, it causes that Uber Jar generation fails

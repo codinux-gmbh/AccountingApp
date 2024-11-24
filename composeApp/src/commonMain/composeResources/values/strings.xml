@@ -50,4 +50,6 @@
     <string name="name_of_financial_institution">Bank name</string>
     <string name="iban">IBAN</string>
     <string name="bic">BIC</string>
+
+    <string name="save">Save</string>
 </resources>

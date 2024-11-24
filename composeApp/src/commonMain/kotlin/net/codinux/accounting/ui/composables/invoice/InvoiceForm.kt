@@ -14,15 +14,14 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.resources.*
-import net.codinux.accounting.resources.Res
-import net.codinux.accounting.ui.composables.forms.OutlinedTextField
-import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
-import net.codinux.accounting.ui.composables.forms.SectionHeader
+import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
@@ -76,6 +75,8 @@ fun InvoiceForm() {
     var generatedEInvoiceXml by rememberSaveable { mutableStateOf<String?>(null) }
 
     val clipboardManager = LocalClipboardManager.current
+
+    val fileLauncher = rememberFileSaverLauncher { }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -183,7 +184,11 @@ fun InvoiceForm() {
             generatedEInvoiceXml?.let { generatedEInvoiceXml ->
                 Row(Modifier.padding(top = 2.dp), verticalAlignment = Alignment.CenterVertically) {
                     TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml))}) {
-                        Text(stringResource(Res.string.copy), color = Colors.CodinuxSecondaryColor)
+                        Text(stringResource(Res.string.copy), Modifier.width(100.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    }
+
+                    TextButton(onClick = { fileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${invoiceNumber.value}", "xml") }) {
+                        Text(stringResource(Res.string.save), Modifier.width(100.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }
                 }
 

@@ -12,6 +12,8 @@
 
     <string name="name">Name</string>
 
+    <string name="month">Month</string>
+
 
     <!-- invoice -->
     <string name="invoice_details">Invoice details</string>
@@ -35,7 +37,10 @@
     <string name="description_of_services">Service description</string>
     <string name="delivery_date">Delivery date</string>
     <string name="service_date">Service date</string>
+    <string name="service_period_month">Service period month</string>
     <string name="service_period">Service period</string>
+    <string name="service_period_start">Start</string>
+    <string name="service_period_end">End</string>
     <string name="delivered_goods_or_provided_services">Delivered goods or provided services</string>
     <string name="quantity">Quantity</string>
     <string name="unit">Unit</string>

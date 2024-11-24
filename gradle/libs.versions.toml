@@ -12,6 +12,7 @@ klf = "1.6.2"
 
 
 filekit = "0.8.7"
+calendarCompose = "2.6.0-beta01"
 
 
 compose-multiplatform = "1.7.1"
@@ -40,6 +41,7 @@ klf = { group = "net.codinux.log", name = "klf", version.ref = "klf" }
 
 
 filekit = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }
+calendarCompose = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendarCompose" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }

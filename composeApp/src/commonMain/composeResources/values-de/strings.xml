@@ -12,6 +12,8 @@
 
     <string name="name">Name</string>
 
+    <string name="month">Monat</string>
+
 
     <!-- invoice -->
     <string name="invoice_details">Rechnungsdaten</string>
@@ -35,7 +37,10 @@
     <string name="description_of_services">Leistungsbeschreibung</string>
     <string name="delivery_date">Lieferdatum</string>
     <string name="service_date">Leistungsdatum</string>
+    <string name="service_period_month">Leistungszeitraum Monat</string>
     <string name="service_period">Leistungszeitraum</string>
+    <string name="service_period_start">Start</string>
+    <string name="service_period_end">Ende</string>
     <string name="delivered_goods_or_provided_services">Gelieferte Gegenstände oder erbrachten Leistungen</string>
     <string name="quantity">Menge</string>
     <string name="unit">Einheit</string>

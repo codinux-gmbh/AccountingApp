@@ -70,6 +70,7 @@ kotlin {
 
             // UI
             implementation(libs.filekit)
+            implementation(libs.calendarCompose)
 
             implementation(compose.runtime)
             implementation(compose.foundation)

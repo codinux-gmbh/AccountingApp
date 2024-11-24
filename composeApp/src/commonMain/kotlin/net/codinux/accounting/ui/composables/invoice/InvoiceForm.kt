@@ -20,8 +20,13 @@ import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.platform.Platform
+import net.codinux.accounting.platform.isDesktop
 import net.codinux.accounting.ui.composables.forms.*
+import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
+import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
@@ -43,7 +48,7 @@ private val PlaceholderTextColor = Colors.Zinc500
 @Composable
 fun InvoiceForm() {
 
-    var invoiceDate = rememberSaveable { mutableStateOf(LocalDate.now().toString()) }
+    var invoiceDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
 
     var invoiceNumber = rememberSaveable { mutableStateOf("") }
 
@@ -65,6 +70,12 @@ fun InvoiceForm() {
     var iban = rememberSaveable { mutableStateOf("") }
     var bic = rememberSaveable { mutableStateOf("") }
 
+    val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
+    var selectedServiceDateOption by rememberSaveable { mutableStateOf(ServiceDateOptions.ServicePeriodMonth) }
+    var serviceDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
+    var servicePeriodMonth by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.month) }
+    var servicePeriodStart by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
+    var servicePeriodEnd by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
     var itemName = rememberSaveable { mutableStateOf("") }
     var itemQuantity = rememberSaveable { mutableStateOf("") }
     var itemUnit = rememberSaveable { mutableStateOf("") }
@@ -78,8 +89,18 @@ fun InvoiceForm() {
 
     val fileLauncher = rememberFileSaverLauncher { }
 
+    val isLargeDisplay = Platform.isDesktop
+
     val coroutineScope = rememberCoroutineScope()
 
+
+    @Composable
+    fun getLabel(option: ServiceDateOptions): String = when (option) {
+        ServiceDateOptions.DeliveryDate -> stringResource(Res.string.delivery_date)
+        ServiceDateOptions.ServiceDate -> stringResource(Res.string.service_date)
+        ServiceDateOptions.ServicePeriodMonth -> stringResource(Res.string.service_period_month)
+        ServiceDateOptions.ServicePeriodCustom -> stringResource(Res.string.service_period)
+    }
 
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
 
@@ -89,7 +110,7 @@ fun InvoiceForm() {
                 val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: issuerName.value, nullable(bankName))
                 else null
                 val invoice = Invoice(
-                    invoiceNumber.value, LocalDate.parse(invoiceDate.value),
+                    invoiceNumber.value, invoiceDate,
                     Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable((issuerEmail)), bankDetails = bankDetails),
                     Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail)),
                     listOf(InvoiceItem(itemName.value, BigDecimal(itemQuantity.value), itemUnit.value, BigDecimal(itemUnitPrice.value), BigDecimal(itemVatRate.value)))
@@ -108,10 +129,13 @@ fun InvoiceForm() {
 
     Column(Modifier.fillMaxWidth().rememberVerticalScroll()) {
         Section(Res.string.invoice_details) {
-            // TODO: use a date picker
-            InvoiceTextField(invoiceDate, Res.string.invoice_date)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                DatePicker(stringResource(Res.string.invoice_date), invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true) { invoiceDate = it }
 
-            InvoiceTextField(invoiceNumber, Res.string.invoice_number)
+                Spacer(Modifier.width(6.dp))
+
+                InvoiceTextField(invoiceNumber, Res.string.invoice_number)
+            }
         }
 
         Section(Res.string.issuer) {
@@ -125,7 +149,20 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.description_of_services) {
-            Text(stringResource(Res.string.service_date)) // TODO: add two DatePicker fields and add selection box for delivery date, service date and service period
+            Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+                Select("", ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).width(if (isLargeDisplay) 210.dp else 185.dp))
+
+                when (selectedServiceDateOption) {
+                    ServiceDateOptions.DeliveryDate -> { DatePicker("", serviceDate) { serviceDate = it } }
+                    ServiceDateOptions.ServiceDate -> { DatePicker("", serviceDate) { serviceDate = it } }
+                    ServiceDateOptions.ServicePeriodMonth -> { SelectMonth(servicePeriodMonth) { servicePeriodMonth = it } }
+                    ServiceDateOptions.ServicePeriodCustom -> {
+                        DatePicker(stringResource(Res.string.service_period_start), servicePeriodStart, moveFocusOnToNextElementOnSelection = false) { servicePeriodStart = it }
+                        Text("-", textAlign = TextAlign.Center, modifier = Modifier.width(18.dp))
+                        DatePicker(stringResource(Res.string.service_period_end), servicePeriodEnd) { servicePeriodEnd = it }
+                    }
+                }
+            }
 
             Text(stringResource(Res.string.delivered_goods_or_provided_services))
 

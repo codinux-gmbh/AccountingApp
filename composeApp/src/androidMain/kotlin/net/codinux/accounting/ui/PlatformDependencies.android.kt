@@ -7,7 +7,7 @@ import java.io.File
 
 actual object PlatformDependencies {
 
-    actual val storageDir = File(AndroidContext.applicationContext.filesDir, "storage").also {
+    actual val storageDir = File(AndroidContext.applicationContext.filesDir, "data").also {
         it.mkdirs()
     }
 

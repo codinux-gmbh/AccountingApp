@@ -8,15 +8,15 @@ import java.time.format.DateTimeFormatter
 class FormatUtil {
 
     companion object {
-        private val ShortDateFormat = DateTimeFormatter.ofPattern("dd. MMM")
+        private val DayAndMonthDateFormat = DateTimeFormatter.ofPattern("dd. MMM")
     }
 
 
-    fun formatShortDate(date: LocalDate): String =
-        ShortDateFormat.format(date)
+    fun formatDateToDayAndMonth(date: LocalDate): String =
+        DayAndMonthDateFormat.format(date)
 
-    fun formatShortDate(instant: Instant): String =
-        formatShortDate(toDate(instant))
+    fun formatDateToDayAndMonth(instant: Instant): String =
+        formatDateToDayAndMonth(toDate(instant))
 
 
     private fun toDate(instant: Instant): LocalDate =

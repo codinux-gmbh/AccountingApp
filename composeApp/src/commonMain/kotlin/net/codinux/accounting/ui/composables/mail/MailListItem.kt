@@ -37,7 +37,7 @@ fun MailListItem(mail: MailWithInvoice) {
                 Icon(Icons.Outlined.Attachment, "Mail has attachment(s)", Modifier.padding(horizontal = 4.dp))
             }
 
-            Text(formatUtil.formatShortDate(mail.sent ?: mail.received), fontWeight = FontWeight.Bold)
+            Text(formatUtil.formatDateToDayAndMonth(mail.sent ?: mail.received), fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(6.dp))

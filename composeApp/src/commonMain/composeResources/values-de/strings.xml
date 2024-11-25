@@ -56,5 +56,9 @@
     <string name="iban">IBAN</string>
     <string name="bic">BIC</string>
 
+    <string name="e_invoice_xml_format">E-Rechnung XML Format</string>
+    <string name="e_invoice_xml_format_x_rechnung">XRechnung</string>
+    <string name="e_invoice_xml_format_factur_x">Factur-X / ZUGFeRD</string>
+
     <string name="save">Speichern</string>
 </resources>

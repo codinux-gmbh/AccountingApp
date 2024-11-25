@@ -4,9 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
@@ -23,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.codinux.accounting.domain.invoice.model.EInvoiceXmlFormat
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.Platform
@@ -82,11 +81,14 @@ fun InvoiceForm() {
     val invoiceItems = remember { mutableStateListOf(EditableInvoiceItem()) }
 
 
+    var selectedEInvoiceXmlFormat by rememberSaveable { mutableStateOf(EInvoiceXmlFormat.FacturX) }
+
     var generatedEInvoiceXml by rememberSaveable { mutableStateOf<String?>(null) }
+
 
     val clipboardManager = LocalClipboardManager.current
 
-    val fileLauncher = rememberFileSaverLauncher { }
+    val saveXmlFileLauncher = rememberFileSaverLauncher { }
 
     val isLargeDisplay = Platform.isDesktop
 
@@ -99,6 +101,12 @@ fun InvoiceForm() {
         ServiceDateOptions.ServiceDate -> stringResource(Res.string.service_date)
         ServiceDateOptions.ServicePeriodMonth -> stringResource(Res.string.service_period_month)
         ServiceDateOptions.ServicePeriodCustom -> stringResource(Res.string.service_period)
+    }
+
+    @Composable
+    fun getLabel(format: EInvoiceXmlFormat): String = when (format) {
+        EInvoiceXmlFormat.FacturX -> stringResource(Res.string.e_invoice_xml_format_factur_x)
+        EInvoiceXmlFormat.XRechnung -> stringResource(Res.string.e_invoice_xml_format_x_rechnung)
     }
 
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
@@ -117,7 +125,7 @@ fun InvoiceForm() {
                 )
 
                 // TODO: care for iOS display bug of long texts
-                generatedEInvoiceXml = DI.invoiceService.createEInvoiceXml(invoice)
+                generatedEInvoiceXml = DI.invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create eInvoice" }
 
@@ -192,7 +200,9 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.create) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Select(stringResource(Res.string.e_invoice_xml_format), EInvoiceXmlFormat.entries, selectedEInvoiceXmlFormat, { selectedEInvoiceXmlFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
+
                 Spacer(Modifier.width(1.dp).weight(1f))
 
                 TextButton({ generateEInvoice() }) {
@@ -206,7 +216,7 @@ fun InvoiceForm() {
                         Text(stringResource(Res.string.copy), Modifier.width(100.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }
 
-                    TextButton(onClick = { fileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${invoiceNumber.value}", "xml") }) {
+                    TextButton(onClick = { saveXmlFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${invoiceNumber.value}", "xml") }) {
                         Text(stringResource(Res.string.save), Modifier.width(100.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }
                 }

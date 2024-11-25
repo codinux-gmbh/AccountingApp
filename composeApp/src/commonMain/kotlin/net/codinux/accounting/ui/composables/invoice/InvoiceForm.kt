@@ -73,7 +73,7 @@ fun InvoiceForm() {
     var bic = rememberSaveable { mutableStateOf("") }
 
     val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
-    var selectedServiceDateOption by rememberSaveable { mutableStateOf(ServiceDateOptions.ServicePeriodMonth) }
+    var selectedServiceDateOption by rememberSaveable { mutableStateOf(ServiceDateOptions.ServiceDate) }
     var serviceDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
     var servicePeriodMonth by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.month) }
     var servicePeriodStart by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }

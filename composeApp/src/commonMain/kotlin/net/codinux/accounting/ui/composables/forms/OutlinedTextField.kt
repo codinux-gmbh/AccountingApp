@@ -40,9 +40,7 @@ fun OutlinedTextField(
 ) {
     val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
         focusedBorderColor = Colors.CodinuxSecondaryColor,
-        // a workaround: we assume textStyle is set to change text color, so we set unfocusedBorderColor according to it // TODO: fix by passing textColor to OutlinedTextField
-        unfocusedBorderColor = if (textStyle != LocalTextStyle.current) textStyle.color else MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
-        focusedLabelColor = Colors.CodinuxSecondaryColor, // does not work
+        focusedLabelColor = Colors.CodinuxSecondaryColor,
         backgroundColor = backgroundColor
     )
 

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.datetime.DateTimeUnit
 
-fun Modifier.clickable(
+fun Modifier.clickableWithRipple(
     enabled: Boolean = true,
     showRipple: Boolean = true,
     onClickLabel: String? = null,

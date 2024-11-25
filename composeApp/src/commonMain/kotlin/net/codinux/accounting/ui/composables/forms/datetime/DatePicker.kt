@@ -38,7 +38,7 @@ fun DatePicker(
     val focusManager = LocalFocusManager.current
 
 
-    Column(modifier.clickable { showDatePickerDialog = true }, verticalArrangement = Arrangement.Center) {
+    Column(modifier.clickableWithRipple { showDatePickerDialog = true }, verticalArrangement = Arrangement.Center) {
         OutlinedTextField(
             value = selectedDate?.let { dateFormatter.format(it) } ?: "",
             onValueChange = { },

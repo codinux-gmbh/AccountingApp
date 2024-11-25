@@ -113,7 +113,7 @@ private fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) ->
             .clip(CircleShape)
             .background(color = if (isSelected) Colors.CodinuxSecondaryColor else Color.Transparent)
             // Disable clicks on inDates/outDates
-            .clickable(
+            .clickableWithRipple(
                 enabled = day.position == DayPosition.MonthDate,
                 showRipple = !isSelected,
                 onClick = { onClick(day) },

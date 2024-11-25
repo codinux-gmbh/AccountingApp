@@ -27,6 +27,8 @@ object Style {
 
     val FormCardPadding = 8.dp
 
+    val LabelledValueFontSize = 15.sp
+
 
     val DividerThickness = 1.dp
 

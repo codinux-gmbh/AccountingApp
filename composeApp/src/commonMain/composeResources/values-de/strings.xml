@@ -16,6 +16,8 @@
 
 
     <!-- invoice -->
+    <string name="invoice_view">Rechnungsansicht</string>
+
     <string name="invoice_details">Rechnungsdaten</string>
     <string name="invoice_date">Rechnungsdatum</string>
     <string name="invoice_number">Rechnungsnummer</string>
@@ -29,6 +31,9 @@
     <string name="city">Ort</string>
     <string name="country">Land</string>
     <string name="email">E-Mail</string>
+    <string name="phone">Telefon</string>
+    <string name="fax">Fax</string>
+    <string name="contact_name">Kontaktname</string>
 
     <string name="vat_id_or_tax_number">USt-IdNr. oder Steuernummer</string>
     <string name="tax_exempt">Steuerbefreit</string>
@@ -51,6 +56,7 @@
     <string name="total_amount">Gesamt</string>
 
     <string name="bank_details">Bankverbindung</string>
+    <string name="account_holder">Kontoinhaber*in</string>
     <string name="account_holder_if_different">Kontoinhaber (falls abweichend)</string>
     <string name="name_of_financial_institution">Bankname</string>
     <string name="iban">IBAN</string>

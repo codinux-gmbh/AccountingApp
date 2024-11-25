@@ -16,10 +16,13 @@ import androidx.compose.ui.unit.sp
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isDesktop
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
+import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.DatePickerDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+
+
+private val formatUtil = DI.formatUtil
 
 @Composable
 fun DatePicker(
@@ -28,7 +31,7 @@ fun DatePicker(
     modifier: Modifier = Modifier.width(if (Platform.isDesktop) 90.dp else 86.dp).heightIn(min = 45.dp),
     showCalendarIcon: Boolean = false,
     moveFocusOnToNextElementOnSelection: Boolean = true,
-    dateFormatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT),
+    dateFormatter: DateTimeFormatter? = null,
     textColor: Color? = null,
     dateSelected: (LocalDate) -> Unit
 ) {
@@ -40,7 +43,7 @@ fun DatePicker(
 
     Column(modifier.clickableWithRipple { showDatePickerDialog = true }, verticalArrangement = Arrangement.Center) {
         OutlinedTextField(
-            value = selectedDate?.let { dateFormatter.format(it) } ?: "",
+            value = selectedDate?.let { dateFormatter?.format(it) ?: formatUtil.formatShortDate(it) } ?: "",
             onValueChange = { },
             modifier = Modifier.fillMaxSize().onFocusEvent { state -> if (state.isFocused || state.hasFocus) { showDatePickerDialog = true } },
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,

@@ -39,6 +39,7 @@ fun BaseDialog(
     dismissButtonTitle: String = "Abbrechen",
     showProgressIndicatorOnConfirmButton: Boolean = false,
     useMoreThanPlatformDefaultWidthOnMobile: Boolean = false,
+    backgroundColor: Color = MaterialTheme.colors.surface,
     onDismiss: () -> Unit,
     onConfirm: (() -> Unit)? = null,
     properties: DialogProperties = DialogProperties(),
@@ -50,8 +51,8 @@ fun BaseDialog(
 
 
     Dialog(onDismissRequest = onDismiss, if (overwriteDefaultWidth) properties.copy(usePlatformDefaultWidth = false) else properties) {
-        RoundedCornersCard(Modifier.let { if (overwriteDefaultWidth) it.fillMaxWidth(0.95f) else it }) {
-            Column(Modifier.applyPlatformSpecificPaddingIf(overwriteDefaultWidth && isKeyboardVisible, 8.dp).background(Color.White).padding(horizontal = 8.dp).verticalScroll()) {
+        RoundedCornersCard(Modifier.let { if (overwriteDefaultWidth) it.fillMaxWidth(0.95f) else it }, backgroundColor = backgroundColor) {
+            Column(Modifier.applyPlatformSpecificPaddingIf(overwriteDefaultWidth && isKeyboardVisible, 8.dp).background(backgroundColor).padding(horizontal = 8.dp).verticalScroll()) {
 
                 if (titleBarVisible) {
                     Row(Modifier.fillMaxWidth().padding(bottom = 8.dp).height(32.dp), verticalAlignment = Alignment.CenterVertically) {

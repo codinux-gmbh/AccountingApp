@@ -18,7 +18,7 @@ class MailRepository(
     private var storedMails: List<MailWithInvoice> = emptyList()
 
 
-    fun loadMails(): List<MailWithInvoice> =
+    suspend fun loadMails(): List<MailWithInvoice> =
         if (mailsFile.exists()) {
             try {
                 jsonMapper.readValue<List<MailWithInvoice>>(mailsFile).also {
@@ -32,7 +32,7 @@ class MailRepository(
             emptyList()
         }
 
-    fun saveMails(mails: Collection<MailWithInvoice>) {
+    suspend fun saveMails(mails: Collection<MailWithInvoice>) {
         this.storedMails += mails
 
         jsonMapper.writeValue(mailsFile, storedMails)

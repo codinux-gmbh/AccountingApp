@@ -24,12 +24,12 @@ class MailService(
     }
 
 
-    fun loadPersistedMails() = repository.loadMails()
+    private suspend fun loadPersistedMails() = repository.loadMails()
 
-    fun persistMails(mails: Collection<MailWithInvoice>) = repository.saveMails(mails)
+    private suspend fun persistMails(mails: Collection<MailWithInvoice>) = repository.saveMails(mails)
 
 
-    fun retrieveMails(account: MailAccount): List<MailWithInvoice> =
+    private suspend fun retrieveMails(account: MailAccount): List<MailWithInvoice> =
         mailReader.listAllMessagesWithEInvoice(account, true)
 
 }

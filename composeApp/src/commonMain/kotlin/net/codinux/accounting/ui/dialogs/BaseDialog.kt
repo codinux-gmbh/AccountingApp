@@ -77,7 +77,7 @@ fun BaseDialog(
                         TextButton(
                             modifier = Modifier.weight(0.5f),
                             enabled = confirmButtonEnabled,
-                            onClick = { onConfirm?.invoke() ?: onDismiss() }
+                            onClick = { onConfirm?.invoke(); onDismiss() }
                         ) {
                             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                                 if (showProgressIndicatorOnConfirmButton) {

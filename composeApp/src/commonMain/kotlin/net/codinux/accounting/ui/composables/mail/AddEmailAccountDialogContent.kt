@@ -11,11 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.ImeNext
+import net.codinux.invoicing.mail.MailAccount
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -23,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 private val VerticalRowPadding = 2.dp
 
 @Composable
-fun AddEmailAccountDialogContent() {
+fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
 
     var receiveEmails = remember { mutableStateOf(true) }
     var receiveEmailsUsername = remember { mutableStateOf("") }
@@ -34,14 +36,28 @@ fun AddEmailAccountDialogContent() {
     var sendEmails = remember { mutableStateOf(false) }
     var sendEmailsUsername = remember { mutableStateOf("") }
     var sendEmailsPassword = remember { mutableStateOf("") }
-    var sendEmailsImapServerAddress = remember { mutableStateOf("") }
+    var sendEmailsSmtpServerAddress = remember { mutableStateOf("") }
     var sendEmailsPort = remember { mutableStateOf(587) }
 
 
     Column {
         MailAccountForm(Res.string.receive_emails, receiveEmails, receiveEmailsUsername, receiveEmailsPassword, Res.string.imap_server_address, receiveEmailsImapServerAddress, receiveEmailsPort)
 
-        MailAccountForm(Res.string.send_emails, sendEmails, sendEmailsUsername, sendEmailsPassword, Res.string.smtp_server_address, sendEmailsImapServerAddress, sendEmailsPort, 12.dp)
+        MailAccountForm(Res.string.send_emails, sendEmails, sendEmailsUsername, sendEmailsPassword, Res.string.smtp_server_address, sendEmailsSmtpServerAddress, sendEmailsPort, 12.dp)
+    }
+
+
+    LaunchedEffect(sendEmails.value) {
+        if (sendEmails.value == true && sendEmailsUsername.value.isEmpty() && sendEmailsPassword.value.isEmpty() && sendEmailsSmtpServerAddress.value.isEmpty()) {
+            sendEmailsUsername.value = receiveEmailsUsername.value
+            sendEmailsPassword.value = receiveEmailsPassword.value
+            sendEmailsSmtpServerAddress.value = receiveEmailsImapServerAddress.value
+        }
+    }
+
+    SideEffect {
+        account.receiveEmailConfiguration = if (receiveEmails.value == false) null else MailAccount(receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value)
+        account.sendEmailConfiguration = if (sendEmails.value == false) null else MailAccount(sendEmailsUsername.value, sendEmailsPassword.value, sendEmailsSmtpServerAddress.value, sendEmailsPort.value)
     }
 }
 

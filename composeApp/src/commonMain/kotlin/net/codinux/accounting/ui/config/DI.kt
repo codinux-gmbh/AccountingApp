@@ -32,7 +32,7 @@ object DI {
 
 
     suspend fun init() {
-        mailService.init()
+        mailService.init(uiState)
     }
 
 }

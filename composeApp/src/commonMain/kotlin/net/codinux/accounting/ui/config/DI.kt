@@ -30,4 +30,9 @@ object DI {
 
     val mailService = MailService(MailReader(invoiceReader), MailRepository(jsonMapper))
 
+
+    suspend fun init() {
+        mailService.init()
+    }
+
 }

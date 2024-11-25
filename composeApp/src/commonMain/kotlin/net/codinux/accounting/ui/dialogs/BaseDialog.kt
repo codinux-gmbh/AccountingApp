@@ -19,6 +19,7 @@ import androidx.compose.ui.window.DialogProperties
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.PlatformType
 import net.codinux.accounting.platform.isMobile
+import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.CloseButton
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.config.Colors
@@ -27,6 +28,7 @@ import net.codinux.accounting.ui.extensions.applyPlatformSpecificPaddingIf
 import net.codinux.accounting.ui.extensions.copy
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.accounting.ui.composables.forms.*
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BaseDialog(
@@ -34,9 +36,9 @@ fun BaseDialog(
     centerTitle: Boolean = false,
     titleBarVisible: Boolean = true,
     confirmButtonVisible: Boolean = true,
-    confirmButtonTitle: String = "OK",
+    confirmButtonTitle: String = stringResource(Res.string.ok),
     confirmButtonEnabled: Boolean = true,
-    dismissButtonTitle: String = "Abbrechen",
+    dismissButtonTitle: String = stringResource(Res.string.cancel),
     showProgressIndicatorOnConfirmButton: Boolean = false,
     useMoreThanPlatformDefaultWidthOnMobile: Boolean = false,
     backgroundColor: Color = MaterialTheme.colors.surface,

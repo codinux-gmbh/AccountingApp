@@ -44,7 +44,7 @@ private val FieldsSpace = 4.dp
 
 
 @Composable
-fun InvoiceItemForm(item: EditableInvoiceItem, placeholderTextColor: Color = Color.Unspecified) {
+fun InvoiceItemForm(item: EditableInvoiceItem) {
 
     Spacer(Modifier.height(6.dp))
 
@@ -52,46 +52,46 @@ fun InvoiceItemForm(item: EditableInvoiceItem, placeholderTextColor: Color = Col
         Column(Modifier.fillMaxWidth().padding(all = 4.dp)) {
             if (isCompactScreen) { // on small screens we use two lines
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    InvoiceItemTextField(item, EditableInvoiceItem::name, Res.string.name, placeholderTextColor)
+                    InvoiceItemTextField(item, EditableInvoiceItem::name, Res.string.name)
                 }
 
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        InvoiceItemNumberTextField(item, EditableInvoiceItem::quantity, Res.string.quantity, placeholderTextColor)
+                        InvoiceItemNumberTextField(item, EditableInvoiceItem::quantity, Res.string.quantity)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceItemTextField(item, EditableInvoiceItem::unit, Res.string.unit, placeholderTextColor)
+                        InvoiceItemTextField(item, EditableInvoiceItem::unit, Res.string.unit)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceItemNumberTextField(item, EditableInvoiceItem::unitPrice, Res.string.unit_price, placeholderTextColor)
+                        InvoiceItemNumberTextField(item, EditableInvoiceItem::unitPrice, Res.string.unit_price)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceItemNumberTextField(item, EditableInvoiceItem::vatRate, Res.string.vat_rate, placeholderTextColor)
+                        InvoiceItemNumberTextField(item, EditableInvoiceItem::vatRate, Res.string.vat_rate)
                     }
                 }
             } else { // on large screens one line
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        InvoiceItemTextField(item, EditableInvoiceItem::name, Res.string.name, placeholderTextColor)
+                        InvoiceItemTextField(item, EditableInvoiceItem::name, Res.string.name)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemNumberTextField(item, EditableInvoiceItem::quantity, Res.string.quantity, placeholderTextColor)
+                        InvoiceItemNumberTextField(item, EditableInvoiceItem::quantity, Res.string.quantity)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemTextField(item, EditableInvoiceItem::unit, Res.string.unit, placeholderTextColor)
+                        InvoiceItemTextField(item, EditableInvoiceItem::unit, Res.string.unit)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemNumberTextField(item, EditableInvoiceItem::unitPrice, Res.string.unit_price, placeholderTextColor)
+                        InvoiceItemNumberTextField(item, EditableInvoiceItem::unitPrice, Res.string.unit_price)
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemNumberTextField(item, EditableInvoiceItem::vatRate, Res.string.vat_rate, placeholderTextColor)
+                        InvoiceItemNumberTextField(item, EditableInvoiceItem::vatRate, Res.string.vat_rate)
                     }
                 }
             }
@@ -100,7 +100,7 @@ fun InvoiceItemForm(item: EditableInvoiceItem, placeholderTextColor: Color = Col
 }
 
 @Composable
-private fun InvoiceItemTextField(item: EditableInvoiceItem, property: KMutableProperty<String>, labelResource: StringResource, placeholderTextColor: Color = Color.Unspecified, modifier: Modifier = Modifier.fillMaxWidth()) {
+private fun InvoiceItemTextField(item: EditableInvoiceItem, property: KMutableProperty<String>, labelResource: StringResource, modifier: Modifier = Modifier.fillMaxWidth()) {
 
     var enteredValue by remember { mutableStateOf(property.getter.call(item)) }
 
@@ -111,20 +111,20 @@ private fun InvoiceItemTextField(item: EditableInvoiceItem, property: KMutablePr
             enteredValue = newValue
         },
         modifier,
-        label = { Text(stringResource(labelResource), color = placeholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext
     )
 }
 
 @Composable
-private fun InvoiceItemNumberTextField(item: EditableInvoiceItem, property: KMutableProperty<BigDecimal?>, labelResource: StringResource, placeholderTextColor: Color = Color.Unspecified, modifier: Modifier = Modifier.fillMaxWidth()) {
+private fun InvoiceItemNumberTextField(item: EditableInvoiceItem, property: KMutableProperty<BigDecimal?>, labelResource: StringResource, modifier: Modifier = Modifier.fillMaxWidth()) {
     OutlinedNumberTextField(
         BigDecimal::class,
         property.getter.call(item),
         { property.setter.call(item, it) },
         modifier,
-        label = { Text(stringResource(labelResource), color = placeholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext
     )

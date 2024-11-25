@@ -8,4 +8,7 @@ class UiState : ViewModel() {
 
     val selectedMainScreenTab = MutableStateFlow(MainScreenTab.Postings)
 
+
+    val showAddMailAccountDialog = MutableStateFlow(false)
+
 }

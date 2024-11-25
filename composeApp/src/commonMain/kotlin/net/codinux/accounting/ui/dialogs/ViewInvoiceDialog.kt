@@ -16,7 +16,7 @@ fun ViewInvoiceDialog(invoice: Invoice, onDismiss: () -> Unit) {
         centerTitle = true,
         confirmButtonVisible = false,
         useMoreThanPlatformDefaultWidthOnMobile = true,
-        backgroundColor = Colors.Zinc100,
+        backgroundColor = Colors.MainBackgroundColor,
         onDismiss = onDismiss
     ) {
         InvoiceView(invoice)

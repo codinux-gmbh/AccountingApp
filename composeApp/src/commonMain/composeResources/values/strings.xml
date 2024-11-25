@@ -10,12 +10,27 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="add">Add</string>
     <string name="copy">Copy</string>
     <string name="create">Create</string>
 
     <string name="name">Name</string>
 
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="port">Port</string>
+
     <string name="month">Month</string>
+
+
+    <!-- mails -->
+    <string name="add_email_account">Add email account</string>
+
+    <string name="receive_emails">Receive emails</string>
+    <string name="send_emails">Send emails</string>
+
+    <string name="imap_server_address">IMAP server address</string>
+    <string name="smtp_server_address">SMTP server address</string>
 
 
     <!-- invoice -->

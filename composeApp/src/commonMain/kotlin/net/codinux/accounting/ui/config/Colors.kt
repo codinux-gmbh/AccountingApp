@@ -70,6 +70,10 @@ object Colors {
     val Emerald700 = Color(4, 120, 87)
 
 
+    val MainBackgroundColor = Zinc100
+
+    val PlaceholderTextColor = Colors.Zinc500
+
     val ZebraStripesColor = Zinc100_50
 
     val ItemDividerColor = Zinc200

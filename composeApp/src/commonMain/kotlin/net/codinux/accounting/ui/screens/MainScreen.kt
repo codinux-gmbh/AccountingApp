@@ -1,7 +1,12 @@
 package net.codinux.accounting.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -21,7 +26,15 @@ fun MainScreen() {
 
     Scaffold(
         bottomBar = { BottomToolbar(selectedTab) },
-        backgroundColor = Colors.Zinc100,
+        backgroundColor = Colors.MainBackgroundColor,
+        floatingActionButton = if (selectedTab != MainScreenTab.Mails) { { } } else { {
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = { uiState.showAddMailAccountDialog.value = true }
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Zeigt ein Menü zum Hinzufügen eines E-Mail Kontos, ... an")
+            }
+        } },
     ) { scaffoldPadding -> // scaffoldPadding contains e.g. the size of the bottom toolbar
 
         // when removing tabs from composition tree, than tab's state, e.g. entered data, gets
@@ -38,7 +51,7 @@ fun MainScreen() {
             InvoicesTab()
         }
         Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
-            MailsTab()
+            MailsTab(uiState)
         }
     }
 }

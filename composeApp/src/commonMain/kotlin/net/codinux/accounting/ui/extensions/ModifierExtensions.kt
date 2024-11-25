@@ -4,6 +4,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerIcon
+import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.platform.Platform
@@ -19,6 +21,8 @@ fun Modifier.horizontalScroll() = this.horizontalScroll(ScrollState(0), enabled 
 
 @Composable
 fun Modifier.rememberHorizontalScroll() = this.horizontalScroll(rememberScrollState())
+
+fun Modifier.handCursor() = this.pointerHoverIcon(PointerIcon.Hand)
 
 
 @Composable

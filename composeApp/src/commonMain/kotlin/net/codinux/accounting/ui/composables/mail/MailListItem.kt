@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.extensions.horizontalScroll
 import net.codinux.invoicing.mail.MailWithInvoice
 
 private val formatUtil = DI.formatUtil
@@ -25,7 +26,7 @@ fun MailListItem(mail: MailWithInvoice) {
 
 
     // height 64 dp: first row has 24 dp (due to attachment icon), 6 dp vertical spacing, and each line in the second row has 17 dp. But don't know why + 1 dp is needed so that second body line gets displayed
-    Column(Modifier.fillMaxWidth().background(backgroundColor).padding(horizontal = 6.dp, vertical = 6.dp).height(65.dp)) {
+    Column(Modifier.fillMaxWidth().background(backgroundColor).padding(horizontal = 6.dp, vertical = 6.dp).heightIn(min = 65.dp, max = 101.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(mail.sender ?: "", Modifier.widthIn(20.dp, 175.dp), fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
@@ -45,6 +46,18 @@ fun MailListItem(mail: MailWithInvoice) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             val body = (mail.plainTextOrHtmlBody ?: "").replace("\r", "").replace("\n", " ")
             Text(body, maxLines = 2, overflow = TextOverflow.Ellipsis)
+        }
+
+        if (mail.attachmentsWithEInvoice.isNotEmpty()) {
+            Spacer(Modifier.height(6.dp))
+
+            Row(Modifier.fillMaxWidth().horizontalScroll(), verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Outlined.Attachment, "Mail has attachment(s)")
+
+                mail.attachmentsWithEInvoice.forEach {
+                    MailAttachmentListItem(it)
+                }
+            }
         }
     }
 

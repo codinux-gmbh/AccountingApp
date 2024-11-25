@@ -4,8 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -76,11 +79,7 @@ fun InvoiceForm() {
     var servicePeriodMonth by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.month) }
     var servicePeriodStart by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
     var servicePeriodEnd by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
-    var itemName = rememberSaveable { mutableStateOf("") }
-    var itemQuantity = rememberSaveable { mutableStateOf("") }
-    var itemUnit = rememberSaveable { mutableStateOf("") }
-    var itemUnitPrice = rememberSaveable { mutableStateOf("") }
-    var itemVatRate = rememberSaveable { mutableStateOf("") }
+    val invoiceItems = remember { mutableStateListOf(EditableInvoiceItem()) }
 
 
     var generatedEInvoiceXml by rememberSaveable { mutableStateOf<String?>(null) }
@@ -113,7 +112,8 @@ fun InvoiceForm() {
                     invoiceNumber.value, invoiceDate,
                     Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable((issuerEmail)), bankDetails = bankDetails),
                     Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail)),
-                    listOf(InvoiceItem(itemName.value, BigDecimal(itemQuantity.value), itemUnit.value, BigDecimal(itemUnitPrice.value), BigDecimal(itemVatRate.value)))
+                    // TODO: add check if values are really set and add error handling
+                    invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
                 )
 
                 // TODO: care for iOS display bug of long texts
@@ -164,37 +164,19 @@ fun InvoiceForm() {
                 }
             }
 
-            Text(stringResource(Res.string.delivered_goods_or_provided_services))
+            Column(Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth().padding(top = 12.dp).height(30.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(Res.string.delivered_goods_or_provided_services), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Column(Modifier.weight(1f)) {
-                    Text(stringResource(Res.string.name), fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.weight(1f))
 
-                    InvoiceTextField(itemName, Res.string.name)
+                    TextButton({ invoiceItems.add(EditableInvoiceItem()) }, contentPadding = PaddingValues(0.dp)) {
+                        Icon(Icons.Outlined.Add, "Add invoice item", Modifier.width(48.dp).fillMaxHeight(), Colors.CodinuxSecondaryColor)
+                    }
                 }
 
-                Column(Modifier.padding(start = 4.dp).width(75.dp)) {
-                    Text(stringResource(Res.string.quantity), fontWeight = FontWeight.Bold)
-
-                    InvoiceTextField(itemQuantity, Res.string.quantity)
-                }
-
-                Column(Modifier.padding(start = 4.dp).width(75.dp)) {
-                    Text(stringResource(Res.string.unit), fontWeight = FontWeight.Bold)
-
-                    InvoiceTextField(itemUnit, Res.string.unit)
-                }
-
-                Column(Modifier.padding(start = 4.dp).width(75.dp)) {
-                    Text(stringResource(Res.string.unit_price), fontWeight = FontWeight.Bold)
-
-                    InvoiceTextField(itemUnitPrice, Res.string.unit_price)
-                }
-
-                Column(Modifier.padding(start = 4.dp).width(75.dp)) {
-                    Text(stringResource(Res.string.vat_rate), fontWeight = FontWeight.Bold)
-
-                    InvoiceTextField(itemVatRate, Res.string.vat_rate)
+                invoiceItems.toList().forEach { item ->
+                    InvoiceItemForm(item, PlaceholderTextColor)
                 }
             }
         }

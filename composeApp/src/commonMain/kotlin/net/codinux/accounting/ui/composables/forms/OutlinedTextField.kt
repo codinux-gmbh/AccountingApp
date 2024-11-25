@@ -5,15 +5,14 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import net.codinux.accounting.ui.config.Colors
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun OutlinedTextField(
     value: String,
@@ -26,6 +25,7 @@ fun OutlinedTextField(
     placeholder: @Composable (() -> Unit)? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
+    backgroundColor: Color = Color.Transparent,
     isError: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -42,7 +42,8 @@ fun OutlinedTextField(
         focusedBorderColor = Colors.CodinuxSecondaryColor,
         // a workaround: we assume textStyle is set to change text color, so we set unfocusedBorderColor according to it // TODO: fix by passing textColor to OutlinedTextField
         unfocusedBorderColor = if (textStyle != LocalTextStyle.current) textStyle.color else MaterialTheme.colors.primary.copy(alpha = ContentAlpha.high),
-        focusedLabelColor = Colors.CodinuxSecondaryColor // does not work
+        focusedLabelColor = Colors.CodinuxSecondaryColor, // does not work
+        backgroundColor = backgroundColor
     )
 
     androidx.compose.material.OutlinedTextField(

@@ -20,16 +20,33 @@ class MailService(
             DI.uiState.mails.value = loadPersistedMails()
         } catch (e: Throwable) {
             log.error(e) { "Could not initialize persisted mail data" }
+
+            // TODO: show error to user
         }
     }
 
 
     private suspend fun loadPersistedMails() = repository.loadMails()
 
-    private suspend fun persistMails(mails: Collection<MailWithInvoice>) = repository.saveMails(mails)
+    private suspend fun persistMails(mails: Collection<MailWithInvoice>) {
+        try {
+            repository.saveMails(mails)
+        } catch (e: Throwable) {
+            log.error(e) { "Could not persist mails" }
+
+            // TODO: show error to user
+        }
+    }
 
 
-    private suspend fun retrieveMails(account: MailAccount): List<MailWithInvoice> =
+    private suspend fun retrieveMails(account: MailAccount): List<MailWithInvoice> = try {
         mailReader.listAllMessagesWithEInvoice(account, true)
+    } catch (e: Throwable) {
+        log.error(e) { "Could not retrieve mails" }
+
+        // TODO: show error to user
+
+        emptyList()
+    }
 
 }

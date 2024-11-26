@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.appskeleton.BottomToolbar
+import net.codinux.accounting.ui.composables.StateHandler
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.tabs.*
@@ -54,6 +55,9 @@ fun MainScreen() {
             MailsTab(uiState)
         }
     }
+
+
+    StateHandler(uiState)
 }
 
 @Composable

@@ -23,6 +23,11 @@
     <string name="month">Month</string>
 
 
+    <!-- errors -->
+    <string name="error_add_email_account">Email account could not be added</string>
+    <string name="error_save_to_database">Failed writing data to database</string>
+
+
     <!-- mails -->
     <string name="add_email_account">Add email account</string>
 

@@ -23,6 +23,11 @@
     <string name="month">Monat</string>
 
 
+    <!-- errors -->
+    <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
+    <string name="error_save_to_database">Daten konnten nicht in der Datenbank gespeichert werden</string>
+
+
     <!-- mails -->
     <string name="add_email_account">E-Mail Konto hinzufügen</string>
 

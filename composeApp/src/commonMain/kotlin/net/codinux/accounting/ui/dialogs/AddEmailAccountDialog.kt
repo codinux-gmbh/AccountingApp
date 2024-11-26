@@ -18,22 +18,39 @@ fun AddEmailAccountDialog() {
 
     val account by remember { mutableStateOf(MailAccountConfiguration()) }
 
+    var isAddingAccount by remember { mutableStateOf(false) }
+
     val coroutineScope = rememberCoroutineScope()
+
+
+    fun dismiss() {
+        DI.uiState.showAddMailAccountDialog.value = false
+    }
 
     fun addMailAccount() {
         coroutineScope.launch(Dispatchers.IO) {
-            mailService.addMailAccount(account)
-        }
+            isAddingAccount = true
 
+            val successful = mailService.addMailAccount(account)
+            if (successful) {
+                dismiss()
+            }
+
+            isAddingAccount = false
+        }
     }
+
 
     BaseDialog(
         title = stringResource(Res.string.add_email_account),
         confirmButtonTitle = stringResource(Res.string.add),
+        confirmButtonEnabled = isAddingAccount == false,
+        showProgressIndicatorOnConfirmButton = isAddingAccount,
         backgroundColor = Colors.MainBackgroundColor,
         useMoreThanPlatformDefaultWidthOnMobile = true,
+        callOnDismissAfterOnConfirm = false,
         onConfirm = { addMailAccount() },
-        onDismiss = { DI.uiState.showAddMailAccountDialog.value = false }
+        onDismiss = { dismiss() }
     ) {
         AddEmailAccountDialogContent(account)
     }

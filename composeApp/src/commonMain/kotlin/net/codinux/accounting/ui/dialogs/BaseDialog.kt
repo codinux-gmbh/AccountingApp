@@ -42,6 +42,7 @@ fun BaseDialog(
     showProgressIndicatorOnConfirmButton: Boolean = false,
     useMoreThanPlatformDefaultWidthOnMobile: Boolean = false,
     backgroundColor: Color = MaterialTheme.colors.surface,
+    callOnDismissAfterOnConfirm: Boolean = true,
     onDismiss: () -> Unit,
     onConfirm: (() -> Unit)? = null,
     properties: DialogProperties = DialogProperties(),
@@ -77,7 +78,12 @@ fun BaseDialog(
                         TextButton(
                             modifier = Modifier.weight(0.5f),
                             enabled = confirmButtonEnabled,
-                            onClick = { onConfirm?.invoke(); onDismiss() }
+                            onClick = {
+                                onConfirm?.invoke()
+                                if (callOnDismissAfterOnConfirm) {
+                                    onDismiss()
+                                }
+                            }
                         ) {
                             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                                 if (showProgressIndicatorOnConfirmButton) {

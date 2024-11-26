@@ -10,6 +10,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
 
+    <string name="save">Speichern</string>
     <string name="add">Hinzufügen</string>
     <string name="copy">Kopieren</string>
     <string name="create">Erstellen</string>
@@ -25,6 +26,7 @@
 
     <!-- errors -->
     <string name="error_message">Fehlermeldung</string>
+    <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
     <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
     <string name="error_load_from_database">Daten konnten nicht aus der Datenbank geladen werden</string>
@@ -96,5 +98,11 @@
     <string name="e_invoice_xml_format_x_rechnung">XRechnung</string>
     <string name="e_invoice_xml_format_factur_x">Factur-X / ZUGFeRD</string>
 
-    <string name="save">Speichern</string>
+    <string name="create_only_xml">Nur XML erzeugen</string>
+    <string name="create_xml_and_attach_to_existing_pdf">XML erzeugen und an existierende PDF anhängen</string>
+    <string name="create_xml_and_pdf">XML und PDF erzeugen</string>
+    <string name="select_existing_pdf_to_attach_e_invoice_xml_to">PDF auswählen an das E-Rechnung angehängt werden soll ...</string>
+    <string name="select_pdf_output_file">PDF Pfad auswählen ...</string>
+
+    <string name="error_message_could_not_create_invoice">E-Rechnung konnte nicht erstellt werden</string>
 </resources>

@@ -10,6 +10,7 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
 
+    <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="copy">Copy</string>
     <string name="create">Create</string>
@@ -25,6 +26,7 @@
 
     <!-- errors -->
     <string name="error_message">Error message</string>
+    <string name="error_create_invoice">Invoice could not be created</string>
     <string name="error_add_email_account">Email account could not be added</string>
     <string name="error_fetch_emails">Failed fetching emails</string>
     <string name="error_load_from_database">Failed loading data from database</string>
@@ -96,5 +98,11 @@
     <string name="e_invoice_xml_format_x_rechnung">XRechnung</string>
     <string name="e_invoice_xml_format_factur_x">Factur-X / ZUGFeRD</string>
 
-    <string name="save">Save</string>
+    <string name="create_only_xml">Create only XML</string>
+    <string name="create_xml_and_attach_to_existing_pdf">Create XML and attach to existing PDF</string>
+    <string name="create_xml_and_pdf">Create XML and PDF</string>
+    <string name="select_existing_pdf_to_attach_e_invoice_xml_to">Select PDF to attach eInvoice XML to ...</string>
+    <string name="select_pdf_output_file">Select PDF save path ...</string>
+
+    <string name="error_message_could_not_create_invoice">Could not create invoice</string>
 </resources>

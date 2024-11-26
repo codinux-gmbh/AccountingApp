@@ -24,9 +24,11 @@ object DI {
     }
 
 
+    val fileHandler = PlatformDependencies.fileHandler
+
     private val invoiceReader = PlatformDependencies.invoiceReader
 
-    val invoiceService = InvoiceService()
+    val invoiceService = InvoiceService(PlatformDependencies.invoiceCreator, fileHandler)
 
     val mailService = MailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper))
 

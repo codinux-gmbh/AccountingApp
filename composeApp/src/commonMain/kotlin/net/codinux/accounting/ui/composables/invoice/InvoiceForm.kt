@@ -18,15 +18,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import io.github.vinceglb.filekit.core.PickerType
+import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.codinux.accounting.domain.invoice.model.EInvoiceXmlFormat
+import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isDesktop
 import net.codinux.accounting.ui.composables.forms.*
+import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
 import net.codinux.accounting.ui.config.Colors
@@ -37,7 +42,7 @@ import net.codinux.invoicing.model.*
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import java.math.BigDecimal
+import java.io.File
 import java.time.LocalDate
 
 
@@ -45,7 +50,10 @@ private val VerticalRowPadding = 2.dp
 
 private val VerticalSectionPadding = 12.dp
 
-private val PlaceholderTextColor = Colors.Zinc500
+private val createEInvoiceOptions = CreateEInvoiceOptions.entries
+    .filter { if (Platform.supportsCreatingPdfs == false && it == CreateEInvoiceOptions.CreateXmlAndPdf) false else true }
+
+private val invoiceService = DI.invoiceService
 
 @Composable
 fun InvoiceForm() {
@@ -78,21 +86,28 @@ fun InvoiceForm() {
     var servicePeriodMonth by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.month) }
     var servicePeriodStart by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
     var servicePeriodEnd by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
+
     val invoiceItems = remember { mutableStateListOf(EditableInvoiceItem()) }
 
 
     var selectedEInvoiceXmlFormat by rememberSaveable { mutableStateOf(EInvoiceXmlFormat.FacturX) }
+
+    var selectedCreateEInvoiceOption by rememberSaveable { mutableStateOf(CreateEInvoiceOptions.XmlOnly) }
 
     var generatedEInvoiceXml by rememberSaveable { mutableStateOf<String?>(null) }
 
 
     val clipboardManager = LocalClipboardManager.current
 
+    val coroutineScope = rememberCoroutineScope()
+
     val saveXmlFileLauncher = rememberFileSaverLauncher { }
 
-    val isLargeDisplay = Platform.isDesktop
+    var pdfToAttachXmlTo by rememberSaveable { mutableStateOf<String?>(null) }
 
-    val coroutineScope = rememberCoroutineScope()
+    var pdfOutputFile by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val isLargeDisplay = Platform.isDesktop
 
 
     @Composable
@@ -109,28 +124,88 @@ fun InvoiceForm() {
         EInvoiceXmlFormat.XRechnung -> stringResource(Res.string.e_invoice_xml_format_x_rechnung)
     }
 
+    @Composable
+    fun getLabel(option: CreateEInvoiceOptions): String = when (option) {
+        CreateEInvoiceOptions.XmlOnly -> stringResource(Res.string.create_only_xml)
+        CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> stringResource(Res.string.create_xml_and_attach_to_existing_pdf)
+        CreateEInvoiceOptions.CreateXmlAndPdf -> stringResource(Res.string.create_xml_and_pdf)
+    }
+
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
 
-    fun generateEInvoice() {
+    fun createInvoice(): Invoice {
+        val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: issuerName.value, nullable(bankName))
+        else null
+
+        return Invoice(
+            invoiceNumber.value, invoiceDate,
+            Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable((issuerEmail)), bankDetails = bankDetails),
+            Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail)),
+            // TODO: add check if values are really set and add error handling
+            invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
+        )
+    }
+
+    fun createEInvoiceXml() {
         coroutineScope.launch(Dispatchers.Default) {
             try {
-                val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: issuerName.value, nullable(bankName))
-                else null
-                val invoice = Invoice(
-                    invoiceNumber.value, invoiceDate,
-                    Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable((issuerEmail)), bankDetails = bankDetails),
-                    Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail)),
-                    // TODO: add check if values are really set and add error handling
-                    invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
-                )
+                val invoice = createInvoice()
 
                 // TODO: care for iOS display bug of long texts
-                generatedEInvoiceXml = DI.invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
+                generatedEInvoiceXml = invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create eInvoice" }
 
-                // TODO: show error message to user
+                DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
             }
+        }
+    }
+
+    fun attachInvoiceToExistingPdf(pdfFile: PlatformFile) {
+        coroutineScope.launch(Dispatchers.Default) {
+            try {
+                pdfToAttachXmlTo = pdfFile.path
+
+                val invoice = createInvoice()
+
+                generatedEInvoiceXml = invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfFile)
+
+                DI.fileHandler.openFileInDefaultViewer(pdfFile)
+            } catch (e: Throwable) {
+                Log.error(e) { "Could not create eInvoice" }
+
+                DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
+            }
+        }
+    }
+
+    fun createEInvoicePdf(pdfFile: PlatformFile) {
+        coroutineScope.launch(Dispatchers.Default) {
+            try {
+                pdfOutputFile = pdfFile.path
+
+                val invoice = createInvoice()
+
+                generatedEInvoiceXml = invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat, pdfFile)
+
+                DI.fileHandler.openFileInDefaultViewer(pdfFile)
+            } catch (e: Throwable) {
+                Log.error(e) { "Could not create eInvoice" }
+
+                DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
+            }
+        }
+    }
+
+    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.let { File(it).parent }) { selectedFile ->
+        selectedFile?.let {
+            attachInvoiceToExistingPdf(it)
+        }
+    }
+
+    val savePdfFileLauncher = rememberFileSaverLauncher { selectedFile ->
+        selectedFile?.let {
+            createEInvoicePdf(it)
         }
     }
 
@@ -184,7 +259,7 @@ fun InvoiceForm() {
                 }
 
                 invoiceItems.toList().forEach { item ->
-                    InvoiceItemForm(item, PlaceholderTextColor)
+                    InvoiceItemForm(item)
                 }
             }
         }
@@ -200,12 +275,44 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.create) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Select("", createEInvoiceOptions, selectedCreateEInvoiceOption, { selectedCreateEInvoiceOption = it }, { getLabel(it) })
+            }
+
+            if (selectedCreateEInvoiceOption == CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf) {
+                Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = { openExistingPdfFileLauncher.launch() }, Modifier.fillMaxWidth()) {
+                        Text(stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+                    }
+                }
+
+                if (pdfToAttachXmlTo != null) {
+                    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+                        Text(pdfToAttachXmlTo ?: "", Modifier.padding(horizontal = 4.dp))
+                    }
+                }
+            }
+
+            if (selectedCreateEInvoiceOption == CreateEInvoiceOptions.CreateXmlAndPdf) {
+                Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = { savePdfFileLauncher.launch(null, "invoice-${invoiceNumber.value}", "pdf", pdfOutputFile?.let { File(it).parent }) }, Modifier.fillMaxWidth()) {
+                        Text(stringResource(Res.string.select_pdf_output_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+                    }
+                }
+
+                if (pdfOutputFile != null) {
+                    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+                        Text(pdfOutputFile ?: "", Modifier.padding(horizontal = 4.dp))
+                    }
+                }
+            }
+
             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Select(stringResource(Res.string.e_invoice_xml_format), EInvoiceXmlFormat.entries, selectedEInvoiceXmlFormat, { selectedEInvoiceXmlFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
 
                 Spacer(Modifier.width(1.dp).weight(1f))
 
-                TextButton({ generateEInvoice() }) {
+                TextButton({ createEInvoiceXml() }) {
                     Text(stringResource(Res.string.create), color = Colors.CodinuxSecondaryColor)
                 }
             }
@@ -221,7 +328,7 @@ fun InvoiceForm() {
                     }
                 }
 
-                Column(Modifier.rememberHorizontalScroll().background(Colors.Zinc100)) {
+                Column(Modifier.rememberHorizontalScroll().background(Colors.MainBackgroundColor)) {
                     SelectionContainer(modifier = Modifier.fillMaxSize()) {
                         Text(generatedEInvoiceXml, fontFamily = FontFamily.Monospace)
                     }
@@ -265,7 +372,7 @@ private fun InvoiceTextField(value: MutableState<String>, labelResource: StringR
         value.value,
         { value.value = it },
         modifier,
-        label = { Text(stringResource(labelResource), color = PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         keyboardOptions = KeyboardOptions.ImeNext
     )
 }

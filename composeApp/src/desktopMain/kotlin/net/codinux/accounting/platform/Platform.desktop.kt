@@ -9,6 +9,11 @@ actual object Platform {
     actual val type = PlatformType.JVM
 
 
+    actual val supportsCreatingPdfs = true
+
+    actual val supportsValidatingXml = true
+
+
     @Composable
     actual fun systemPaddings(): PaddingValues = PaddingValues(0.dp)
 

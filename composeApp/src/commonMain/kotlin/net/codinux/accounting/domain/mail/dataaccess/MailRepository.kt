@@ -25,17 +25,13 @@ class MailRepository(
     private val log by logger()
 
 
+    /**
+     * Does not handle errors, [net.codinux.accounting.domain.mail.service.MailService.init] does this for us
+     */
     suspend fun loadMails(): List<Email> =
         if (mailsFile.exists()) {
-            try {
-                jsonMapper.readValue<MutableList<Email>>(mailsFile).also {
-                    storedMails = it
-
-                    log.info { "Deserialized ${it.size} mails" }
-                }
-            } catch (e: Throwable) {
-                log.error(e) { "Could not deserialize mails" }
-                emptyList()
+            jsonMapper.readValue<MutableList<Email>>(mailsFile).also {
+                storedMails = it
             }
         } else { // mails have not been persisted yet
             emptyList()
@@ -54,13 +50,8 @@ class MailRepository(
 
     suspend fun loadMailAccounts(): List<MailAccountConfiguration> =
         if (mailAccountsFile.exists()) {
-            try {
-                jsonMapper.readValue<MutableList<MailAccountConfiguration>>(mailAccountsFile).also {
-                    storedMailAccounts = it
-                }
-            } catch (e: Throwable) {
-                log.error(e) { "Could not deserialize mail accounts" }
-                emptyList()
+            jsonMapper.readValue<MutableList<MailAccountConfiguration>>(mailAccountsFile).also {
+                storedMailAccounts = it
             }
         } else { // mail accounts have not been persisted yet
             emptyList()

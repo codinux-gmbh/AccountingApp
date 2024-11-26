@@ -38,6 +38,8 @@ fun DatePicker(
 
     var showDatePickerDialog by remember { mutableStateOf(false) }
 
+    var hasDateBeenSelected by remember { mutableStateOf(false) }
+
     val focusManager = LocalFocusManager.current
 
 
@@ -55,11 +57,14 @@ fun DatePicker(
     }
 
     if (showDatePickerDialog) {
-        DatePickerDialog(selectedDate, dateSelected) {
+        DatePickerDialog(selectedDate, dateSelected = { selectedDate ->
+            dateSelected(selectedDate)
+            hasDateBeenSelected = true
+        }) {
             showDatePickerDialog = false
 
             // remove focus from picker's OutlinedTextField so that it's focusable again and therefore onFocusEvent { } fires again
-            if (moveFocusOnToNextElementOnSelection) {
+            if (hasDateBeenSelected && moveFocusOnToNextElementOnSelection) {
                 focusManager.moveFocus(FocusDirection.Next)
             } else {
                 focusManager.clearFocus(true)

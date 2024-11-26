@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.screens.MainScreen
+import net.codinux.log.LoggerFactory
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private val typography = Typography(
@@ -20,6 +21,7 @@ private val typography = Typography(
 @Composable
 @Preview
 fun App() {
+    LoggerFactory.defaultLoggerName = "net.codinux.accounting"
 
     val colors = MaterialTheme.colors.copy(primary = Colors.Primary, primaryVariant = Colors.PrimaryDark, onPrimary = Color.White,
         secondary = Colors.Accent, secondaryVariant = Colors.Accent, onSecondary = Color.White)

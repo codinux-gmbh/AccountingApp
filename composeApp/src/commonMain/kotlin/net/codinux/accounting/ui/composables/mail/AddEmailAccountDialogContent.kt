@@ -47,17 +47,22 @@ fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
     }
 
 
-    LaunchedEffect(sendEmails.value) {
+    DisposableEffect(receiveEmails.value, receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value) {
+        account.receiveEmailConfiguration = if (receiveEmails.value == false) null else MailAccount(receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value)
+
+        onDispose { }
+    }
+
+    DisposableEffect(sendEmails.value, sendEmailsUsername.value, sendEmailsPassword.value, sendEmailsSmtpServerAddress.value, sendEmailsPort.value) {
         if (sendEmails.value == true && sendEmailsUsername.value.isEmpty() && sendEmailsPassword.value.isEmpty() && sendEmailsSmtpServerAddress.value.isEmpty()) {
             sendEmailsUsername.value = receiveEmailsUsername.value
             sendEmailsPassword.value = receiveEmailsPassword.value
             sendEmailsSmtpServerAddress.value = receiveEmailsImapServerAddress.value
         }
-    }
 
-    SideEffect {
-        account.receiveEmailConfiguration = if (receiveEmails.value == false) null else MailAccount(receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value)
         account.sendEmailConfiguration = if (sendEmails.value == false) null else MailAccount(sendEmailsUsername.value, sendEmailsPassword.value, sendEmailsSmtpServerAddress.value, sendEmailsPort.value)
+
+        onDispose { }
     }
 }
 

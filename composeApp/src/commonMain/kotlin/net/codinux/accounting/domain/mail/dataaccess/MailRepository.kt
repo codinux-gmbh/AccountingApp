@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.config.DI
-import net.codinux.invoicing.mail.MailWithInvoice
+import net.codinux.invoicing.email.model.Email
 import net.codinux.log.logger
 import java.io.File
 
@@ -16,7 +16,7 @@ class MailRepository(
 
     private val mailsFile = File(storageDirectory, "mails.json")
 
-    private var storedMails: MutableList<MailWithInvoice> = mutableListOf()
+    private var storedMails: MutableList<Email> = mutableListOf()
 
     private val mailAccountsFile = File(storageDirectory, "mailAccounts.json")
 
@@ -25,10 +25,10 @@ class MailRepository(
     private val log by logger()
 
 
-    suspend fun loadMails(): List<MailWithInvoice> =
+    suspend fun loadMails(): List<Email> =
         if (mailsFile.exists()) {
             try {
-                jsonMapper.readValue<MutableList<MailWithInvoice>>(mailsFile).also {
+                jsonMapper.readValue<MutableList<Email>>(mailsFile).also {
                     storedMails = it
 
                     log.info { "Deserialized ${it.size} mails" }
@@ -41,7 +41,7 @@ class MailRepository(
             emptyList()
         }
 
-    suspend fun saveMails(mails: Collection<MailWithInvoice>): List<MailWithInvoice> {
+    suspend fun saveMails(mails: Collection<Email>): List<Email> {
         this.storedMails += mails
 
         storedMails.sortByDescending { it.received }

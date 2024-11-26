@@ -6,7 +6,7 @@ import net.codinux.accounting.domain.common.model.error.ApplicationError
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.tabs.MainScreenTab
-import net.codinux.invoicing.mail.MailWithInvoice
+import net.codinux.invoicing.email.model.Email
 import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
@@ -14,7 +14,7 @@ class UiState : ViewModel() {
     val selectedMainScreenTab = MutableStateFlow(MainScreenTab.Mails)
 
 
-    val mails = MutableStateFlow<List<MailWithInvoice>>(emptyList())
+    val mails = MutableStateFlow<List<Email>>(emptyList())
 
     val mailAccounts = MutableStateFlow<List<MailAccountConfiguration>>(emptyList())
 

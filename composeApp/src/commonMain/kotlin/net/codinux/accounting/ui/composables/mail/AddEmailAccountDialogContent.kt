@@ -17,7 +17,7 @@ import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.ImeNext
-import net.codinux.invoicing.mail.MailAccount
+import net.codinux.invoicing.email.model.EmailAccount
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -48,7 +48,7 @@ fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
 
 
     DisposableEffect(receiveEmails.value, receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value) {
-        account.receiveEmailConfiguration = if (receiveEmails.value == false) null else MailAccount(receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value)
+        account.receiveEmailConfiguration = if (receiveEmails.value == false) null else EmailAccount(receiveEmailsUsername.value, receiveEmailsPassword.value, receiveEmailsImapServerAddress.value, receiveEmailsPort.value)
 
         onDispose { }
     }
@@ -60,7 +60,7 @@ fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
             sendEmailsSmtpServerAddress.value = receiveEmailsImapServerAddress.value
         }
 
-        account.sendEmailConfiguration = if (sendEmails.value == false) null else MailAccount(sendEmailsUsername.value, sendEmailsPassword.value, sendEmailsSmtpServerAddress.value, sendEmailsPort.value)
+        account.sendEmailConfiguration = if (sendEmails.value == false) null else EmailAccount(sendEmailsUsername.value, sendEmailsPassword.value, sendEmailsSmtpServerAddress.value, sendEmailsPort.value)
 
         onDispose { }
     }

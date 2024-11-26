@@ -10,10 +10,10 @@ import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
 import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.handCursor
-import net.codinux.invoicing.mail.MailAttachmentWithEInvoice
+import net.codinux.invoicing.email.model.EmailAttachment
 
 @Composable
-fun MailAttachmentListItem(attachment: MailAttachmentWithEInvoice) {
+fun MailAttachmentListItem(attachment: EmailAttachment) {
 
     var showInvoice by remember { mutableStateOf(false) }
 
@@ -26,8 +26,10 @@ fun MailAttachmentListItem(attachment: MailAttachmentWithEInvoice) {
 
 
     if (showInvoice) {
-        ViewInvoiceDialog(attachment.invoice) {
-            showInvoice = false
+        attachment.invoice?.let { invoice ->
+            ViewInvoiceDialog(invoice) {
+                showInvoice = false
+            }
         }
     }
 }

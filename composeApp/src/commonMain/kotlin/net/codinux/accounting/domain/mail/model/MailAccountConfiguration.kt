@@ -1,8 +1,8 @@
 package net.codinux.accounting.domain.mail.model
 
-import net.codinux.invoicing.mail.MailAccount
+import net.codinux.invoicing.email.model.EmailAccount
 
 data class MailAccountConfiguration(
-    var receiveEmailConfiguration: MailAccount? = null,
-    var sendEmailConfiguration: MailAccount? = null
+    var receiveEmailConfiguration: EmailAccount? = null,
+    var sendEmailConfiguration: EmailAccount? = null
 )

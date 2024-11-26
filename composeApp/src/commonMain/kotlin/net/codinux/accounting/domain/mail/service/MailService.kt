@@ -6,14 +6,15 @@ import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.state.UiState
-import net.codinux.invoicing.mail.MailAccount
-import net.codinux.invoicing.mail.MailReader
-import net.codinux.invoicing.mail.MailWithInvoice
+import net.codinux.invoicing.email.EmailsFetcher
+import net.codinux.invoicing.email.FetchEmailsOptions
+import net.codinux.invoicing.email.model.Email
+import net.codinux.invoicing.email.model.EmailAccount
 import net.codinux.log.logger
 
 class MailService(
     private val uiState: UiState,
-    private val mailReader: MailReader,
+    private val emailsFetcher: EmailsFetcher,
     private val repository: MailRepository
 ) {
 
@@ -35,7 +36,7 @@ class MailService(
 
     private suspend fun loadPersistedMails() = repository.loadMails()
 
-    private suspend fun persistMails(mails: Collection<MailWithInvoice>) {
+    private suspend fun persistMails(mails: Collection<Email>) {
         try {
             uiState.mails.value = repository.saveMails(mails)
         } catch (e: Throwable) {
@@ -46,8 +47,8 @@ class MailService(
     }
 
 
-    private suspend fun fetchEmails(account: MailAccount): List<MailWithInvoice> = try {
-        val result = mailReader.listAllMessagesWithEInvoice(account, true)
+    private suspend fun fetchEmails(account: EmailAccount): List<Email> = try {
+        val result = emailsFetcher.fetchAllEmails(account, FetchEmailsOptions(downloadMessageBody = true))
 
         if (result.overallError != null) {
             uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, result.overallError)

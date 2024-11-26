@@ -8,7 +8,7 @@ import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.service.FormatUtil
 import net.codinux.accounting.ui.state.UiState
-import net.codinux.invoicing.mail.MailReader
+import net.codinux.invoicing.email.EmailsFetcher
 
 object DI {
 
@@ -28,7 +28,7 @@ object DI {
 
     val invoiceService = InvoiceService()
 
-    val mailService = MailService(uiState, MailReader(invoiceReader), MailRepository(jsonMapper))
+    val mailService = MailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper))
 
 
     suspend fun init() {

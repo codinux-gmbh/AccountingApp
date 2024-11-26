@@ -15,12 +15,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.horizontalScroll
-import net.codinux.invoicing.mail.MailWithInvoice
+import net.codinux.invoicing.email.model.Email
 
 private val formatUtil = DI.formatUtil
 
 @Composable
-fun MailListItem(mail: MailWithInvoice) {
+fun MailListItem(mail: Email) {
 
     val backgroundColor = Color.White
 
@@ -34,7 +34,7 @@ fun MailListItem(mail: MailWithInvoice) {
 
             Text(mail.subject, Modifier.weight(1f), fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
-            if (mail.attachmentsWithEInvoice.isNotEmpty()) {
+            if (mail.attachments.isNotEmpty()) {
                 Icon(Icons.Outlined.Attachment, "Mail has attachment(s)", Modifier.padding(horizontal = 4.dp))
             }
 
@@ -48,13 +48,13 @@ fun MailListItem(mail: MailWithInvoice) {
             Text(body, maxLines = 2, overflow = TextOverflow.Ellipsis)
         }
 
-        if (mail.attachmentsWithEInvoice.isNotEmpty()) {
+        if (mail.attachments.isNotEmpty()) {
             Spacer(Modifier.height(6.dp))
 
             Row(Modifier.fillMaxWidth().horizontalScroll(), verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Outlined.Attachment, "Mail has attachment(s)")
 
-                mail.attachmentsWithEInvoice.forEach {
+                mail.attachments.forEach {
                     MailAttachmentListItem(it)
                 }
             }

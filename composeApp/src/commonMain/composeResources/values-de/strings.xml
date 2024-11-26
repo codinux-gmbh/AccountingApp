@@ -24,8 +24,11 @@
 
 
     <!-- errors -->
+    <string name="error_message">Fehlermeldung</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
-    <string name="error_save_to_database">Daten konnten nicht in der Datenbank gespeichert werden</string>
+    <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
+    <string name="error_load_from_database">Daten konnten nicht aus der Datenbank geladen werden</string>
+    <string name="error_save_to_database">Daten konnten nicht in die Datenbank gespeichert werden</string>
 
 
     <!-- mails -->
@@ -36,6 +39,10 @@
 
     <string name="imap_server_address">IMAP Server-Adresse</string>
     <string name="smtp_server_address">SMTP Server-Adresse</string>
+
+    <string name="error_message_could_not_fetch_emails">E-Mails konnten nicht abgeholt werden</string>
+    <string name="error_message_could_not_load_emails">E-Mails konnten nicht aus der Datenbank geladen werden</string>
+    <string name="error_message_could_not_persist_emails">E-Mails konnten nicht in die Datenbank gespeichert werden</string>
 
 
     <!-- invoice -->

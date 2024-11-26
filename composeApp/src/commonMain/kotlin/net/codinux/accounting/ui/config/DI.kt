@@ -28,11 +28,11 @@ object DI {
 
     val invoiceService = InvoiceService()
 
-    val mailService = MailService(MailReader(invoiceReader), MailRepository(jsonMapper))
+    val mailService = MailService(uiState, MailReader(invoiceReader), MailRepository(jsonMapper))
 
 
     suspend fun init() {
-        mailService.init(uiState)
+        mailService.init()
     }
 
 }

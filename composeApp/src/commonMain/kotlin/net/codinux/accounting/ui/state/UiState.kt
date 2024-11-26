@@ -7,10 +7,11 @@ import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.tabs.MainScreenTab
 import net.codinux.invoicing.mail.MailWithInvoice
+import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
 
-    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.Postings)
+    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.Mails)
 
 
     val mails = MutableStateFlow<List<MailWithInvoice>>(emptyList())
@@ -23,14 +24,8 @@ class UiState : ViewModel() {
 
     val applicationErrors = MutableStateFlow<List<ApplicationError>>(emptyList())
 
-    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: String?, exception: Throwable? = null) {
-        val message = errorMessage
-            ?: exception?.message // TODO: find a better way to get error message from exception
-            ?: exception?.let { it::class.simpleName }
-
-        if (message != null) {
-            errorOccurred(ApplicationError(erroneousAction, message, exception))
-        }
+    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, exception: Throwable? = null) {
+        errorOccurred(ApplicationError(erroneousAction, errorMessage, exception))
     }
 
     fun errorOccurred(error: ApplicationError) {

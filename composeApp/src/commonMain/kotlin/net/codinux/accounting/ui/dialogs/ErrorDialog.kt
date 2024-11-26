@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
+import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Config.NewLine
@@ -20,12 +21,12 @@ fun ErrorDialog(
     text: String,
     title: StringResource? = null,
     exception: Throwable? = null,
-    confirmButtonText: String = "OK",
+    confirmButtonText: String = stringResource(Res.string.ok),
     onDismiss: (() -> Unit)? = null
 ) {
 
     val effectiveText = if (exception == null) text else {
-        "$text${NewLine}${NewLine}Fehlermeldung:${NewLine}${exception.stackTraceToString()}"
+        "$text${NewLine}${NewLine}${stringResource(Res.string.error_message)}:${NewLine}${exception.stackTraceToString()}"
     }
 
 
@@ -34,6 +35,7 @@ fun ErrorDialog(
         title = { title?.let {
             HeaderText(stringResource(title), Modifier.fillMaxWidth(), TextAlign.Center)
         } },
+        modifier = Modifier.let { if (exception != null) it.fillMaxWidth(0.95f) else it },
         properties = if (exception == null) DialogProperties() else DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = { onDismiss?.invoke() },
         confirmButton = {

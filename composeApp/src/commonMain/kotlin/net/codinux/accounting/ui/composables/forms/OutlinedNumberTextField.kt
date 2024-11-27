@@ -47,7 +47,8 @@ fun <T : Number> OutlinedNumberTextField(
     onEnterPressed: (() -> Unit)? = null
 ) {
 
-    var enteredValue by remember { mutableStateOf(if (value is BigDecimal) value.toPlainString() else (value?.toString() ?: "")) }
+    // remember(value) is required so that on changes to value, e.g. after restoring historical data, the init method gets called again
+    var enteredValue by remember(value) { mutableStateOf(if (value is BigDecimal) value.toPlainString() else (value?.toString() ?: "")) }
 
     // optionally starts with a minus, followed by any number of numbers. Optionally ends with a decimal separator and any number of numbers.
     val decimalRegex = Regex("^-?\\d*([.,]\\d*)?")

@@ -2,6 +2,7 @@ package net.codinux.accounting.ui.config
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.service.InvoiceService
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.MailService
@@ -35,12 +36,14 @@ object DI {
 
     private val invoiceReader = PlatformDependencies.invoiceReader
 
-    val invoiceService = InvoiceService(PlatformDependencies.invoiceCreator, fileHandler, invoicesDirectory)
+    val invoiceService = InvoiceService(uiState, PlatformDependencies.invoiceCreator, InvoiceRepository(jsonMapper, dataDirectory), fileHandler, invoicesDirectory)
 
     val mailService = MailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper, dataDirectory))
 
 
     suspend fun init() {
+        invoiceService.init()
+
         mailService.init()
     }
 

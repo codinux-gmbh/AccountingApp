@@ -18,6 +18,7 @@ import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.extensions.ImeNext
+import net.codinux.invoicing.model.InvoiceItem
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import java.math.BigDecimal
@@ -34,6 +35,8 @@ class EditableInvoiceItem(
 ) {
     override fun toString() = "$name, $quantity x $unitPrice, $vatRate %"
 }
+
+fun InvoiceItem.toEditable() = EditableInvoiceItem(this.name, this.quantity, this.unit, this.unitPrice, this.vatRate, this.description)
 
 
 private val isCompactScreen = Platform.isMobile
@@ -102,7 +105,7 @@ fun InvoiceItemForm(item: EditableInvoiceItem) {
 @Composable
 private fun InvoiceItemTextField(item: EditableInvoiceItem, property: KMutableProperty<String>, labelResource: StringResource, modifier: Modifier = Modifier.fillMaxWidth()) {
 
-    var enteredValue by remember { mutableStateOf(property.getter.call(item)) }
+    var enteredValue by remember(item) { mutableStateOf(property.getter.call(item)) }
 
     OutlinedTextField(
         enteredValue,

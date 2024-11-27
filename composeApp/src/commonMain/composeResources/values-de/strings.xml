@@ -107,4 +107,6 @@
     <string name="save_pdf">PDF speichern</string>
 
     <string name="error_message_could_not_create_invoice">E-Rechnung konnte nicht erstellt werden</string>
+    <string name="error_message_could_not_load_invoices">Rechnungsdaten konnten nicht aus der Datenbank geladen werden</string>
+    <string name="error_message_could_not_persist_historical_invoice_data">Rechnungs-Autovervollständigungsdaten konnten nicht gespeichert werden</string>
 </resources>

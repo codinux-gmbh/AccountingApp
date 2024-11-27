@@ -8,13 +8,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
+import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.Platform
@@ -57,54 +58,56 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun InvoiceForm() {
+fun InvoiceForm(historicalData: HistoricalInvoiceData) {
 
-    var invoiceDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
+    var invoiceDate by remember { mutableStateOf(LocalDate.now()) }
 
-    var invoiceNumber = rememberSaveable { mutableStateOf("") }
+    var invoiceNumber = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.invoiceNumber ?: "") }
 
-    var issuerName = remember { mutableStateOf("") }
-    var issuerStreet = rememberSaveable { mutableStateOf("") }
-    var issuerPostalCode = rememberSaveable { mutableStateOf("") }
-    var issuerCity = rememberSaveable { mutableStateOf("") }
-    var issuerEmail = rememberSaveable { mutableStateOf("") }
-    var issuerVatId = rememberSaveable { mutableStateOf("") }
+    var issuerName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.name ?: "") }
+    var issuerStreet = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.street ?: "") }
+    var issuerPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.postalCode ?: "") }
+    var issuerCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.city ?: "") }
+    var issuerEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.email ?: "") }
+    var issuerVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.vatId ?: "") }
 
-    var recipientName = rememberSaveable { mutableStateOf("") }
-    var recipientStreet = rememberSaveable { mutableStateOf("") }
-    var recipientPostalCode = rememberSaveable { mutableStateOf("") }
-    var recipientCity = rememberSaveable { mutableStateOf("") }
-    var recipientEmail = rememberSaveable { mutableStateOf("") }
+    var recipientName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.name ?: "") }
+    var recipientStreet = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.street ?: "") }
+    var recipientPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.postalCode ?: "") }
+    var recipientCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.city ?: "") }
+    var recipientEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.email ?: "") }
 
-    var accountHolder = rememberSaveable { mutableStateOf("") }
-    var bankName = rememberSaveable { mutableStateOf("") }
-    var iban = rememberSaveable { mutableStateOf("") }
-    var bic = rememberSaveable { mutableStateOf("") }
+    var accountHolder = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.accountHolderName ?: "") }
+    var bankName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.financialInstitutionName ?: "") }
+    var iban = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.accountNumber ?: "") }
+    var bic = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.bankCode ?: "") }
 
     val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
-    var selectedServiceDateOption by rememberSaveable { mutableStateOf(ServiceDateOptions.ServiceDate) }
-    var serviceDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
-    var servicePeriodMonth by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.month) }
-    var servicePeriodStart by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
-    var servicePeriodEnd by rememberSaveable { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
+    var selectedServiceDateOption by remember(historicalData) { mutableStateOf(historicalData.selectedServiceDateOption) }
+    var serviceDate by remember { mutableStateOf(LocalDate.now()) }
+    var servicePeriodMonth by remember { mutableStateOf(servicePeriodDefaultMonth.month) }
+    var servicePeriodStart by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
+    var servicePeriodEnd by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
 
-    val invoiceItems = remember { mutableStateListOf(EditableInvoiceItem()) }
+    val invoiceItems: MutableList<EditableInvoiceItem> = remember(historicalData) { mutableStateListOf(
+        *(historicalData.lastCreatedInvoice?.items?.map { it.toEditable() }?.toTypedArray() ?: arrayOf(EditableInvoiceItem()))
+    ) }
 
 
-    var selectedEInvoiceXmlFormat by rememberSaveable { mutableStateOf(EInvoiceXmlFormat.FacturX) }
+    var selectedEInvoiceXmlFormat by remember(historicalData) { mutableStateOf(historicalData.selectedEInvoiceXmlFormat) }
 
-    var selectedCreateEInvoiceOption by rememberSaveable { mutableStateOf(CreateEInvoiceOptions.XmlOnly) }
+    var selectedCreateEInvoiceOption by remember(historicalData) { mutableStateOf(historicalData.selectedCreateEInvoiceOption) }
 
-    var generatedEInvoiceXml by rememberSaveable { mutableStateOf<String?>(null) }
+    var generatedEInvoiceXml by remember { mutableStateOf<String?>(null) }
 
-    var showGeneratedEInvoiceXml by rememberSaveable { mutableStateOf(true) }
+    var showGeneratedEInvoiceXml by remember(historicalData) { mutableStateOf(historicalData.showGeneratedEInvoiceXml) }
 
 
     val clipboardManager = LocalClipboardManager.current
 
     val coroutineScope = rememberCoroutineScope()
 
-    var pdfToAttachXmlTo by remember { mutableStateOf<PlatformFile?>(null) } // rememberSaveable { } would crash with PlatformFile
+    var pdfToAttachXmlTo by remember { mutableStateOf<PlatformFile?>(null) }
 
     var createdPdfFile by remember { mutableStateOf<PlatformFile?>(null) }
 
@@ -172,8 +175,10 @@ fun InvoiceForm() {
                         xml
                     }
                 }
+
+                invoiceService.saveHistoricalInvoiceData(HistoricalInvoiceData(invoice, selectedServiceDateOption, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
             } catch (e: Throwable) {
-                Log.error(e) { "Could not create eInvoice" }
+                Log.error(e) { "Could not create or save eInvoice" }
 
                 DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
             }

@@ -73,7 +73,9 @@ fun <T : Number> OutlinedNumberTextField(
             if (newValue.isEmpty() || decimalRegex.matches(newValue)) {
                 enteredValue = newValue
                 try {
-                    onValueChange(mapEnteredString(newValue))
+                    if (newValue.isNotBlank() && newValue != "-") { // "" and "-" are valid values to enter but will not map to a number
+                        onValueChange(mapEnteredString(newValue))
+                    }
                 } catch (e: Throwable) { // e.g. it's valid to enter "-", but this cannot get mapped to a number yet
                     Log.warn(e) { "Could not map value '$newValue' to $valueClass" }
                 }

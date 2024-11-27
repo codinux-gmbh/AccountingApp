@@ -337,16 +337,16 @@ private fun PersonFields(name: MutableState<String>, street: MutableState<String
         InvoiceTextField(city, Res.string.city, Modifier.weight(1f))
     }
 
-    InvoiceTextField(email, Res.string.email)
+    InvoiceTextField(email, Res.string.email, keyboardType = KeyboardType.Email)
 }
 
 @Composable
-private fun InvoiceTextField(value: MutableState<String>, labelResource: StringResource, modifier: Modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding)) {
+private fun InvoiceTextField(value: MutableState<String>, labelResource: StringResource, modifier: Modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding), keyboardType: KeyboardType = KeyboardType.Text) {
     OutlinedTextField(
         value.value,
         { value.value = it },
         modifier,
         label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        keyboardOptions = KeyboardOptions.ImeNext
+        keyboardOptions = KeyboardOptions.ImeNext.copy(keyboardType = keyboardType)
     )
 }

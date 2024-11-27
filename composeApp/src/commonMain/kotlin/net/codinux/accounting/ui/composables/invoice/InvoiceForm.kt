@@ -97,6 +97,8 @@ fun InvoiceForm() {
 
     var generatedEInvoiceXml by rememberSaveable { mutableStateOf<String?>(null) }
 
+    var showGeneratedEInvoiceXml by rememberSaveable { mutableStateOf(true) }
+
 
     val clipboardManager = LocalClipboardManager.current
 
@@ -287,11 +289,17 @@ fun InvoiceForm() {
                             Text(stringResource(Res.string.save_pdf), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                         }
                     }
+
+                    Spacer(Modifier.weight(1f))
+
+                    BooleanOption(stringResource(Res.string.show_xml), showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
                 }
 
-                Column(Modifier.rememberHorizontalScroll().background(Colors.MainBackgroundColor)) {
-                    SelectionContainer(modifier = Modifier.fillMaxSize()) {
-                        Text(generatedEInvoiceXml, fontFamily = FontFamily.Monospace)
+                if (showGeneratedEInvoiceXml) {
+                    Column(Modifier.rememberHorizontalScroll().background(Colors.MainBackgroundColor)) {
+                        SelectionContainer(modifier = Modifier.fillMaxSize()) {
+                            Text(generatedEInvoiceXml, fontFamily = FontFamily.Monospace)
+                        }
                     }
                 }
             }

@@ -2,6 +2,7 @@ package net.codinux.accounting.platform
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import io.github.vinceglb.filekit.core.PlatformFile
 import java.io.InputStream
 import java.io.OutputStream
@@ -9,6 +10,9 @@ import java.io.OutputStream
 actual class PlatformFileHandler(
     private val applicationContext: Context
 ) {
+
+    actual fun fromPath(path: String) = PlatformFile(Uri.parse(path), applicationContext)
+
 
     actual fun getInputStream(file: PlatformFile): InputStream? =
         applicationContext.contentResolver.openInputStream(file.uri)

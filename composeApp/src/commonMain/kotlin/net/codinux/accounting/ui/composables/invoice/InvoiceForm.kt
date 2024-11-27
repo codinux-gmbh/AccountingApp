@@ -22,6 +22,7 @@ import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
+import io.github.vinceglb.filekit.core.baseName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
@@ -101,15 +102,15 @@ fun InvoiceForm() {
 
     val coroutineScope = rememberCoroutineScope()
 
-    val saveXmlFileLauncher = rememberFileSaverLauncher { }
+    var pdfToAttachXmlTo by remember { mutableStateOf<PlatformFile?>(null) } // rememberSaveable { } would crash with PlatformFile
 
-    var pdfToAttachXmlTo by rememberSaveable { mutableStateOf<PlatformFile?>(null) }
+    var createdPdfFile by remember { mutableStateOf<PlatformFile?>(null) }
 
-    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.file?.parent) { selectedFile ->
+    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent) { selectedFile ->
         pdfToAttachXmlTo = selectedFile
     }
 
-    val savePdfFileLauncher = rememberFileSaverLauncher { }
+    val saveFileLauncher = rememberFileSaverLauncher { }
 
     val isLargeDisplay = Platform.isDesktop
 
@@ -136,7 +137,7 @@ fun InvoiceForm() {
     }
 
     fun parentDirAndFilename(file: PlatformFile?): String? =
-        file?.let { File(it.file.parentFile, it.name).path }
+        file?.let { File(it.parentDirName, it.name).path }
 
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
 
@@ -161,7 +162,13 @@ fun InvoiceForm() {
                 generatedEInvoiceXml = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat).let { (xml, pdf) ->
+                        createdPdfFile = pdf
+                        coroutineScope.launch {
+                            DI.fileHandler.openFileInDefaultViewer(pdf)
+                        }
+                        xml
+                    }
                 }
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create eInvoice" }
@@ -255,11 +262,6 @@ fun InvoiceForm() {
                 }
             }
 
-            // will return soon ...
-//            TextButton(onClick = { savePdfFileLauncher.launch(null, "invoice-${invoiceNumber.value}", "pdf", pdfOutputFile?.let { File(it).parent }) }, Modifier.fillMaxWidth()) {
-//                Text(stringResource(Res.string.select_pdf_output_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
-//            }
-
             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Select(stringResource(Res.string.e_invoice_xml_format), EInvoiceXmlFormat.entries, selectedEInvoiceXmlFormat, { selectedEInvoiceXmlFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
 
@@ -276,8 +278,14 @@ fun InvoiceForm() {
                         Text(stringResource(Res.string.copy), Modifier.width(100.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }
 
-                    TextButton(onClick = { saveXmlFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${invoiceNumber.value}", "xml") }) {
-                        Text(stringResource(Res.string.save), Modifier.width(100.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${invoiceNumber.value}", "xml") }) {
+                        Text(stringResource(Res.string.save_xml), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    }
+
+                    createdPdfFile?.let { createdPdfFile ->
+                        TextButton(onClick = { saveFileLauncher.launch(null, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
+                            Text(stringResource(Res.string.save_pdf), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                        }
                     }
                 }
 

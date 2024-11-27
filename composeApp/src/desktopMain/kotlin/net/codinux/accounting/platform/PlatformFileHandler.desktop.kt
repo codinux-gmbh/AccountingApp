@@ -3,12 +3,16 @@ package net.codinux.accounting.platform
 import io.github.vinceglb.filekit.core.PlatformFile
 import net.codinux.log.logger
 import java.awt.Desktop
+import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 
 actual class PlatformFileHandler {
 
     private val log by logger()
+
+
+    actual fun fromPath(path: String) = PlatformFile(File(path))
 
 
     actual fun getInputStream(file: PlatformFile): InputStream? = file.file.inputStream()

@@ -33,7 +33,7 @@ class InvoiceService(
         return xml
     }
 
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): String {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): Pair<String, PlatformFile> {
         val xml = createEInvoiceXml(invoice, format)
 
         val directory = File(invoicesDirectory, invoice.invoicingDate.year.toString()).also { it.mkdirs() }
@@ -44,7 +44,7 @@ class InvoiceService(
 
         File(directory, filename + ".xml").writeText(xml)
 
-        return xml
+        return Pair(xml, fileHandler.fromPath(pdfFile.absolutePath))
     }
 
 }

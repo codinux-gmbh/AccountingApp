@@ -6,11 +6,18 @@ import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.invoicing.creation.EInvoiceCreator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
+import java.io.File
+import java.time.format.DateTimeFormatter
 
 class InvoiceService(
     private val creator: EInvoiceCreator = PlatformDependencies.invoiceCreator,
-    private val fileHandler: PlatformFileHandler = PlatformDependencies.fileHandler
+    private val fileHandler: PlatformFileHandler = PlatformDependencies.fileHandler,
+    private val invoicesDirectory: File
 ) {
+
+    companion object {
+        private val InvoicingDateFilenameFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+    }
 
     fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): String = when (format) {
         EInvoiceXmlFormat.FacturX -> creator.createFacturXXml(invoice)
@@ -26,10 +33,16 @@ class InvoiceService(
         return xml
     }
 
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat, outputFile: PlatformFile): String {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): String {
         val xml = createEInvoiceXml(invoice, format)
 
-        creator.createPdfWithAttachedXml(xml, format, fileHandler.getOutputStream(outputFile)!!)
+        val directory = File(invoicesDirectory, invoice.invoicingDate.year.toString()).also { it.mkdirs() }
+        val filename = "${InvoicingDateFilenameFormat.format(invoice.invoicingDate)} ${invoice.invoiceNumber} ${invoice.recipient.name}"
+        val pdfFile = File(directory, filename + ".pdf")
+
+        creator.createPdfWithAttachedXml(xml, format, pdfFile)
+
+        File(directory, filename + ".xml").writeText(xml)
 
         return xml
     }

@@ -7,7 +7,7 @@ import java.io.File
 
 expect object PlatformDependencies {
 
-    val storageDir: File
+    val applicationDataDirectory: File
 
     val fileHandler: PlatformFileHandler
 

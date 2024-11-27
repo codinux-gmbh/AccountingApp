@@ -103,9 +103,13 @@ fun InvoiceForm() {
 
     val saveXmlFileLauncher = rememberFileSaverLauncher { }
 
-    var pdfToAttachXmlTo by rememberSaveable { mutableStateOf<String?>(null) }
+    var pdfToAttachXmlTo by rememberSaveable { mutableStateOf<PlatformFile?>(null) }
 
-    var pdfOutputFile by rememberSaveable { mutableStateOf<String?>(null) }
+    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.file?.parent) { selectedFile ->
+        pdfToAttachXmlTo = selectedFile
+    }
+
+    val savePdfFileLauncher = rememberFileSaverLauncher { }
 
     val isLargeDisplay = Platform.isDesktop
 
@@ -131,6 +135,9 @@ fun InvoiceForm() {
         CreateEInvoiceOptions.CreateXmlAndPdf -> stringResource(Res.string.create_xml_and_pdf)
     }
 
+    fun parentDirAndFilename(file: PlatformFile?): String? =
+        file?.let { File(it.file.parentFile, it.name).path }
+
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
 
     fun createInvoice(): Invoice {
@@ -146,66 +153,21 @@ fun InvoiceForm() {
         )
     }
 
-    fun createEInvoiceXml() {
+    fun createEInvoice() {
         coroutineScope.launch(Dispatchers.Default) {
             try {
                 val invoice = createInvoice()
 
-                // TODO: care for iOS display bug of long texts
-                generatedEInvoiceXml = invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
+                generatedEInvoiceXml = when (selectedCreateEInvoiceOption) {
+                    CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
+                    CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)
+                }
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create eInvoice" }
 
                 DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
             }
-        }
-    }
-
-    fun attachInvoiceToExistingPdf(pdfFile: PlatformFile) {
-        coroutineScope.launch(Dispatchers.Default) {
-            try {
-                pdfToAttachXmlTo = pdfFile.path
-
-                val invoice = createInvoice()
-
-                generatedEInvoiceXml = invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfFile)
-
-                DI.fileHandler.openFileInDefaultViewer(pdfFile)
-            } catch (e: Throwable) {
-                Log.error(e) { "Could not create eInvoice" }
-
-                DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
-            }
-        }
-    }
-
-    fun createEInvoicePdf(pdfFile: PlatformFile) {
-        coroutineScope.launch(Dispatchers.Default) {
-            try {
-                pdfOutputFile = pdfFile.path
-
-                val invoice = createInvoice()
-
-                generatedEInvoiceXml = invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat, pdfFile)
-
-                DI.fileHandler.openFileInDefaultViewer(pdfFile)
-            } catch (e: Throwable) {
-                Log.error(e) { "Could not create eInvoice" }
-
-                DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
-            }
-        }
-    }
-
-    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.let { File(it).parent }) { selectedFile ->
-        selectedFile?.let {
-            attachInvoiceToExistingPdf(it)
-        }
-    }
-
-    val savePdfFileLauncher = rememberFileSaverLauncher { selectedFile ->
-        selectedFile?.let {
-            createEInvoicePdf(it)
         }
     }
 
@@ -288,31 +250,22 @@ fun InvoiceForm() {
 
                 if (pdfToAttachXmlTo != null) {
                     Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-                        Text(pdfToAttachXmlTo ?: "", Modifier.padding(horizontal = 4.dp))
+                        Text(parentDirAndFilename(pdfToAttachXmlTo) ?: "", Modifier.padding(horizontal = 4.dp))
                     }
                 }
             }
 
-            if (selectedCreateEInvoiceOption == CreateEInvoiceOptions.CreateXmlAndPdf) {
-                Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(onClick = { savePdfFileLauncher.launch(null, "invoice-${invoiceNumber.value}", "pdf", pdfOutputFile?.let { File(it).parent }) }, Modifier.fillMaxWidth()) {
-                        Text(stringResource(Res.string.select_pdf_output_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
-                    }
-                }
-
-                if (pdfOutputFile != null) {
-                    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-                        Text(pdfOutputFile ?: "", Modifier.padding(horizontal = 4.dp))
-                    }
-                }
-            }
+            // will return soon ...
+//            TextButton(onClick = { savePdfFileLauncher.launch(null, "invoice-${invoiceNumber.value}", "pdf", pdfOutputFile?.let { File(it).parent }) }, Modifier.fillMaxWidth()) {
+//                Text(stringResource(Res.string.select_pdf_output_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+//            }
 
             Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                 Select(stringResource(Res.string.e_invoice_xml_format), EInvoiceXmlFormat.entries, selectedEInvoiceXmlFormat, { selectedEInvoiceXmlFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
 
                 Spacer(Modifier.width(1.dp).weight(1f))
 
-                TextButton({ createEInvoiceXml() }) {
+                TextButton({ createEInvoice() }) {
                     Text(stringResource(Res.string.create), color = Colors.CodinuxSecondaryColor)
                 }
             }

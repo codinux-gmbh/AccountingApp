@@ -27,21 +27,25 @@ object DI {
 
     val applicationDataDirectory = PlatformDependencies.applicationDataDirectory
 
-    val dataDirectory = File(applicationDataDirectory, "data").also {
-        it.mkdirs()
-    }
+    val dataDirectory = ensureDirectory(applicationDataDirectory, "data")
+
+    val invoicesDirectory = ensureDirectory(applicationDataDirectory, "invoices")
 
     val fileHandler = PlatformDependencies.fileHandler
 
     private val invoiceReader = PlatformDependencies.invoiceReader
 
-    val invoiceService = InvoiceService(PlatformDependencies.invoiceCreator, fileHandler)
+    val invoiceService = InvoiceService(PlatformDependencies.invoiceCreator, fileHandler, invoicesDirectory)
 
     val mailService = MailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper, dataDirectory))
 
 
     suspend fun init() {
         mailService.init()
+    }
+
+    private fun ensureDirectory(parentDir: File, directoryName: String): File = File(parentDir, directoryName).also {
+        it.mkdirs()
     }
 
 }

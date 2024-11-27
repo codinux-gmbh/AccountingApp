@@ -101,8 +101,7 @@
     <string name="create_only_xml">Nur XML erzeugen</string>
     <string name="create_xml_and_attach_to_existing_pdf">XML erzeugen und an existierende PDF anhängen</string>
     <string name="create_xml_and_pdf">XML und PDF erzeugen</string>
-    <string name="select_existing_pdf_to_attach_e_invoice_xml_to">PDF auswählen an das E-Rechnung angehängt werden soll ...</string>
-    <string name="select_pdf_output_file">PDF Pfad auswählen ...</string>
+    <string name="select_existing_pdf_to_attach_e_invoice_xml_to">PDF auswählen an die E-Rechnung angehängt werden soll ...</string>
 
     <string name="error_message_could_not_create_invoice">E-Rechnung konnte nicht erstellt werden</string>
 </resources>

@@ -6,15 +6,12 @@ import net.codinux.accounting.domain.invoice.service.PdfAttachmentReaderAndWrite
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.invoicing.creation.EInvoiceCreator
 import net.codinux.invoicing.reader.EInvoiceReader
-import java.io.File
 
 actual object PlatformDependencies {
 
     private val applicationContext = AndroidContext.applicationContext
 
-    actual val storageDir = File(applicationContext.filesDir, "data").also {
-        it.mkdirs()
-    }
+    actual val applicationDataDirectory = applicationContext.filesDir
 
     actual val fileHandler = PlatformFileHandler(applicationContext)
 

@@ -3,7 +3,6 @@ package net.codinux.accounting.domain.mail.dataaccess
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
-import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.config.DI
 import net.codinux.invoicing.email.model.Email
 import net.codinux.log.logger
@@ -11,14 +10,14 @@ import java.io.File
 
 class MailRepository(
     private val jsonMapper: ObjectMapper = DI.jsonMapper,
-    storageDirectory: File = PlatformDependencies.storageDir
+    dataDirectory: File
 ) {
 
-    private val mailsFile = File(storageDirectory, "mails.json")
+    private val mailsFile = File(dataDirectory, "mails.json")
 
     private var storedMails: MutableList<Email> = mutableListOf()
 
-    private val mailAccountsFile = File(storageDirectory, "mailAccounts.json")
+    private val mailAccountsFile = File(dataDirectory, "mailAccounts.json")
 
     private var storedMailAccounts: MutableList<MailAccountConfiguration> = mutableListOf()
 

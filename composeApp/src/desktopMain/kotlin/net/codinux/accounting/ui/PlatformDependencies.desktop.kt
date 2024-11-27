@@ -7,9 +7,7 @@ import java.io.File
 
 actual object PlatformDependencies {
 
-    actual val storageDir = File(File(System.getProperty("user.home"), ".accounting"), "data").also {
-        it.mkdirs()
-    }
+    actual val applicationDataDirectory = File(System.getProperty("user.home"), ".accounting")
 
     actual val fileHandler = PlatformFileHandler()
 

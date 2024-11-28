@@ -5,4 +5,6 @@ import net.codinux.invoicing.email.model.EmailAccount
 data class MailAccountConfiguration(
     var receiveEmailConfiguration: EmailAccount? = null,
     var sendEmailConfiguration: EmailAccount? = null
-)
+) {
+    var id: Long? = null
+}

@@ -57,6 +57,8 @@ class MailRepository(
         }
 
     suspend fun saveMailAccount(account: MailAccountConfiguration): List<MailAccountConfiguration> {
+        account.id = this.storedMailAccounts.size.toLong()
+
         this.storedMailAccounts += account
 
         jsonMapper.writeValue(mailAccountsFile, storedMailAccounts)

@@ -1,12 +1,15 @@
 package net.codinux.accounting
 
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.*
 
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         title = "Accounting",
+        state = WindowState(position = WindowPosition(Alignment.Center), size = DpSize(1000.dp, 800.dp)),
     ) {
         App()
     }

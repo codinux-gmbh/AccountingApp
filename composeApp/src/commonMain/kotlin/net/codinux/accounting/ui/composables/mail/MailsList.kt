@@ -15,7 +15,7 @@ fun MailsList(mails: List<Email>) {
 
     LazyColumn(Modifier.padding(vertical = Style.MainScreenTabVerticalPadding)) {
         itemsIndexed(mails) { index, mail ->
-            key(mail.messageId) {
+            key(mail.id) {
                 MailListItem(mail)
 
                 if (index < mails.size - 1) {

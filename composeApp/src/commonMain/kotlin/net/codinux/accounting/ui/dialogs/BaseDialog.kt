@@ -54,7 +54,7 @@ fun BaseDialog(
 
 
     Dialog(onDismissRequest = onDismiss, if (overwriteDefaultWidth) properties.copy(usePlatformDefaultWidth = false) else properties) {
-        RoundedCornersCard(Modifier.let { if (overwriteDefaultWidth) it.fillMaxWidth(0.95f) else it }, backgroundColor = backgroundColor) {
+        RoundedCornersCard(Modifier.let { if (overwriteDefaultWidth) it.fillMaxWidth(0.95f).fillMaxHeight(0.97f) else it }, backgroundColor = backgroundColor) {
             Column(Modifier.applyPlatformSpecificPaddingIf(overwriteDefaultWidth && isKeyboardVisible, 8.dp).background(backgroundColor).padding(horizontal = 8.dp).verticalScroll()) {
 
                 if (titleBarVisible) {

@@ -8,9 +8,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
+import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.handCursor
 import net.codinux.invoicing.email.model.EmailAttachment
+
+
+private val formatUtil = DI.formatUtil
 
 @Composable
 fun MailAttachmentListItem(attachment: EmailAttachment) {
@@ -19,7 +23,12 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
 
 
     RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp).clickableWithHandCursorIf(attachment.invoice != null) { showInvoice = true }) {
-        Text(attachment.filename, Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
+        var displayText = attachment.filename
+        attachment.invoice?.totalAmounts?.duePayableAmount?.let { total ->
+            displayText += " (${formatUtil.formatAmountOfMoney(total, true)})"
+        }
+
+        Text(displayText, Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
     }
 
 

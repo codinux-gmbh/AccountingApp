@@ -1,7 +1,6 @@
 package net.codinux.accounting.ui.preview
 
-import net.codinux.invoicing.email.model.Email
-import net.codinux.invoicing.email.model.EmailAttachment
+import net.codinux.invoicing.email.model.*
 import net.codinux.invoicing.model.BankDetails
 import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.model.InvoiceItem
@@ -83,9 +82,10 @@ object DataGenerator {
     ) = InvoiceItem(name, quantity, unit, unitPrice, vatRate, description)
 
 
-    fun createMail(invoice: Invoice, messageNumber: Int = 1) =
-        Email(invoice.sender.email, "Invoice No. ${invoice.invoiceNumber}", invoice.invoicingDate.atStartOfDay(ZoneId.systemDefault()).toInstant(), invoice.invoicingDate.atStartOfDay(ZoneId.systemDefault()).toInstant(), messageNumber, false, "Sehr geehrter Herr Sowieso,\nanbei unsere völlig überzogene Rechnung für unsere nutzlosen Dienstleistung mit Bitte um Überweisung innerhalb 24 Minuten.\nGezeichnet,\nHerr Geier", null, listOf(
-            EmailAttachment("invoice.pdf", "application/pdf", invoice, File("."))
-        ))
+    fun createMail(invoice: Invoice, messageId: Long = 1) =
+        Email(messageId, invoice.sender.email?.let { EmailAddress(it) }, "Invoice No. ${invoice.invoiceNumber}", invoice.invoicingDate.atStartOfDay(ZoneId.systemDefault()).toInstant(), emptyList(),
+            plainTextBody = "Sehr geehrter Herr Sowieso,\nanbei unsere völlig überzogene Rechnung für unsere nutzlosen Dienstleistung mit Bitte um Überweisung innerhalb 24 Minuten.\nGezeichnet,\nHerr Geier",
+            attachments = listOf(EmailAttachment("invoice.pdf", "pdf", null, ContentDisposition.Attachment, "application/pdf", null, invoice, null))
+        )
 
 }

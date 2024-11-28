@@ -28,7 +28,7 @@ fun MailListItem(mail: Email) {
     // height 64 dp: first row has 24 dp (due to attachment icon), 6 dp vertical spacing, and each line in the second row has 17 dp. But don't know why + 1 dp is needed so that second body line gets displayed
     Column(Modifier.fillMaxWidth().background(backgroundColor).padding(horizontal = 6.dp, vertical = 6.dp).heightIn(min = 65.dp, max = 101.dp)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(mail.sender ?: "", Modifier.widthIn(20.dp, 175.dp), fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(mail.sender?.toString() ?: "", Modifier.widthIn(20.dp, 175.dp), fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
             Text("-", Modifier.padding(horizontal = 4.dp))
 
@@ -38,7 +38,7 @@ fun MailListItem(mail: Email) {
                 Icon(Icons.Outlined.Attachment, "Mail has attachment(s)", Modifier.padding(horizontal = 4.dp))
             }
 
-            Text(formatUtil.formatDateToDayAndMonth(mail.sent ?: mail.received), fontWeight = FontWeight.Bold)
+            Text(formatUtil.formatDateToDayAndMonth(mail.date), fontWeight = FontWeight.Bold)
         }
 
         Spacer(Modifier.height(6.dp))

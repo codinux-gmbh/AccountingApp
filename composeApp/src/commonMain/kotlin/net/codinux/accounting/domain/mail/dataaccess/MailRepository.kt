@@ -39,7 +39,7 @@ class MailRepository(
     suspend fun saveMails(mails: Collection<Email>): List<Email> {
         this.storedMails += mails
 
-        storedMails.sortByDescending { it.received }
+        storedMails.sortByDescending { it.messageId }
 
         jsonMapper.writeValue(mailsFile, storedMails)
 

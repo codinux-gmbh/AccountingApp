@@ -18,9 +18,7 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
     var showInvoice by remember { mutableStateOf(false) }
 
 
-    RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp)
-        // remove indication so that not ugly grey background gets displayed on hover
-        .let { if (attachment.invoice != null) it.handCursor().clickable(null, indication = null) { showInvoice = true } else it }) {
+    RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp).clickableWithHandCursorIf(attachment.invoice != null) { showInvoice = true }) {
         Text(attachment.filename, Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
     }
 
@@ -33,3 +31,11 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
         }
     }
 }
+
+private fun Modifier.clickableWithHandCursorIf(condition: Boolean, onClick: () -> Unit): Modifier =
+    if (condition) {
+        // remove indication so that not ugly grey background gets displayed on hover
+        this.handCursor().clickable(null, indication = null, onClick = onClick)
+    } else {
+        this
+    }

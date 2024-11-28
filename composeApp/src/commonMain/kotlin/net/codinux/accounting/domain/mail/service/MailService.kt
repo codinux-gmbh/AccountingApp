@@ -34,9 +34,10 @@ class MailService(
     }
 
 
+    // errors handled by init()
     private suspend fun loadPersistedMails() = repository.loadMails()
 
-    private suspend fun persistMails(mails: Collection<Email>) {
+    private suspend fun persistEmails(mails: Collection<Email>) {
         try {
             uiState.mails.value = repository.saveMails(mails)
         } catch (e: Throwable) {
@@ -47,7 +48,7 @@ class MailService(
     }
 
 
-    private suspend fun fetchEmails(account: EmailAccount): List<Email> = try {
+    private suspend fun fetchAndPersistEmails(account: EmailAccount): List<Email> = try {
         val result = emailsFetcher.fetchAllEmails(account, FetchEmailsOptions(downloadMessageBody = true))
 
         if (result.overallError != null) {
@@ -57,7 +58,13 @@ class MailService(
             uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, error.error)
         }
 
-        result.emails
+        val newEmails = result.emails
+
+        if (newEmails.isNotEmpty()) {
+            persistEmails(newEmails)
+        }
+
+        newEmails
     } catch (e: Throwable) {
         log.error(e) { "Could not fetch emails of account $account" }
 
@@ -67,6 +74,7 @@ class MailService(
     }
 
 
+    // errors handled by init()
     private suspend fun loadPersistedMailAccounts() = repository.loadMailAccounts()
 
     suspend fun addMailAccount(account: MailAccountConfiguration): Boolean {
@@ -74,9 +82,7 @@ class MailService(
             DI.uiState.mailAccounts.value = repository.saveMailAccount(account)
 
             account.receiveEmailConfiguration?.let {
-                val newMails = fetchEmails(it)
-
-                persistMails(newMails)
+                fetchAndPersistEmails(it)
             }
 
             return true

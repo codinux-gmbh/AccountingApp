@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.horizontalScroll
-import net.codinux.invoicing.email.model.Email
 
 private val formatUtil = DI.formatUtil
 
@@ -44,7 +44,7 @@ fun MailListItem(mail: Email) {
         Spacer(Modifier.height(6.dp))
 
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            val body = (mail.plainTextOrHtmlBody ?: "").replace("\r", "").replace("\n", " ")
+            val body = (mail.bodyPreviewText).replace("\r", "").replace("\n", " ")
             Text(body, maxLines = 2, overflow = TextOverflow.Ellipsis)
         }
 

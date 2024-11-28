@@ -1,14 +1,15 @@
 package net.codinux.accounting.domain.mail.service
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.state.UiState
-import net.codinux.invoicing.email.EmailsFetcher
-import net.codinux.invoicing.email.FetchEmailsOptions
-import net.codinux.invoicing.email.model.Email
+import net.codinux.invoicing.email.*
 import net.codinux.invoicing.email.model.EmailAccount
 import net.codinux.log.logger
 
@@ -37,9 +38,9 @@ class MailService(
     // errors handled by init()
     private suspend fun loadPersistedMails() = repository.loadMails()
 
-    private suspend fun persistEmails(mails: Collection<Email>) {
+    private suspend fun persistEmails(account: MailAccountConfiguration, emails: Collection<net.codinux.invoicing.email.model.Email>) {
         try {
-            uiState.mails.value = repository.saveMails(mails)
+            uiState.mails.value = repository.saveMails(account, emails)
         } catch (e: Throwable) {
             log.error(e) { "Could not persist emails" }
 
@@ -48,8 +49,8 @@ class MailService(
     }
 
 
-    private suspend fun fetchAndPersistEmails(account: EmailAccount): List<Email> = try {
-        val result = emailsFetcher.fetchAllEmails(account, FetchEmailsOptions(downloadMessageBody = true))
+    private suspend fun fetchAndPersistEmails(configuration: MailAccountConfiguration, fetchAccount: EmailAccount) = try {
+        val result = emailsFetcher.fetchAllEmails(fetchAccount, FetchEmailsOptions(downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true))
 
         if (result.overallError != null) {
             uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, result.overallError)
@@ -61,16 +62,13 @@ class MailService(
         val newEmails = result.emails
 
         if (newEmails.isNotEmpty()) {
-            persistEmails(newEmails)
+            persistEmails(configuration, newEmails)
         }
-
-        newEmails
+        Unit
     } catch (e: Throwable) {
-        log.error(e) { "Could not fetch emails of account $account" }
+        log.error(e) { "Could not fetch emails of account $fetchAccount" }
 
         uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, e)
-
-        emptyList()
     }
 
 
@@ -82,7 +80,7 @@ class MailService(
             DI.uiState.mailAccounts.value = repository.saveMailAccount(account)
 
             account.receiveEmailConfiguration?.let {
-                fetchAndPersistEmails(it)
+                fetchAndPersistEmails(account, it)
             }
 
             return true

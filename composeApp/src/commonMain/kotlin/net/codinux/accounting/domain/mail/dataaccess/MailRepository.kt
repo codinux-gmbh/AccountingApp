@@ -2,9 +2,9 @@ package net.codinux.accounting.domain.mail.dataaccess
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.config.DI
-import net.codinux.invoicing.email.model.Email
 import net.codinux.log.logger
 import java.io.File
 
@@ -36,8 +36,10 @@ class MailRepository(
             emptyList()
         }
 
-    suspend fun saveMails(mails: Collection<Email>): List<Email> {
-        this.storedMails += mails
+    suspend fun saveMails(account: MailAccountConfiguration, emails: Collection<net.codinux.invoicing.email.model.Email>): List<Email> {
+        val mapped = emails.mapIndexed { index, it -> Email((storedMails.size + index).toLong(), account.id!!, it.messageId, it.sender, it.subject, it.date, it.plainTextOrHtmlBody!!, it.contentLanguage, it.isEncrypted, it.attachments) }
+
+        this.storedMails += mapped
 
         storedMails.sortByDescending { it.messageId }
 

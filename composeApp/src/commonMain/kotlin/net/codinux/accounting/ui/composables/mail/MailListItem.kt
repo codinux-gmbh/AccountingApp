@@ -51,7 +51,7 @@ fun MailListItem(mail: Email) {
                 Icon(Icons.Outlined.Attachment, "Mail has attachment(s)")
             }
 
-            mail.attachments.forEach {
+            mail.attachments.sortedWith(compareByDescending<EmailAttachment> { it.containsEInvoice }.thenBy { it.filename.lowercase() } ).forEach {
                 MailAttachmentListItem(it)
             }
         }

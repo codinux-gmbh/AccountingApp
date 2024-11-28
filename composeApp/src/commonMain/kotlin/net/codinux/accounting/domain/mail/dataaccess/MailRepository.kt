@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.config.DI
-import net.codinux.log.logger
 import java.io.File
 
 class MailRepository(
@@ -20,8 +19,6 @@ class MailRepository(
     private val mailAccountsFile = File(dataDirectory, "mailAccounts.json")
 
     private var storedMailAccounts: MutableList<MailAccountConfiguration> = mutableListOf()
-
-    private val log by logger()
 
 
     /**

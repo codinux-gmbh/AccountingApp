@@ -1,8 +1,6 @@
 package net.codinux.accounting.domain.mail.service
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
@@ -24,9 +22,18 @@ class MailService(
 
     suspend fun init() {
         try {
-            uiState.mails.value = loadPersistedMails()
+            val allEmails = loadPersistedMails()
+            uiState.mails.emit(allEmails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
 
-            uiState.mailAccounts.value = loadPersistedMailAccounts()
+            uiState.mailAccounts.emit(loadPersistedMailAccounts())
+
+            uiState.mailAccounts.value.forEach { account ->
+                withContext(Dispatchers.IO) {
+                    val lastRetrievedMessageId = allEmails.filter { it.emailAccountId == account.id }.maxOfOrNull { it.messageId }
+
+                    launch { fetchAndListenToNewMails(account, lastRetrievedMessageId, this) }
+                }
+            }
         } catch (e: Throwable) {
             log.error(e) { "Could not initialize persisted email data" }
 
@@ -40,17 +47,38 @@ class MailService(
 
     private suspend fun persistEmails(account: MailAccountConfiguration, emails: Collection<net.codinux.invoicing.email.model.Email>) {
         try {
-            uiState.mails.value = repository.saveMails(account, emails)
+            val allMails = repository.saveMails(account, emails)
+            uiState.mails.emit(allMails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
         } catch (e: Throwable) {
-            log.error(e) { "Could not persist emails" }
+            log.error(e) { "Could not persist emails of account ${account.receiveEmailConfiguration}" }
 
             uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_emails, e)
         }
     }
 
 
-    private suspend fun fetchAndPersistEmails(configuration: MailAccountConfiguration, fetchAccount: EmailAccount) = try {
-        val result = emailsFetcher.fetchAllEmails(fetchAccount, FetchEmailsOptions(downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true))
+    private suspend fun fetchAndListenToNewMails(configuration: MailAccountConfiguration, lastRetrievedMessageId: Long? = null, scope: CoroutineScope) {
+        configuration.receiveEmailConfiguration?.let { account ->
+             fetchAndPersistEmails(configuration, account, lastRetrievedMessageId)
+
+            try {
+                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true, onError = { handleFetchEmailError(it) }) { newEmail ->
+                    scope.launch {
+                        persistEmails(configuration, listOf(newEmail))
+                    }
+                })
+            } catch (e: Throwable) {
+                log.error(e) { "Listening to new emails failed" }
+            }
+        }
+    }
+
+    private fun handleFetchEmailError(error: FetchEmailError) {
+
+    }
+
+    private suspend fun fetchAndPersistEmails(configuration: MailAccountConfiguration, fetchAccount: EmailAccount, lastRetrievedMessageId: Long? = null) = try {
+        val result = emailsFetcher.fetchAllEmails(fetchAccount, FetchEmailsOptions(lastRetrievedMessageId, downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true))
 
         if (result.overallError != null) {
             uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, result.overallError)

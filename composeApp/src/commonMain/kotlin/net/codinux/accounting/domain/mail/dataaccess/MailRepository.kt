@@ -38,7 +38,7 @@ class MailRepository(
 
         this.storedMails += mapped
 
-        storedMails.sortByDescending { it.messageId }
+        storedMails.sortByDescending { it.date }
 
         jsonMapper.writeValue(mailsFile, storedMails)
 

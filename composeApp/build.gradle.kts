@@ -98,6 +98,7 @@ kotlin {
         
         androidMain.dependencies {
             implementation(libs.pdfBoxAndroid)
+            implementation(libs.pdfBoxAndroidTextExtractor)
 
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)

@@ -5,6 +5,7 @@ kotlinx-coroutines = "1.9.0"
 
 invoicing="0.5.0-SNAPSHOT"
 pdfBoxAndroid="2.0.27.0"
+pdfBoxAndroidTextExtractor="0.6.1"
 
 jackson="2.18.1"
 
@@ -33,6 +34,7 @@ kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 invoicing = { module = "net.codinux.invoicing:e-invoice", version.ref = "invoicing" }
 
 pdfBoxAndroid = { module = "com.tom-roush:pdfbox-android", version.ref = "pdfBoxAndroid" }
+pdfBoxAndroidTextExtractor = { module = "net.dankito.text.extraction:pdfbox-android-text-extractor", version.ref = "pdfBoxAndroidTextExtractor" }
 
 jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version.ref = "jackson" }
 jackson-datetime = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson" }

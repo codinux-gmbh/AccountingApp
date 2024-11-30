@@ -16,5 +16,8 @@ fun ApplicationErrorDialog(error: ApplicationError, onDismiss: (() -> Unit)? = n
         ErroneousAction.SaveToDatabase -> Res.string.error_save_to_database
     }
 
-    ErrorDialog(stringResource(error.errorMessage), title, error.exception, onDismiss = onDismiss)
+    val errorMessage = if (error.errorMessageArguments.isNotEmpty()) stringResource(error.errorMessage, *error.errorMessageArguments.toTypedArray())
+                    else stringResource(error.errorMessage)
+
+    ErrorDialog(errorMessage, title, error.exception, onDismiss = onDismiss)
 }

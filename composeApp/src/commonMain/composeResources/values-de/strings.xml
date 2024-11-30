@@ -42,6 +42,7 @@
     <string name="imap_server_address">IMAP Server-Adresse</string>
     <string name="smtp_server_address">SMTP Server-Adresse</string>
 
+    <string name="error_message_checking_email_account_credentials_failed">Verbindung zu E-Mail Konto fehlgeschlagen: %s</string>
     <string name="error_message_could_not_fetch_emails">E-Mails konnten nicht abgeholt werden</string>
     <string name="error_message_could_not_load_emails">E-Mails konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_message_could_not_persist_emails">E-Mails konnten nicht in die Datenbank gespeichert werden</string>

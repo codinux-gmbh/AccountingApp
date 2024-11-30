@@ -8,7 +8,7 @@ import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.*
-import net.codinux.invoicing.email.model.EmailAccount
+import net.codinux.invoicing.email.model.*
 import net.codinux.log.logger
 
 class MailService(
@@ -105,6 +105,14 @@ class MailService(
 
     suspend fun addMailAccount(account: MailAccountConfiguration): Boolean {
         try {
+            val checkCredentialsResult = emailsFetcher.checkCredentials(account.receiveEmailConfiguration ?: account.sendEmailConfiguration!!)
+            if (checkCredentialsResult != CheckCredentialsResult.Ok) {
+                // TODO: translate checkCredentialsResult
+                uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_checking_email_account_credentials_failed, null, listOf(checkCredentialsResult))
+
+                return false
+            }
+
             DI.uiState.emails.mailAccounts.value = repository.saveMailAccount(account)
 
             account.receiveEmailConfiguration?.let {

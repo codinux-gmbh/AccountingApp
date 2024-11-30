@@ -42,6 +42,7 @@
     <string name="imap_server_address">IMAP server address</string>
     <string name="smtp_server_address">SMTP server address</string>
 
+    <string name="error_message_checking_email_account_credentials_failed">Could not connect to email account: %s</string>
     <string name="error_message_could_not_fetch_emails">Could not fetch emails</string>
     <string name="error_message_could_not_load_emails">Could not load emails</string>
     <string name="error_message_could_not_persist_emails">Could not persist emails</string>

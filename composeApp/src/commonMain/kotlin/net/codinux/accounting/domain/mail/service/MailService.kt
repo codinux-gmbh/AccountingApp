@@ -103,7 +103,7 @@ class MailService(
     // errors handled by init()
     private suspend fun loadPersistedMailAccounts() = repository.loadMailAccounts()
 
-    suspend fun addMailAccount(account: MailAccountConfiguration): Boolean {
+    suspend fun addMailAccount(account: MailAccountConfiguration, scope: CoroutineScope): Boolean {
         try {
             val checkCredentialsResult = emailsFetcher.checkCredentials(account.receiveEmailConfiguration ?: account.sendEmailConfiguration!!)
             if (checkCredentialsResult != CheckCredentialsResult.Ok) {
@@ -116,7 +116,9 @@ class MailService(
             DI.uiState.emails.mailAccounts.value = repository.saveMailAccount(account)
 
             account.receiveEmailConfiguration?.let {
-                fetchAndPersistEmails(account, it)
+                scope.launch(Dispatchers.IO) {
+                    fetchAndPersistEmails(account, it)
+                }
             }
 
             return true

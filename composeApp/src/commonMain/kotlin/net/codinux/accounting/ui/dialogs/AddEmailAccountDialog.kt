@@ -31,7 +31,7 @@ fun AddEmailAccountDialog() {
         coroutineScope.launch(Dispatchers.IO) {
             isAddingAccount = true
 
-            val successful = mailService.addMailAccount(account)
+            val successful = mailService.addMailAccount(account, coroutineScope)
             if (successful) {
                 dismiss()
             }

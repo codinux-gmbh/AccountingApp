@@ -15,9 +15,9 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun HorizontalLabelledValue(label: StringResource, value: String?, labelWidth: Dp = 150.dp, valueTextColor: Color? = null, labelMaxLines: Int = 1) {
+fun HorizontalLabelledValue(label: StringResource, value: String?, labelWidth: Dp = 150.dp, valueTextColor: Color? = null, topPadding: Dp = 12.dp, bottomPadding: Dp = 4.dp, labelMaxLines: Int = 1) {
 
-    Row(Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().padding(top = topPadding, bottom = bottomPadding), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(label),
             modifier = Modifier.width(labelWidth),

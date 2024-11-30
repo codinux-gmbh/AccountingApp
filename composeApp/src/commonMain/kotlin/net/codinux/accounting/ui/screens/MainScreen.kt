@@ -6,7 +6,8 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -29,11 +30,21 @@ fun MainScreen() {
         bottomBar = { BottomToolbar(selectedTab) },
         backgroundColor = Colors.MainBackgroundColor,
         floatingActionButton = if (selectedTab != MainScreenTab.Mails) { { } } else { {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = { uiState.emails.showAddMailAccountDialog.value = true }
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Zeigt ein Menü zum Hinzufügen eines E-Mail Kontos, ... an")
+            Column {
+                FloatingActionButton(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    shape = CircleShape,
+                    onClick = { uiState.emails.showAddMailAccountDialog.value = true }
+                ) {
+                    Icon(Icons.Outlined.Add, contentDescription = "Zeigt ein Menü zum Hinzufügen eines E-Mail Kontos, ... an")
+                }
+
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = { uiState.emails.showOnlyEmailsWithInvoices.value = !uiState.emails.showOnlyEmailsWithInvoices.value }
+                ) {
+                    Icon(Icons.Outlined.FilterAlt, contentDescription = "Zeigt ein Menü zum Hinzufügen eines E-Mail Kontos, ... an")
+                }
             }
         } },
     ) { scaffoldPadding -> // scaffoldPadding contains e.g. the size of the bottom toolbar

@@ -24,7 +24,7 @@ fun AddEmailAccountDialog() {
 
 
     fun dismiss() {
-        DI.uiState.showAddMailAccountDialog.value = false
+        DI.uiState.emails.showAddMailAccountDialog.value = false
     }
 
     fun addMailAccount() {

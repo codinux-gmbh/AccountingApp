@@ -23,11 +23,11 @@ class MailService(
     suspend fun init() {
         try {
             val allEmails = loadPersistedMails()
-            uiState.mails.emit(allEmails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
+            uiState.emails.mails.emit(allEmails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
 
-            uiState.mailAccounts.emit(loadPersistedMailAccounts())
+            uiState.emails.mailAccounts.emit(loadPersistedMailAccounts())
 
-            uiState.mailAccounts.value.forEach { account ->
+            uiState.emails.mailAccounts.value.forEach { account ->
                 withContext(Dispatchers.IO) {
                     val lastRetrievedMessageId = allEmails.filter { it.emailAccountId == account.id }.maxOfOrNull { it.messageId }
 
@@ -48,7 +48,7 @@ class MailService(
     private suspend fun persistEmails(account: MailAccountConfiguration, emails: Collection<net.codinux.invoicing.email.model.Email>) {
         try {
             val allMails = repository.saveMails(account, emails)
-            uiState.mails.emit(allMails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
+            uiState.emails.mails.emit(allMails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
         } catch (e: Throwable) {
             log.error(e) { "Could not persist emails of account ${account.receiveEmailConfiguration}" }
 
@@ -105,7 +105,7 @@ class MailService(
 
     suspend fun addMailAccount(account: MailAccountConfiguration): Boolean {
         try {
-            DI.uiState.mailAccounts.value = repository.saveMailAccount(account)
+            DI.uiState.emails.mailAccounts.value = repository.saveMailAccount(account)
 
             account.receiveEmailConfiguration?.let {
                 fetchAndPersistEmails(account, it)

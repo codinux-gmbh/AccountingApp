@@ -10,9 +10,9 @@ import net.codinux.accounting.ui.state.UiState
 @Composable
 fun MailsTab(uiState: UiState) {
 
-    val mails = uiState.mails.collectAsState().value
+    val mails = uiState.emails.mails.collectAsState().value
 
-    val showAddMailAccountDialog by uiState.showAddMailAccountDialog.collectAsState()
+    val showAddMailAccountDialog by uiState.emails.showAddMailAccountDialog.collectAsState()
 
 
     MailsList(mails)

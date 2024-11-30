@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import net.codinux.accounting.domain.common.model.error.ApplicationError
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
-import net.codinux.accounting.domain.mail.model.Email
-import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.tabs.MainScreenTab
 import org.jetbrains.compose.resources.StringResource
 
@@ -18,12 +16,7 @@ class UiState : ViewModel() {
     val historicalInvoiceData = MutableStateFlow(HistoricalInvoiceData())
 
 
-    val mails = MutableStateFlow<List<Email>>(emptyList())
-
-    val mailAccounts = MutableStateFlow<List<MailAccountConfiguration>>(emptyList())
-
-
-    val showAddMailAccountDialog = MutableStateFlow(false)
+    val emails = EmailsUiState()
 
 
     val applicationErrors = MutableStateFlow<List<ApplicationError>>(emptyList())

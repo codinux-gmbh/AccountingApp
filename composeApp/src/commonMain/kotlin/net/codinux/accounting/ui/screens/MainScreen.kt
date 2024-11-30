@@ -31,7 +31,7 @@ fun MainScreen() {
         floatingActionButton = if (selectedTab != MainScreenTab.Mails) { { } } else { {
             FloatingActionButton(
                 shape = CircleShape,
-                onClick = { uiState.showAddMailAccountDialog.value = true }
+                onClick = { uiState.emails.showAddMailAccountDialog.value = true }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "Zeigt ein Menü zum Hinzufügen eines E-Mail Kontos, ... an")
             }

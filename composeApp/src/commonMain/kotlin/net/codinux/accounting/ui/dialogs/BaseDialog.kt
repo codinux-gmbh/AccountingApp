@@ -55,7 +55,7 @@ fun BaseDialog(
 
     Dialog(onDismissRequest = onDismiss, if (overwriteDefaultWidth) properties.copy(usePlatformDefaultWidth = false) else properties) {
         RoundedCornersCard(Modifier.let { if (overwriteDefaultWidth) it.fillMaxWidth(0.95f).fillMaxHeight(0.97f) else it }, backgroundColor = backgroundColor) {
-            Column(Modifier.applyPlatformSpecificPaddingIf(overwriteDefaultWidth && isKeyboardVisible, 8.dp).background(backgroundColor).padding(horizontal = 8.dp).verticalScroll()) {
+            Column(Modifier.applyPlatformSpecificPaddingIf(overwriteDefaultWidth && isKeyboardVisible, 8.dp).background(backgroundColor).padding(horizontal = 8.dp)) {
 
                 if (titleBarVisible) {
                     Row(Modifier.fillMaxWidth().padding(bottom = 8.dp).height(32.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -67,9 +67,11 @@ fun BaseDialog(
                     }
                 }
 
-                content()
+                Row(Modifier.fillMaxWidth().weight(0.5f, false)) {
+                    content()
+                }
 
-                Row(Modifier.fillMaxWidth().padding(top = 8.dp)) {
+                Row(Modifier.fillMaxWidth().padding(top = 8.dp).height(32.dp)) {
                     TextButton(onClick = onDismiss, Modifier.weight(0.5f)) {
                         Text(dismissButtonTitle, color = Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                     }

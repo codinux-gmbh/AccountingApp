@@ -20,6 +20,7 @@ import net.codinux.accounting.ui.composables.forms.SectionHeader
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -36,7 +37,7 @@ private val formatUtil = DI.formatUtil
 fun InvoiceView(invoice: Invoice) {
 
     SelectionContainer(Modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().verticalScroll()) {
             Section(Res.string.invoice_details) {
                 HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatShortDate(invoice.invoicingDate))
 

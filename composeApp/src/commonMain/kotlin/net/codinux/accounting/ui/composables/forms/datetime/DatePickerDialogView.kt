@@ -39,7 +39,7 @@ fun DatePickerDialogView(selectedDate: LocalDate? = null, adjacentMonths: Int = 
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .background(Color.White),
     ) {
         val state = rememberCalendarState(

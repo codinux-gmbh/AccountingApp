@@ -109,4 +109,11 @@
     <string name="error_message_could_not_create_invoice">E-Rechnung konnte nicht erstellt werden</string>
     <string name="error_message_could_not_load_invoices">Rechnungsdaten konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_message_could_not_persist_historical_invoice_data">Rechnungs-Autovervollständigungsdaten konnten nicht gespeichert werden</string>
+
+
+    <!-- PDF invoice data -->
+    <string name="possible_invoice_data">Eventuelle Rechnungsdaten</string>
+    <string name="possible_invoice_data_explanation">Die folgenden Daten wurden versucht automatisch aus der PDF zu lesen. Wir gewähren keine Sicherheit, dass diese Angaben stimmen.</string>
+
+    <string name="show_pdf_text">PDF text anzeigen</string>
 </resources>

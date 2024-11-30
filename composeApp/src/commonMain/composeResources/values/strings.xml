@@ -109,4 +109,11 @@
     <string name="error_message_could_not_create_invoice">Could not create invoice</string>
     <string name="error_message_could_not_load_invoices">Could not load invoice data from database</string>
     <string name="error_message_could_not_persist_historical_invoice_data">Could not persist historical invoice data</string>
+
+
+    <!-- PDF invoice data -->
+    <string name="possible_invoice_data">Possible invoice data</string>
+    <string name="possible_invoice_data_explanation">The following data was attempted to be read automatically from the PDF. We cannot guarantee that this information is correct.</string>
+
+    <string name="show_pdf_text">Show PDF text</string>
 </resources>

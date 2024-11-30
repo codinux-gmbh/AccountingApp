@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.dialogs.PdfInvoiceDataDialog
 import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.handCursor
 import net.codinux.invoicing.email.model.EmailAttachment
@@ -22,10 +23,15 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
     var showInvoice by remember { mutableStateOf(false) }
 
 
-    RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp).clickableWithHandCursorIf(attachment.invoice != null) { showInvoice = true }) {
+    RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp).clickableWithHandCursorIf(attachment.containsEInvoice || attachment.couldExtractPdfInvoiceData) { showInvoice = true }) {
         var displayText = attachment.filename
         attachment.invoice?.totalAmounts?.duePayableAmount?.let { total ->
             displayText += " (${formatUtil.formatAmountOfMoney(total, true)})"
+        }
+        if (attachment.invoice?.totalAmounts?.duePayableAmount == null) {
+            attachment.pdfInvoiceData?.potentialTotalAmount?.let { total ->
+                displayText += " (${formatUtil.formatAmountOfMoney(total.amount, true)})"
+            }
         }
 
         Text(displayText, Modifier.padding(horizontal = 8.dp, vertical = 4.dp))
@@ -36,6 +42,14 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
         attachment.invoice?.let { invoice ->
             ViewInvoiceDialog(invoice) {
                 showInvoice = false
+            }
+        }
+
+        if (attachment.invoice == null) {
+            attachment.pdfInvoiceData?.let { pdfInvoiceData ->
+                PdfInvoiceDataDialog(pdfInvoiceData) {
+                    showInvoice = false
+                }
             }
         }
     }

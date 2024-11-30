@@ -2,7 +2,6 @@ package net.codinux.accounting.ui.composables.forms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
@@ -18,20 +17,26 @@ import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun BooleanOption(label: StringResource, isChecked: Boolean, enabled: Boolean = true, textColor: Color = Color.Unspecified, checkChanged: (Boolean) -> Unit) =
-    BooleanOption(stringResource(label), isChecked, enabled, textColor, checkChanged)
+fun BooleanOption(label: StringResource, isChecked: Boolean, switchBeforeLabel: Boolean = true, enabled: Boolean = true, textColor: Color = Color.Unspecified, checkChanged: (Boolean) -> Unit) =
+    BooleanOption(stringResource(label), isChecked, switchBeforeLabel, enabled, textColor, checkChanged)
 
 @Composable
-fun BooleanOption(label: String, isChecked: Boolean, enabled: Boolean = true, textColor: Color = Color.Unspecified, checkChanged: (Boolean) -> Unit) =
-    BooleanOption({ Text(label, Modifier.clickable { checkChanged(!!!isChecked) }.padding(start = 6.dp), color = textColor) }, isChecked, enabled, checkChanged)
+fun BooleanOption(label: String, isChecked: Boolean, switchBeforeLabel: Boolean = true, enabled: Boolean = true, textColor: Color = Color.Unspecified, checkChanged: (Boolean) -> Unit) =
+    BooleanOption({ Text(label, Modifier.clickable { checkChanged(!!!isChecked) }.padding(start = 6.dp), color = textColor) }, isChecked, switchBeforeLabel, enabled, checkChanged)
 
 @Composable
-fun BooleanOption(label: @Composable () -> Unit, isChecked: Boolean, enabled: Boolean = true, checkChanged: (Boolean) -> Unit) {
+fun BooleanOption(label: @Composable () -> Unit, isChecked: Boolean, switchBeforeLabel: Boolean = true, enabled: Boolean = true, checkChanged: (Boolean) -> Unit) {
 
     Row(verticalAlignment = Alignment.CenterVertically) {
+        if (switchBeforeLabel == false) {
+            label()
+        }
+
         Switch(isChecked, checkChanged, enabled = enabled, colors = SwitchDefaults.colors(checkedThumbColor = Colors.CodinuxSecondaryColor))
 
-        label()
+        if (switchBeforeLabel) {
+            label()
+        }
     }
 
 }

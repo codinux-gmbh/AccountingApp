@@ -31,7 +31,11 @@ class PdfAttachmentReaderAndWriterAndroid(
             PDDocument.load(pdfFileInputStream).use { document ->
                 val names = PDDocumentNameDictionary(document.documentCatalog)
                 val embeddedFiles = names.embeddedFiles
-                val fileMap = (embeddedFiles.names ?: emptyMap())
+                if (embeddedFiles ==  null || embeddedFiles.names == null) {
+                    return emptyList()
+                }
+
+                val fileMap = embeddedFiles.names
 
                 return fileMap.mapNotNull { (name, fileSpec) ->
                     if (name.lowercase().endsWith(".xml") || fileSpec.filename.lowercase().endsWith(".xml")) {

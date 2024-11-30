@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.horizontalScroll
+import net.codinux.invoicing.email.model.EmailAttachment
 
 private val formatUtil = DI.formatUtil
 
@@ -39,14 +40,14 @@ fun MailListItem(mail: Email) {
 
         Spacer(Modifier.height(6.dp))
 
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().weight(1f), verticalAlignment = Alignment.CenterVertically) {
             val body = (mail.bodyPreviewText).replace("\r", "").replace("\n", " ")
             Text(body, maxLines = 2, overflow = TextOverflow.Ellipsis)
         }
 
         Spacer(Modifier.height(6.dp))
 
-        Row(Modifier.fillMaxWidth().horizontalScroll(), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().height(36.dp).horizontalScroll(), verticalAlignment = Alignment.CenterVertically) {
             if (mail.attachments.isNotEmpty()) {
                 Icon(Icons.Outlined.Attachment, "Mail has attachment(s)")
             }

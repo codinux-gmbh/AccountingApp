@@ -298,7 +298,7 @@ fun InvoiceForm(historicalData: HistoricalInvoiceData) {
 
                     Spacer(Modifier.weight(1f))
 
-                    BooleanOption(stringResource(Res.string.show_xml), showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
+                    BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
                 }
 
                 if (showGeneratedEInvoiceXml) {

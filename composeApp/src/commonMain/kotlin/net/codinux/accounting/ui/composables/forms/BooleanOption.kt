@@ -13,11 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.config.Colors
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
+fun BooleanOption(label: StringResource, isChecked: Boolean, enabled: Boolean = true, textColor: Color = Color.Unspecified, checkChanged: (Boolean) -> Unit) =
+    BooleanOption(stringResource(label), isChecked, enabled, textColor, checkChanged)
+
+@Composable
 fun BooleanOption(label: String, isChecked: Boolean, enabled: Boolean = true, textColor: Color = Color.Unspecified, checkChanged: (Boolean) -> Unit) =
-    BooleanOption({ Text(label, Modifier.fillMaxWidth().clickable { checkChanged(!!!isChecked) }.padding(start = 6.dp), color = textColor) }, isChecked, enabled, checkChanged)
+    BooleanOption({ Text(label, Modifier.clickable { checkChanged(!!!isChecked) }.padding(start = 6.dp), color = textColor) }, isChecked, enabled, checkChanged)
 
 @Composable
 fun BooleanOption(label: @Composable () -> Unit, isChecked: Boolean, enabled: Boolean = true, checkChanged: (Boolean) -> Unit) {

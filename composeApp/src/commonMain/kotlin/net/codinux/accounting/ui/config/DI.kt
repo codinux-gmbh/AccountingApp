@@ -29,7 +29,7 @@ object DI {
 
     val applicationDataDirectory = PlatformDependencies.applicationDataDirectory
 
-    val dataDirectory = ensureDirectory(applicationDataDirectory, "data")
+    val databaseDirectory = ensureDirectory(applicationDataDirectory, "db")
 
     val invoicesDirectory = ensureDirectory(applicationDataDirectory, "invoices")
 
@@ -37,11 +37,11 @@ object DI {
 
     private val invoiceReader = PlatformDependencies.invoiceReader
 
-    val invoiceService = InvoiceService(uiState, PlatformDependencies.invoiceCreator, InvoiceRepository(jsonMapper, dataDirectory), fileHandler, invoicesDirectory)
+    val invoiceService = InvoiceService(uiState, PlatformDependencies.invoiceCreator, InvoiceRepository(jsonMapper, databaseDirectory), fileHandler, invoicesDirectory)
 
     private val invoiceDataExtractor = PdfInvoiceDataExtractor(PlatformDependencies.pdfTextExtractor)
 
-    val mailService = MailService(uiState, EmailsFetcher(invoiceReader, invoiceDataExtractor), MailRepository(jsonMapper, dataDirectory))
+    val mailService = MailService(uiState, EmailsFetcher(invoiceReader, invoiceDataExtractor), MailRepository(jsonMapper, databaseDirectory))
 
 
     suspend fun init() {

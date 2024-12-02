@@ -12,6 +12,7 @@ fun ApplicationErrorDialog(error: ApplicationError, onDismiss: (() -> Unit)? = n
         ErroneousAction.CreateInvoice -> Res.string.error_create_invoice
         ErroneousAction.AddEmailAccount -> Res.string.error_add_email_account
         ErroneousAction.FetchEmails -> Res.string.error_fetch_emails
+        ErroneousAction.ListenForNewEmails -> Res.string.error_listening_for_new_emails
         ErroneousAction.LoadFromDatabase -> Res.string.error_load_from_database
         ErroneousAction.SaveToDatabase -> Res.string.error_save_to_database
     }

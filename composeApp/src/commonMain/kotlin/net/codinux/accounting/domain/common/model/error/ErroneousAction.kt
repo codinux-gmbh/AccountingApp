@@ -5,6 +5,7 @@ enum class ErroneousAction {
 
     AddEmailAccount,
     FetchEmails,
+    ListenForNewEmails,
 
     LoadFromDatabase,
     SaveToDatabase

@@ -29,6 +29,7 @@
     <string name="error_create_invoice">Invoice could not be created</string>
     <string name="error_add_email_account">Email account could not be added</string>
     <string name="error_fetch_emails">Failed fetching emails</string>
+    <string name="error_listening_for_new_emails">Failed listening for new emails</string>
     <string name="error_load_from_database">Failed loading data from database</string>
     <string name="error_save_to_database">Failed writing data to database</string>
 
@@ -44,6 +45,7 @@
 
     <string name="error_message_checking_email_account_credentials_failed">Could not connect to email account: %s</string>
     <string name="error_message_could_not_fetch_emails">Could not fetch emails</string>
+    <string name="error_message_could_not_listen_for_new_emails">Listening for new emails failed for account '%s'.\nTo restart listening for new emails application has to be restarted.</string>
     <string name="error_message_could_not_load_emails">Could not load emails</string>
     <string name="error_message_could_not_persist_emails">Could not persist emails</string>
 

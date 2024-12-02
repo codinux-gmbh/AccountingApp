@@ -21,8 +21,8 @@ class UiState : ViewModel() {
 
     val applicationErrors = MutableStateFlow<List<ApplicationError>>(emptyList())
 
-    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, exception: Throwable? = null, errorMessageArguments: Collection<Any> = emptyList()) {
-        errorOccurred(ApplicationError(erroneousAction, errorMessage, exception, errorMessageArguments))
+    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, exception: Throwable? = null, vararg errorMessageArguments: Any) {
+        errorOccurred(ApplicationError(erroneousAction, errorMessage, exception, errorMessageArguments.toList()))
     }
 
     fun errorOccurred(error: ApplicationError) {

@@ -71,7 +71,7 @@ class MailService(
             }
 
             try {
-                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(onError = { handleFetchEmailError(it) }) { newEmail ->
+                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(onError = { handleFetchEmailError(account, it) }) { newEmail ->
                     coroutineScope.launch {
                         persistEmails(configuration, listOf(newEmail))
                     }
@@ -82,8 +82,10 @@ class MailService(
         }
     }
 
-    private fun handleFetchEmailError(error: FetchEmailError) {
-
+    private fun handleFetchEmailError(account: EmailAccount, error: FetchEmailError) {
+        if (error.type == FetchEmailErrorType.ListenForNewEmails) {
+            uiState.errorOccurred(ErroneousAction.ListenForNewEmails, Res.string.error_message_could_not_listen_for_new_emails, error.error, account.toString())
+        }
     }
 
     private suspend fun fetchAndPersistEmails(configuration: MailAccountConfiguration, fetchAccount: EmailAccount, lastRetrievedMessageId: Long? = null) = try {

@@ -29,6 +29,7 @@
     <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
     <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
+    <string name="error_listening_for_new_emails">Fehler beim Lauschen auf neue E-Mails</string>
     <string name="error_load_from_database">Daten konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_save_to_database">Daten konnten nicht in die Datenbank gespeichert werden</string>
 
@@ -44,6 +45,7 @@
 
     <string name="error_message_checking_email_account_credentials_failed">Verbindung zu E-Mail Konto fehlgeschlagen: %s</string>
     <string name="error_message_could_not_fetch_emails">E-Mails konnten nicht abgeholt werden</string>
+    <string name="error_message_could_not_listen_for_new_emails">Kontinuierliches Empfangen neuer E-Mails wurde abgebrochen für Konto '%s'.\nUm wieder im Hintergrund auf neue E-Mails zu lauschen muss die App neu gestartet werden.</string>
     <string name="error_message_could_not_load_emails">E-Mails konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_message_could_not_persist_emails">E-Mails konnten nicht in die Datenbank gespeichert werden</string>
 

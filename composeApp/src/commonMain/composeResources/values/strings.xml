@@ -55,10 +55,10 @@
     <string name="invoice_date">Invoice date</string>
     <string name="invoice_number">Invoice number</string>
 
-    <string name="issuer">Issuer</string>
-    <string name="recipient">Recipient</string>
+    <string name="supplier">Supplier</string>
+    <string name="customer">Customer</string>
 
-    <string name="street">Street</string>
+    <string name="address">Address</string>
     <string name="additional_address_line">Additional address line</string>
     <string name="postal_code">Postal code</string>
     <string name="city">City</string>

@@ -82,8 +82,8 @@ class InvoiceService(
     suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): Pair<String, PlatformFile> {
         val xml = createEInvoiceXml(invoice, format)
 
-        val directory = File(invoicesDirectory, invoice.invoicingDate.year.toString()).also { it.mkdirs() }
-        val filename = "${InvoicingDateFilenameFormat.format(invoice.invoicingDate)} ${invoice.invoiceNumber} ${invoice.recipient.name}"
+        val directory = File(invoicesDirectory, invoice.details.invoiceDate.year.toString()).also { it.mkdirs() }
+        val filename = "${InvoicingDateFilenameFormat.format(invoice.details.invoiceDate)} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
         val pdfFile = File(directory, filename + ".pdf")
 
         creator.createPdfWithAttachedXml(xml, format, pdfFile)

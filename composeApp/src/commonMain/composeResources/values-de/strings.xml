@@ -55,10 +55,10 @@
     <string name="invoice_date">Rechnungsdatum</string>
     <string name="invoice_number">Rechnungsnummer</string>
 
-    <string name="issuer">Leistungserbringer</string>
-    <string name="recipient">Leistungsempfänger</string>
+    <string name="supplier">Leistungserbringer</string>
+    <string name="customer">Leistungsempfänger</string>
 
-    <string name="street">Straße</string>
+    <string name="address">Straße</string>
     <string name="additional_address_line">Zusätzliche Adresszeile</string>
     <string name="postal_code">Postleitzahl</string>
     <string name="city">Ort</string>

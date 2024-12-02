@@ -39,17 +39,17 @@ fun InvoiceView(invoice: Invoice) {
     SelectionContainer(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().verticalScroll()) {
             Section(Res.string.invoice_details) {
-                HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatShortDate(invoice.invoicingDate))
+                HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatShortDate(invoice.details.invoiceDate))
 
-                HorizontalLabelledValue(Res.string.invoice_number, invoice.invoiceNumber)
+                HorizontalLabelledValue(Res.string.invoice_number, invoice.details.invoiceNumber)
             }
 
-            Section(Res.string.issuer) {
-                PersonFields(invoice.sender)
+            Section(Res.string.supplier) {
+                PersonFields(invoice.supplier)
             }
 
-            Section(Res.string.recipient) {
-                PersonFields(invoice.recipient)
+            Section(Res.string.customer) {
+                PersonFields(invoice.customer)
             }
 
             Section(Res.string.description_of_services) {
@@ -61,10 +61,10 @@ fun InvoiceView(invoice: Invoice) {
                     InvoiceItemView(index, item)
                 }
 
-                invoice.totalAmounts?.let { TotalAmountsView(it) }
+                invoice.totals?.let { TotalAmountsView(it) }
             }
 
-            invoice.sender.bankDetails?.let { BankDetailsView(it, invoice.sender) }
+            invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice.supplier) }
         }
     }
 
@@ -85,7 +85,7 @@ private fun Section(titleResource: StringResource, content: @Composable () -> Un
 private fun PersonFields(party: Party) {
     HorizontalLabelledValue(Res.string.name, party.name)
 
-    HorizontalLabelledValue(Res.string.street, party.street)
+    HorizontalLabelledValue(Res.string.address, party.address)
 
     HorizontalLabelledValue(Res.string.city, "${party.postalCode} ${party.city}${party.countryIsoCode?.let { ", $it" } ?: ""}")
 
@@ -114,21 +114,21 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem) {
 }
 
 @Composable
-private fun TotalAmountsView(amounts: TotalAmounts) {
+private fun TotalAmountsView(totals: TotalAmounts) {
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
         Divider(Modifier.width(185.dp), Colors.ItemDividerColor)
     }
 
-    AmountRow(Res.string.net_amount, amounts.lineTotalAmount)
-    AmountRow(Res.string.vat_amount, amounts.taxTotalAmount)
+    AmountRow(Res.string.net_amount, totals.lineTotalAmount)
+    AmountRow(Res.string.vat_amount, totals.taxTotalAmount)
 
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
         Divider(Modifier.width(160.dp), Color.Black, 1.5.dp)
     }
 
-    AmountRow(Res.string.total_amount, amounts.duePayableAmount)
+    AmountRow(Res.string.total_amount, totals.duePayableAmount)
 }
 
 @Composable

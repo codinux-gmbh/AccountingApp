@@ -62,28 +62,28 @@ fun InvoiceForm(historicalData: HistoricalInvoiceData) {
 
     var invoiceDate by remember { mutableStateOf(LocalDate.now()) }
 
-    var invoiceNumber = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.invoiceNumber ?: "") }
+    var invoiceNumber = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.details?.invoiceNumber ?: "") }
 
-    var issuerName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.name ?: "") }
-    var issuerStreet = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.street ?: "") }
-    var issuerPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.postalCode ?: "") }
-    var issuerCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.city ?: "") }
-    var issuerEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.email ?: "") }
-    var issuerPhone = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.phone ?: "") }
-    var issuerVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.vatId ?: "") }
+    var supplierName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.name ?: "") }
+    var supplierAddress = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.address ?: "") }
+    var supplierPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.postalCode ?: "") }
+    var supplierCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.city ?: "") }
+    var supplierEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.email ?: "") }
+    var supplierPhone = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.phone ?: "") }
+    var supplierVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.vatId ?: "") }
 
-    var recipientName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.name ?: "") }
-    var recipientStreet = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.street ?: "") }
-    var recipientPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.postalCode ?: "") }
-    var recipientCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.city ?: "") }
-    var recipientEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.email ?: "") }
-    var recipientPhone = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.phone ?: "") }
-    var recipientVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.recipient?.vatId ?: "") }
+    var customerName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.name ?: "") }
+    var customerAddress = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.address ?: "") }
+    var customerPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.postalCode ?: "") }
+    var customerCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.city ?: "") }
+    var customerEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.email ?: "") }
+    var customerPhone = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.phone ?: "") }
+    var customerVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.vatId ?: "") }
 
-    var accountHolder = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.accountHolderName ?: "") }
-    var bankName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.financialInstitutionName ?: "") }
-    var iban = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.accountNumber ?: "") }
-    var bic = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.sender?.bankDetails?.bankCode ?: "") }
+    var accountHolder = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.accountHolderName ?: "") }
+    var bankName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.financialInstitutionName ?: "") }
+    var iban = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.accountNumber ?: "") }
+    var bic = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.bankCode ?: "") }
 
     val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
     var selectedServiceDateOption by remember(historicalData) { mutableStateOf(historicalData.selectedServiceDateOption) }
@@ -150,13 +150,13 @@ fun InvoiceForm(historicalData: HistoricalInvoiceData) {
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
 
     fun createInvoice(): Invoice {
-        val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: issuerName.value, nullable(bankName))
+        val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: supplierName.value, nullable(bankName))
         else null
 
         return Invoice(
-            invoiceNumber.value, invoiceDate,
-            Party(issuerName.value, issuerStreet.value, issuerPostalCode.value, issuerCity.value, null, nullable(issuerVatId), nullable(issuerEmail), nullable(issuerPhone), bankDetails = bankDetails),
-            Party(recipientName.value, recipientStreet.value, recipientPostalCode.value, recipientCity.value, null, null, nullable(recipientEmail), nullable(recipientPhone)),
+            InvoiceDetails(invoiceNumber.value, invoiceDate),
+            Party(supplierName.value, supplierAddress.value, null, supplierPostalCode.value, supplierCity.value, null, nullable(supplierVatId), nullable(supplierEmail), nullable(supplierPhone), bankDetails = bankDetails),
+            Party(customerName.value, customerAddress.value, null, customerPostalCode.value, customerCity.value, null, null, nullable(customerEmail), nullable(customerPhone)),
             // TODO: add check if values are really set and add error handling
             invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
         )
@@ -200,12 +200,12 @@ fun InvoiceForm(historicalData: HistoricalInvoiceData) {
             }
         }
 
-        Section(Res.string.issuer) {
-            PersonFields(issuerName, issuerStreet, issuerPostalCode, issuerCity, issuerEmail, issuerPhone, issuerVatId)
+        Section(Res.string.supplier) {
+            PersonFields(supplierName, supplierAddress, supplierPostalCode, supplierCity, supplierEmail, supplierPhone, supplierVatId)
         }
 
-        Section(Res.string.recipient) {
-            PersonFields(recipientName, recipientStreet, recipientPostalCode, recipientCity, recipientEmail, recipientPhone, recipientVatId)
+        Section(Res.string.customer) {
+            PersonFields(customerName, customerAddress, customerPostalCode, customerCity, customerEmail, customerPhone, customerVatId)
         }
 
         Section(Res.string.description_of_services) {
@@ -327,10 +327,10 @@ private fun Section(titleResource: StringResource, content: @Composable () -> Un
 }
 
 @Composable
-private fun PersonFields(name: MutableState<String>, street: MutableState<String>, postalCode: MutableState<String>, city: MutableState<String>, email: MutableState<String>, phone: MutableState<String>, vatId: MutableState<String>) {
+private fun PersonFields(name: MutableState<String>, address: MutableState<String>, postalCode: MutableState<String>, city: MutableState<String>, email: MutableState<String>, phone: MutableState<String>, vatId: MutableState<String>) {
     InvoiceTextField(name, Res.string.name)
 
-    InvoiceTextField(street, Res.string.street)
+    InvoiceTextField(address, Res.string.address)
 
     Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
         InvoiceTextField(postalCode, Res.string.postal_code, Modifier.width(130.dp).height(56.dp).padding(end = 12.dp), KeyboardType.Ascii)

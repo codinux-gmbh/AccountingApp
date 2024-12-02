@@ -4,10 +4,7 @@ import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.invoicing.email.model.ContentDisposition
 import net.codinux.invoicing.email.model.EmailAddress
 import net.codinux.invoicing.email.model.EmailAttachment
-import net.codinux.invoicing.model.BankDetails
-import net.codinux.invoicing.model.Invoice
-import net.codinux.invoicing.model.InvoiceItem
-import net.codinux.invoicing.model.Party
+import net.codinux.invoicing.model.*
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.ZoneId
@@ -19,25 +16,25 @@ object DataGenerator {
     val InvoicingDate = LocalDate.of(2015, 10, 21)
     val DueDate = LocalDate.of(2016, 6, 15)
 
-    const val SenderName = "Hochwürdiger Leistungserbringer"
-    const val SenderStreet = "Fun Street 1"
-    const val SenderPostalCode = "12345"
-    const val SenderCity = "Glückstadt"
-    const val SenderCountry = "DE"
-    const val SenderVatId = "DE123456789"
-    const val SenderEmail = "working-class-hero@rock.me"
-    const val SenderPhone = "+4917012345678"
-    val SenderBankDetails = BankDetails("DE00123456780987654321", "ABZODEFFXXX", "Manuela Musterfrau")
+    const val SupplierName = "Hochwürdiger Leistungserbringer"
+    const val SupplierAddress = "Fun Street 1"
+    const val SupplierPostalCode = "12345"
+    const val SupplierCity = "Glückstadt"
+    const val SupplierCountry = "DE"
+    const val SupplierVatId = "DE123456789"
+    const val SupplierEmail = "working-class-hero@rock.me"
+    const val SupplierPhone = "+4917012345678"
+    val SupplierBankDetails = BankDetails("DE00123456780987654321", "ABZODEFFXXX", "Manuela Musterfrau")
 
-    const val RecipientName = "Untertänigster Leistungsempfänger"
-    const val RecipientStreet = "Party Street 1"
-    const val RecipientPostalCode = SenderPostalCode
-    const val RecipientCity = SenderCity
-    const val RecipientCountry = "DE"
-    const val RecipientVatId = "DE987654321"
-    const val RecipientEmail = "exploiter@your.boss"
-    const val RecipientPhone = "+491234567890"
-    val RecipientBankDetails: BankDetails? = null
+    const val CustomerName = "Untertänigster Leistungsempfänger"
+    const val CustomerAddress = "Party Street 1"
+    const val CustomerPostalCode = SupplierPostalCode
+    const val CustomerCity = SupplierCity
+    const val CustomerCountry = "DE"
+    const val CustomerVatId = "DE987654321"
+    const val CustomerEmail = "exploiter@your.boss"
+    const val CustomerPhone = "+491234567890"
+    val CustomerBankDetails: BankDetails? = null
 
     const val ItemName = "Erbrachte Dienstleistungen"
     const val ItemUnit = "HUR" // EN code for 'hour'
@@ -50,29 +47,29 @@ object DataGenerator {
     fun createInvoice(
         invoiceNumber: String = InvoiceNumber,
         invoicingDate: LocalDate = InvoicingDate,
-        sender: Party = createParty(SenderName, SenderStreet, SenderPostalCode, SenderCity, SenderCountry, SenderVatId, SenderEmail, SenderPhone,
-            bankDetails = SenderBankDetails),
-        recipient: Party = createParty(RecipientName, RecipientStreet, RecipientPostalCode, RecipientCity, RecipientCountry, RecipientVatId, RecipientEmail, RecipientPhone,
-            bankDetails = RecipientBankDetails),
+        supplier: Party = createParty(SupplierName, SupplierAddress, SupplierPostalCode, SupplierCity, SupplierCountry, SupplierVatId, SupplierEmail, SupplierPhone,
+            bankDetails = SupplierBankDetails),
+        customer: Party = createParty(CustomerName, CustomerAddress, CustomerPostalCode, CustomerCity, CustomerCountry, CustomerVatId, CustomerEmail, CustomerPhone,
+            bankDetails = CustomerBankDetails),
         items: List<InvoiceItem> = listOf(createItem()),
         dueDate: LocalDate? = DueDate,
         paymentDescription: String? = dueDate?.let { "Zahlbar ohne Abzug bis ${DateTimeFormatter.ofPattern("dd.MM.yyyy").format(dueDate)}" },
-        buyerReference: String? = null
-    ) = Invoice(invoiceNumber, invoicingDate, sender, recipient, items, dueDate, paymentDescription, buyerReference)
+        customerReferenceNumber: String? = null
+    ) = Invoice(InvoiceDetails(invoiceNumber, invoicingDate, dueDate, paymentDescription), supplier, customer, items, customerReferenceNumber)
 
     fun createParty(
         name: String,
-        streetName: String = SenderStreet,
-        postalCode: String = SenderPostalCode,
-        city: String = SenderCity,
-        country: String? = SenderCountry,
-        vatId: String? = SenderVatId,
-        email: String? = SenderEmail,
-        phone: String? = SenderPhone,
+        address: String = SupplierAddress,
+        postalCode: String = SupplierPostalCode,
+        city: String = SupplierCity,
+        country: String? = SupplierCountry,
+        vatId: String? = SupplierVatId,
+        email: String? = SupplierEmail,
+        phone: String? = SupplierPhone,
         fax: String? = null,
         contactName: String? = null,
         bankDetails: BankDetails? = null
-    ) = Party(name, streetName, postalCode, city, country, vatId, email, phone, fax, contactName, bankDetails)
+    ) = Party(name, address, null, postalCode, city, country, vatId, email, phone, fax, contactName, bankDetails)
 
     fun createItem(
         name: String = ItemName,
@@ -85,7 +82,7 @@ object DataGenerator {
 
 
     fun createMail(invoice: Invoice, messageId: Long = 1) =
-        Email(messageId, messageId, messageId, invoice.sender.email?.let { EmailAddress(it) }, "Invoice No. ${invoice.invoiceNumber}", invoice.invoicingDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
+        Email(messageId, messageId, messageId, invoice.supplier.email?.let { EmailAddress(it) }, "Invoice No. ${invoice.details.invoiceNumber}", invoice.details.invoiceDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
             "Sehr geehrter Herr Sowieso,\nanbei unsere völlig überzogene Rechnung für unsere nutzlosen Dienstleistung mit Bitte um Überweisung innerhalb 24 Minuten.\nGezeichnet,\nHerr Geier",
             attachments = listOf(EmailAttachment("invoice.pdf", "pdf", null, ContentDisposition.Attachment, "application/pdf", null, invoice, null))
         )

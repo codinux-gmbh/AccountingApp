@@ -71,7 +71,7 @@ class MailService(
             }
 
             try {
-                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true, onError = { handleFetchEmailError(it) }) { newEmail ->
+                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(onError = { handleFetchEmailError(it) }) { newEmail ->
                     coroutineScope.launch {
                         persistEmails(configuration, listOf(newEmail))
                     }
@@ -94,7 +94,7 @@ class MailService(
             persistEmailsBatched(configuration, channel, isFetchingMails)
         }
 
-        val result = emailsFetcher.fetchAllEmails(fetchAccount, FetchEmailsOptions(lastRetrievedMessageId, downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true) { newEmail ->
+        val result = emailsFetcher.fetchAllEmails(fetchAccount, FetchEmailsOptions(lastRetrievedMessageId) { newEmail ->
             channel.trySend(newEmail)
         })
 

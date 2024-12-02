@@ -8,9 +8,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.codinux.accounting.ui.config.Colors
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SectionHeader(title: String, topPadding: Boolean = true) {
+fun SectionHeader(title: StringResource, topPadding: Boolean = false) {
+    SectionHeader(stringResource(title), topPadding)
+}
+
+@Composable
+fun SectionHeader(title: String, topPadding: Boolean = false) {
 
     Text(
         text = title,

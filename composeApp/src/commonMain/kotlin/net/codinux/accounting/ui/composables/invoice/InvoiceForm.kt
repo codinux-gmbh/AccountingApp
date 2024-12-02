@@ -50,8 +50,6 @@ import java.time.LocalDate
 
 private val VerticalRowPadding = 2.dp
 
-private val VerticalSectionPadding = 12.dp
-
 private val createEInvoiceOptions = CreateEInvoiceOptions.entries
     .filter { if (Platform.supportsCreatingPdfs == false && it == CreateEInvoiceOptions.CreateXmlAndPdf) false else true }
 
@@ -312,17 +310,6 @@ fun InvoiceForm(historicalData: HistoricalInvoiceData) {
         }
 
         Spacer(Modifier.padding(bottom = Style.MainScreenTabVerticalPadding))
-    }
-}
-
-@Composable
-private fun Section(titleResource: StringResource, content: @Composable () -> Unit) {
-    RoundedCornersCard(Modifier.fillMaxWidth().padding(top = VerticalSectionPadding)) {
-        Column(Modifier.padding(all = Style.FormCardPadding).padding(vertical = VerticalRowPadding)) {
-            SectionHeader(stringResource(titleResource), false)
-
-            content()
-        }
     }
 }
 

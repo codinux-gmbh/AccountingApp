@@ -73,7 +73,7 @@ private fun MailAccountForm(accountLabel: StringResource, configureAccount: Muta
     RoundedCornersCard(Modifier.fillMaxWidth().padding(top = topPadding)) {
         Column(Modifier.padding(all = Style.FormCardPadding)) {
             Row(Modifier.fillMaxWidth().clickable { configureAccount.value = !configureAccount.value }, verticalAlignment = Alignment.CenterVertically) {
-                BooleanOption({ SectionHeader(stringResource(accountLabel), false) }, configureAccount.value) { configureAccount.value = it }
+                BooleanOption({ SectionHeader(accountLabel) }, configureAccount.value) { configureAccount.value = it }
             }
 
             MailFormTextField(username, Res.string.username, enabled)

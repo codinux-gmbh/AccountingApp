@@ -14,9 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
-import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
-import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
-import net.codinux.accounting.ui.composables.forms.SectionHeader
+import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
@@ -26,10 +24,6 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import java.math.BigDecimal
 
-
-private val VerticalRowPadding = 2.dp
-
-private val VerticalSectionPadding = 12.dp
 
 private val formatUtil = DI.formatUtil
 
@@ -68,17 +62,6 @@ fun InvoiceView(invoice: Invoice) {
         }
     }
 
-}
-
-@Composable
-private fun Section(titleResource: StringResource, content: @Composable () -> Unit) {
-    RoundedCornersCard(Modifier.fillMaxWidth().padding(top = VerticalSectionPadding)) {
-        Column(Modifier.padding(all = Style.FormCardPadding).padding(vertical = VerticalRowPadding)) {
-            SectionHeader(stringResource(titleResource), false)
-
-            content()
-        }
-    }
 }
 
 @Composable

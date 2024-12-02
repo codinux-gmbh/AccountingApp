@@ -9,14 +9,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.config.Style
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
-fun Section(titleResource: StringResource, spaceBefore: Dp = 12.dp, innerVerticalPadding: Dp = 12.dp, content: @Composable () -> Unit) {
+fun Section(titleResource: StringResource, spaceBefore: Dp = 12.dp, innerVerticalPadding: Dp = 2.dp, content: @Composable () -> Unit) {
     RoundedCornersCard(Modifier.fillMaxWidth().padding(top = spaceBefore)) {
         Column(Modifier.fillMaxWidth().padding(all = Style.FormCardPadding).padding(vertical = innerVerticalPadding)) {
-            SectionHeader(stringResource(titleResource), false)
+            SectionHeader(titleResource)
 
             content()
         }

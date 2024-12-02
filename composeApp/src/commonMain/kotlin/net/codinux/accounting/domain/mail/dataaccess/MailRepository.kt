@@ -6,6 +6,7 @@ import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.ui.config.DI
 import java.io.File
+import java.util.concurrent.CopyOnWriteArrayList
 
 class MailRepository(
     private val jsonMapper: ObjectMapper = DI.jsonMapper,
@@ -14,11 +15,11 @@ class MailRepository(
 
     private val mailsFile = File(dataDirectory, "mails.json")
 
-    private var storedMails: MutableList<Email> = mutableListOf()
+    private var storedMails: MutableList<Email> = CopyOnWriteArrayList()
 
     private val mailAccountsFile = File(dataDirectory, "mailAccounts.json")
 
-    private var storedMailAccounts: MutableList<MailAccountConfiguration> = mutableListOf()
+    private var storedMailAccounts: MutableList<MailAccountConfiguration> = CopyOnWriteArrayList()
 
 
     /**
@@ -27,7 +28,7 @@ class MailRepository(
     suspend fun loadMails(): List<Email> =
         if (mailsFile.exists()) {
             jsonMapper.readValue<MutableList<Email>>(mailsFile).also {
-                storedMails = it
+                storedMails = CopyOnWriteArrayList(it)
             }
         } else { // mails have not been persisted yet
             emptyList()
@@ -49,7 +50,7 @@ class MailRepository(
     suspend fun loadMailAccounts(): List<MailAccountConfiguration> =
         if (mailAccountsFile.exists()) {
             jsonMapper.readValue<MutableList<MailAccountConfiguration>>(mailAccountsFile).also {
-                storedMailAccounts = it
+                storedMailAccounts = CopyOnWriteArrayList(it)
             }
         } else { // mail accounts have not been persisted yet
             emptyList()

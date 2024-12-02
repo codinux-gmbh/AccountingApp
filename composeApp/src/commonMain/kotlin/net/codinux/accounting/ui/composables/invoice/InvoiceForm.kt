@@ -187,7 +187,7 @@ fun InvoiceForm(historicalData: HistoricalInvoiceData) {
     }
 
 
-    Column(Modifier.fillMaxWidth().rememberVerticalScroll()) {
+    Column(Modifier.fillMaxWidth()) {
         Section(Res.string.invoice_details) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 DatePicker(stringResource(Res.string.invoice_date), invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true) { invoiceDate = it }

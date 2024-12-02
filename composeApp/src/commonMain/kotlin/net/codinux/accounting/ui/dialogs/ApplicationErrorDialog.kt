@@ -10,6 +10,7 @@ import org.jetbrains.compose.resources.stringResource
 fun ApplicationErrorDialog(error: ApplicationError, onDismiss: (() -> Unit)? = null) {
     val title = when (error.erroneousAction) {
         ErroneousAction.CreateInvoice -> Res.string.error_create_invoice
+        ErroneousAction.ReadEInvoice -> Res.string.error_read_e_invoice
         ErroneousAction.AddEmailAccount -> Res.string.error_add_email_account
         ErroneousAction.FetchEmails -> Res.string.error_fetch_emails
         ErroneousAction.ListenForNewEmails -> Res.string.error_listening_for_new_emails

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.codinux.accounting.ui.config.Colors
@@ -12,12 +13,12 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SectionHeader(title: StringResource, topPadding: Boolean = false) {
-    SectionHeader(stringResource(title), topPadding)
+fun SectionHeader(title: StringResource, fontSize: TextUnit = 16.sp, topPadding: Boolean = false) {
+    SectionHeader(stringResource(title), fontSize, topPadding)
 }
 
 @Composable
-fun SectionHeader(title: String, topPadding: Boolean = false) {
+fun SectionHeader(title: String, fontSize: TextUnit = 16.sp, topPadding: Boolean = false) {
 
     Text(
         text = title,
@@ -29,7 +30,7 @@ fun SectionHeader(title: String, topPadding: Boolean = false) {
             }
         },
         color = Colors.CodinuxSecondaryColor,
-        fontSize = 16.sp
+        fontSize = fontSize
     )
 
 }

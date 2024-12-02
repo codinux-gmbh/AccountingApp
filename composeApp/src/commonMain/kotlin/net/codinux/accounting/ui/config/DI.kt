@@ -37,7 +37,7 @@ object DI {
 
     private val invoiceReader = PlatformDependencies.invoiceReader
 
-    val invoiceService = InvoiceService(uiState, PlatformDependencies.invoiceCreator, InvoiceRepository(jsonMapper, databaseDirectory), fileHandler, invoicesDirectory)
+    val invoiceService = InvoiceService(uiState, PlatformDependencies.invoiceCreator, invoiceReader, InvoiceRepository(jsonMapper, databaseDirectory), fileHandler, invoicesDirectory)
 
     private val invoiceDataExtractor = PdfInvoiceDataExtractor(PlatformDependencies.pdfTextExtractor)
 

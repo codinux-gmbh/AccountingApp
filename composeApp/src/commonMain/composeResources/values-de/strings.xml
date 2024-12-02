@@ -27,6 +27,7 @@
     <!-- errors -->
     <string name="error_message">Fehlermeldung</string>
     <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
+    <string name="error_read_e_invoice">E-Rechnung konnte nicht gelesen werden</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
     <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
     <string name="error_listening_for_new_emails">Fehler beim Lauschen auf neue E-Mails</string>
@@ -52,6 +53,11 @@
 
     <!-- invoice -->
     <string name="invoice_view">Rechnungsansicht</string>
+
+    <string name="show_e_invoice_file">E-Rechnungsdatei anzeigen</string>
+    <string name="select_e_invoice_file">E-Rechnungsdatei auswählen ...</string>
+    <string name="error_message_could_not_read_e_invoice">E-Rechnung konnte nicht aus Datei %s gelesen werden</string>
+    <string name="create_invoice">Rechnung erstellen</string>
 
     <string name="invoice_details">Rechnungsdaten</string>
     <string name="invoice_date">Rechnungsdatum</string>

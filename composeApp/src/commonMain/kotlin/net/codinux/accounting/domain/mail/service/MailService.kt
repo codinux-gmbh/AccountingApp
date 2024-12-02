@@ -105,7 +105,8 @@ class MailService(
             uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, result.overallError)
         }
         result.messageSpecificErrors.forEach { error ->
-            uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, error.error)
+            // these messages are too detailed for most users
+            // uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, error.error)
         }
     } catch (e: Throwable) {
         log.error(e) { "Could not fetch emails of account $fetchAccount" }

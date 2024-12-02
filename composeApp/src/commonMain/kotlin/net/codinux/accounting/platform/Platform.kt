@@ -26,3 +26,6 @@ val Platform.isMobile: Boolean
 
 val Platform.isDesktop: Boolean
     get() = !isMobile
+
+val Platform.isAndroid: Boolean
+    get() = this.type == PlatformType.Android

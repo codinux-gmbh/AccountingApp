@@ -26,22 +26,21 @@ class MailService(
 
     suspend fun init() {
         try {
-            val allEmails = loadPersistedMails()
-            uiState.emails.mails.emit(allEmails.toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
+            uiState.emails.mailAccounts.emit(loadPersistedMailAccounts().toList())
 
-            uiState.emails.mailAccounts.emit(loadPersistedMailAccounts())
-
-            uiState.emails.mailAccounts.value.forEach { account ->
-                val lastRetrievedMessageId = allEmails.filter { it.emailAccountId == account.id }.maxOfOrNull { it.messageId }
-
-                coroutineScope.launch(Dispatchers.IO) {
-                    fetchAndListenToNewMails(account, lastRetrievedMessageId)
-                }
-            }
+            uiState.emails.mails.emit(loadPersistedMails().toList()) // make a copy. otherwise the same instance of MailRepository.allMails would be passed to uiState.mails which therefore cannot detect changes
         } catch (e: Throwable) {
             log.error(e) { "Could not initialize persisted email data" }
 
             uiState.errorOccurred(ErroneousAction.LoadFromDatabase, Res.string.error_message_could_not_load_emails, e)
+        }
+
+        uiState.emails.mailAccounts.value.forEach { account ->
+            val lastRetrievedMessageId = uiState.emails.mails.value.filter { it.emailAccountId == account.id }.maxOfOrNull { it.messageId }
+
+            coroutineScope.launch(Dispatchers.IO) {
+                fetchAndListenToNewMails(account, lastRetrievedMessageId)
+            }
         }
     }
 
@@ -65,7 +64,11 @@ class MailService(
 
     private suspend fun fetchAndListenToNewMails(configuration: MailAccountConfiguration, lastRetrievedMessageId: Long? = null) {
         configuration.receiveEmailConfiguration?.let { account ->
-             fetchAndPersistEmails(configuration, account, lastRetrievedMessageId)
+            try {
+                fetchAndPersistEmails(configuration, account, lastRetrievedMessageId)
+            } catch (e: Throwable) {
+                log.error(e) { "Fetching new emails of account $account failed" }
+            }
 
             try {
                 emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(downloadMessageBody = true, downloadOnlyPlainTextOrHtmlMessageBody = true, onError = { handleFetchEmailError(it) }) { newEmail ->
@@ -74,7 +77,7 @@ class MailService(
                     }
                 })
             } catch (e: Throwable) {
-                log.error(e) { "Listening to new emails failed" }
+                log.error(e) { "Listening to new emails of account $account failed" }
             }
         }
     }

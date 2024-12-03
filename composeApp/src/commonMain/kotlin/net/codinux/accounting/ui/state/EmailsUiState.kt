@@ -12,6 +12,8 @@ class EmailsUiState : ViewModel() {
     val mailAccounts = MutableStateFlow<List<MailAccountConfiguration>>(emptyList())
 
 
+    val showEmailFilterPanel = MutableStateFlow(false)
+
     val showOnlyEmailsWithInvoices = MutableStateFlow(false)
 
 

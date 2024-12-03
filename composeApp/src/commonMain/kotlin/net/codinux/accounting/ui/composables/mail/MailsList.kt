@@ -12,13 +12,15 @@ import androidx.compose.ui.Modifier
 import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.ui.composables.ItemDivider
 import net.codinux.accounting.ui.composables.VerticalScrollbar
-import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.accounting.ui.state.EmailsUiState
 
 @Composable
-fun MailsList(mails: List<Email>) {
+fun MailsList(uiState: EmailsUiState, mails: List<Email>) {
 
-    val showOnlyEmailsWithInvoices = DI.uiState.emails.showOnlyEmailsWithInvoices.collectAsState().value
+    val showEmailFilterPanel = uiState.showEmailFilterPanel.collectAsState().value
+
+    val showOnlyEmailsWithInvoices = uiState.showOnlyEmailsWithInvoices.collectAsState().value
 
     val scrollState = rememberLazyListState()
 
@@ -42,6 +44,10 @@ fun MailsList(mails: List<Email>) {
         }
 
         VerticalScrollbar(scrollState, Modifier.align(Alignment.CenterEnd).fillMaxHeight())
+
+        if (showEmailFilterPanel) {
+            EmailFilterPanel(uiState)
+        }
     }
 
 }

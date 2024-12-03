@@ -5,17 +5,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import net.codinux.accounting.ui.composables.mail.MailsList
 import net.codinux.accounting.ui.dialogs.AddEmailAccountDialog
-import net.codinux.accounting.ui.state.UiState
+import net.codinux.accounting.ui.state.EmailsUiState
 
 @Composable
-fun MailsTab(uiState: UiState) {
+fun MailsTab(uiState: EmailsUiState) {
 
-    val mails = uiState.emails.mails.collectAsState().value
+    val mails = uiState.mails.collectAsState().value
 
-    val showAddMailAccountDialog by uiState.emails.showAddMailAccountDialog.collectAsState()
+    val showAddMailAccountDialog by uiState.showAddMailAccountDialog.collectAsState()
 
 
-    MailsList(mails)
+    MailsList(uiState, mails)
 
 
     if (showAddMailAccountDialog) {

@@ -41,7 +41,7 @@ fun MainScreen() {
             InvoicesTab()
         }
         Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
-            MailsTab(uiState)
+            MailsTab(uiState.emails)
         }
     }
 

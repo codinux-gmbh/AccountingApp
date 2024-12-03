@@ -37,6 +37,7 @@ import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
+import net.codinux.accounting.ui.composables.invoice.model.BankDetailsViewModel
 import net.codinux.accounting.ui.composables.invoice.model.PartyViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
@@ -71,10 +72,7 @@ fun InvoiceForm() {
 
     val customer by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.customer)) }
 
-    var accountHolder = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.accountHolderName ?: "") }
-    var bankName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.financialInstitutionName ?: "") }
-    var iban = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.accountNumber ?: "") }
-    var bic = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.bankCode ?: "") }
+    val bankDetails by remember(historicalData) { mutableStateOf(BankDetailsViewModel(historicalData.lastCreatedInvoice?.supplier?.bankDetails)) }
 
     val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
     var selectedServiceDateOption by remember(historicalData) { mutableStateOf(historicalData.selectedServiceDateOption) }
@@ -138,17 +136,15 @@ fun InvoiceForm() {
     fun parentDirAndFilename(file: PlatformFile?): String? =
         file?.let { File(it.parentDirName, it.name).path }
 
-    fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
-
     fun nullable(value: StateFlow<String>): String? = value.value.takeUnless { it.isBlank() }
 
     fun createInvoice(): Invoice {
-        val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: supplier.name.value, nullable(bankName))
+        val mappedBankDetails = if (bankDetails.accountNumber.value.isNotBlank()) BankDetails(bankDetails.accountNumber.value, nullable(bankDetails.bankCode), nullable(bankDetails.accountHolderName) ?: supplier.name.value, nullable(bankDetails.bankName))
         else null
 
         return Invoice(
             InvoiceDetails(invoiceNumber.value, invoiceDate),
-            Party(supplier.name.value, supplier.address.value, null, supplier.postalCode.value, supplier.city.value, null, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = bankDetails),
+            Party(supplier.name.value, supplier.address.value, null, supplier.postalCode.value, supplier.city.value, null, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = mappedBankDetails),
             Party(customer.name.value, customer.address.value, null, customer.postalCode.value, customer.city.value, null, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
             // TODO: add check if values are really set and add error handling
             invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
@@ -235,13 +231,7 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.bank_details) {
-            InvoiceTextField(accountHolder, Res.string.account_holder_if_different)
-
-            InvoiceTextField(bankName, Res.string.name_of_financial_institution)
-
-            InvoiceTextField(iban, Res.string.iban)
-
-            InvoiceTextField(bic, Res.string.bic)
+            BankDetailsForm(bankDetails)
         }
 
         Section(Res.string.create) {

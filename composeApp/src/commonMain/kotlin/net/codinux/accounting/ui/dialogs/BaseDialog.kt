@@ -26,7 +26,6 @@ import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.applyPlatformSpecificPaddingIf
 import net.codinux.accounting.ui.extensions.copy
-import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.accounting.ui.composables.forms.*
 import org.jetbrains.compose.resources.stringResource
 
@@ -71,7 +70,7 @@ fun BaseDialog(
                     content()
                 }
 
-                Row(Modifier.fillMaxWidth().padding(top = 8.dp).height(32.dp)) {
+                Row(Modifier.fillMaxWidth().padding(top = 8.dp).height(if (showProgressIndicatorOnConfirmButton) 44.dp else 32.dp)) {
                     TextButton(onClick = onDismiss, Modifier.weight(0.5f)) {
                         Text(dismissButtonTitle, color = Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                     }
@@ -79,7 +78,7 @@ fun BaseDialog(
                     if (confirmButtonVisible) {
                         TextButton(
                             modifier = Modifier.weight(0.5f),
-                            enabled = confirmButtonEnabled,
+                            enabled = confirmButtonEnabled && showProgressIndicatorOnConfirmButton == false,
                             onClick = {
                                 onConfirm?.invoke()
                                 if (callOnDismissAfterOnConfirm) {

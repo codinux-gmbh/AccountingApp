@@ -24,6 +24,7 @@ import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
 import io.github.vinceglb.filekit.core.baseName
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
@@ -36,6 +37,7 @@ import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
+import net.codinux.accounting.ui.composables.invoice.model.PartyViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
@@ -65,21 +67,9 @@ fun InvoiceForm() {
 
     var invoiceNumber = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.details?.invoiceNumber ?: "") }
 
-    var supplierName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.name ?: "") }
-    var supplierAddress = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.address ?: "") }
-    var supplierPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.postalCode ?: "") }
-    var supplierCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.city ?: "") }
-    var supplierEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.email ?: "") }
-    var supplierPhone = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.phone ?: "") }
-    var supplierVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.vatId ?: "") }
+    var supplier by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.supplier)) }
 
-    var customerName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.name ?: "") }
-    var customerAddress = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.address ?: "") }
-    var customerPostalCode = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.postalCode ?: "") }
-    var customerCity = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.city ?: "") }
-    var customerEmail = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.email ?: "") }
-    var customerPhone = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.phone ?: "") }
-    var customerVatId = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.customer?.vatId ?: "") }
+    val customer by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.customer)) }
 
     var accountHolder = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.accountHolderName ?: "") }
     var bankName = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.supplier?.bankDetails?.financialInstitutionName ?: "") }
@@ -150,14 +140,16 @@ fun InvoiceForm() {
 
     fun nullable(value: MutableState<String>): String? = value.value.takeUnless { it.isBlank() }
 
+    fun nullable(value: StateFlow<String>): String? = value.value.takeUnless { it.isBlank() }
+
     fun createInvoice(): Invoice {
-        val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: supplierName.value, nullable(bankName))
+        val bankDetails = if (iban.value.isNotBlank()) BankDetails(iban.value, nullable(bic), nullable(accountHolder) ?: supplier.name.value, nullable(bankName))
         else null
 
         return Invoice(
             InvoiceDetails(invoiceNumber.value, invoiceDate),
-            Party(supplierName.value, supplierAddress.value, null, supplierPostalCode.value, supplierCity.value, null, nullable(supplierVatId), nullable(supplierEmail), nullable(supplierPhone), bankDetails = bankDetails),
-            Party(customerName.value, customerAddress.value, null, customerPostalCode.value, customerCity.value, null, null, nullable(customerEmail), nullable(customerPhone)),
+            Party(supplier.name.value, supplier.address.value, null, supplier.postalCode.value, supplier.city.value, null, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = bankDetails),
+            Party(customer.name.value, customer.address.value, null, customer.postalCode.value, customer.city.value, null, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
             // TODO: add check if values are really set and add error handling
             invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
         )
@@ -202,11 +194,11 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.supplier) {
-            PersonFields(supplierName, supplierAddress, supplierPostalCode, supplierCity, supplierEmail, supplierPhone, supplierVatId)
+            InvoicePartyForm(supplier)
         }
 
         Section(Res.string.customer) {
-            PersonFields(customerName, customerAddress, customerPostalCode, customerCity, customerEmail, customerPhone, customerVatId)
+            InvoicePartyForm(customer)
         }
 
         Section(Res.string.description_of_services) {
@@ -314,25 +306,6 @@ fun InvoiceForm() {
 
         Spacer(Modifier.padding(bottom = Style.MainScreenTabVerticalPadding))
     }
-}
-
-@Composable
-private fun PersonFields(name: MutableState<String>, address: MutableState<String>, postalCode: MutableState<String>, city: MutableState<String>, email: MutableState<String>, phone: MutableState<String>, vatId: MutableState<String>) {
-    InvoiceTextField(name, Res.string.name)
-
-    InvoiceTextField(address, Res.string.address)
-
-    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-        InvoiceTextField(postalCode, Res.string.postal_code, Modifier.width(130.dp).height(56.dp).padding(end = 12.dp), KeyboardType.Ascii)
-
-        InvoiceTextField(city, Res.string.city, Modifier.weight(1f))
-    }
-
-    InvoiceTextField(email, Res.string.email, keyboardType = KeyboardType.Email)
-
-    InvoiceTextField(phone, Res.string.phone, keyboardType = KeyboardType.Phone)
-
-    InvoiceTextField(vatId, Res.string.vat_id_or_tax_number, keyboardType = KeyboardType.Ascii)
 }
 
 @Composable

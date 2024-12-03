@@ -10,6 +10,7 @@ import net.codinux.accounting.resources.create_invoice
 import net.codinux.accounting.ui.composables.forms.SectionHeader
 import net.codinux.accounting.ui.composables.invoice.InvoiceForm
 import net.codinux.accounting.ui.composables.invoice.SelectEInvoiceFileToDisplay
+import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.rememberVerticalScroll
 
 @Composable
@@ -19,7 +20,7 @@ fun InvoicesTab() {
         SelectEInvoiceFileToDisplay()
 
 
-        Row(Modifier.padding(top = 32.dp, bottom = 2.dp)) {
+        Row(Modifier.padding(top = 32.dp, bottom = Style.FormVerticalRowPadding)) {
             SectionHeader(Res.string.create_invoice, 18.sp)
         }
 

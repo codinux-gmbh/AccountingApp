@@ -22,7 +22,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 
-private val VerticalRowPadding = 2.dp
+private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
 fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {

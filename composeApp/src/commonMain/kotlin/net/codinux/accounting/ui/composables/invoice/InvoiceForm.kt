@@ -48,7 +48,7 @@ import java.io.File
 import java.time.LocalDate
 
 
-private val VerticalRowPadding = 2.dp
+private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 private val createEInvoiceOptions = CreateEInvoiceOptions.entries
     .filter { if (Platform.supportsCreatingPdfs == false && it == CreateEInvoiceOptions.CreateXmlAndPdf) false else true }
@@ -282,7 +282,7 @@ fun InvoiceForm() {
             }
 
             generatedEInvoiceXml?.let { generatedEInvoiceXml ->
-                Row(Modifier.padding(top = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(Modifier.padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
                     TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml)) }, contentPadding = PaddingValues(0.dp)) {
                         Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }

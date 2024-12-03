@@ -99,7 +99,7 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
 }
 
 @Composable
-private fun InvoiceItemNumberTextField(labelResource: StringResource, value: BigDecimal?, modifier: Modifier = Modifier.fillMaxWidth(), valueChanged: (BigDecimal) -> Unit) {
+private fun InvoiceItemNumberTextField(labelResource: StringResource, value: BigDecimal?, modifier: Modifier = Modifier.fillMaxWidth(), valueChanged: (BigDecimal?) -> Unit) {
     OutlinedNumberTextField(
         BigDecimal::class,
         value,

@@ -86,7 +86,7 @@ private fun MailAccountForm(accountLabel: StringResource, configureAccount: Muta
                 OutlinedNumberTextField(
                     Int::class,
                     port.value,
-                    { port.value = it },
+                    { port.value = it ?: -1 },
                     Modifier.width(100.dp),
                     label = { Text(stringResource(Res.string.port), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                     enabled = enabled,

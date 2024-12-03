@@ -20,7 +20,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     private val _quantity = MutableStateFlow(item?.quantity)
     val quantity: StateFlow<BigDecimal?> = _quantity.asStateFlow()
 
-    fun quantityChanged(newValue: BigDecimal) {
+    fun quantityChanged(newValue: BigDecimal?) {
         _quantity.value = newValue
         validate()
     }
@@ -36,7 +36,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     private val _unitPrice = MutableStateFlow(item?.unitPrice)
     val unitPrice: StateFlow<BigDecimal?> = _unitPrice.asStateFlow()
 
-    fun unitPriceChanged(newValue: BigDecimal) {
+    fun unitPriceChanged(newValue: BigDecimal?) {
         _unitPrice.value = newValue
         validate()
     }
@@ -44,7 +44,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     private val _vatRate = MutableStateFlow(item?.vatRate)
     val vatRate: StateFlow<BigDecimal?> = _vatRate.asStateFlow()
 
-    fun vatRateChanged(newValue: BigDecimal) {
+    fun vatRateChanged(newValue: BigDecimal?) {
         _vatRate.value = newValue
         validate()
     }

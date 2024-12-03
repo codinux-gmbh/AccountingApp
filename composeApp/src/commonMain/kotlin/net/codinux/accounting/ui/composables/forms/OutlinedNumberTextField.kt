@@ -25,7 +25,7 @@ private val FloatingPointDataTypes = listOf(BigDecimal::class, Double::class, Fl
 fun <T : Number> OutlinedNumberTextField(
     valueClass: KClass<T>,
     value: T? = null,
-    onValueChange: (T) -> Unit,
+    onValueChange: (T?) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -75,9 +75,12 @@ fun <T : Number> OutlinedNumberTextField(
                 try {
                     if (newValue.isNotBlank() && newValue != "-") { // "" and "-" are valid values to enter but will not map to a number
                         onValueChange(mapEnteredString(newValue))
+                    } else {
+                        onValueChange(null)
                     }
                 } catch (e: Throwable) { // e.g. it's valid to enter "-", but this cannot get mapped to a number yet
                     Log.warn(e) { "Could not map value '$newValue' to $valueClass" }
+                    onValueChange(null)
                 }
             }
         },

@@ -2,7 +2,6 @@ package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -14,7 +13,6 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,10 +32,10 @@ import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isDesktop
 import net.codinux.accounting.ui.composables.forms.*
-import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
 import net.codinux.accounting.ui.composables.invoice.model.BankDetailsViewModel
+import net.codinux.accounting.ui.composables.invoice.model.InvoiceDetailsViewModel
 import net.codinux.accounting.ui.composables.invoice.model.PartyViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
@@ -45,7 +43,6 @@ import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.*
 import net.codinux.invoicing.model.*
 import net.codinux.log.Log
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 import java.time.LocalDate
@@ -64,9 +61,7 @@ fun InvoiceForm() {
     val historicalData = DI.uiState.historicalInvoiceData.collectAsState().value
 
 
-    var invoiceDate by remember { mutableStateOf(LocalDate.now()) }
-
-    var invoiceNumber = remember(historicalData) { mutableStateOf(historicalData.lastCreatedInvoice?.details?.invoiceNumber ?: "") }
+    val details by remember(historicalData) { mutableStateOf(InvoiceDetailsViewModel(historicalData.lastCreatedInvoice?.details)) }
 
     var supplier by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.supplier)) }
 
@@ -143,7 +138,7 @@ fun InvoiceForm() {
         else null
 
         return Invoice(
-            InvoiceDetails(invoiceNumber.value, invoiceDate),
+            InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value),
             Party(supplier.name.value, supplier.address.value, null, supplier.postalCode.value, supplier.city.value, null, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = mappedBankDetails),
             Party(customer.name.value, customer.address.value, null, customer.postalCode.value, customer.city.value, null, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
             // TODO: add check if values are really set and add error handling
@@ -180,13 +175,7 @@ fun InvoiceForm() {
 
     Column(Modifier.fillMaxWidth()) {
         Section(Res.string.invoice_details) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                DatePicker(stringResource(Res.string.invoice_date), invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true) { invoiceDate = it }
-
-                Spacer(Modifier.width(6.dp))
-
-                InvoiceTextField(invoiceNumber, Res.string.invoice_number)
-            }
+            InvoiceDetailsForm(details, isLargeDisplay)
         }
 
         Section(Res.string.supplier) {
@@ -269,7 +258,7 @@ fun InvoiceForm() {
                         Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }
 
-                    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${invoiceNumber.value}", "xml") }, contentPadding = PaddingValues(0.dp)) {
+                    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }, contentPadding = PaddingValues(0.dp)) {
                         Text(stringResource(Res.string.save_xml), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                     }
 
@@ -296,15 +285,4 @@ fun InvoiceForm() {
 
         Spacer(Modifier.padding(bottom = Style.MainScreenTabVerticalPadding))
     }
-}
-
-@Composable
-private fun InvoiceTextField(value: MutableState<String>, labelResource: StringResource, modifier: Modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding), keyboardType: KeyboardType = KeyboardType.Text) {
-    OutlinedTextField(
-        value.value,
-        { value.value = it },
-        modifier,
-        label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        keyboardOptions = KeyboardOptions.ImeNext.copy(keyboardType = keyboardType)
-    )
 }

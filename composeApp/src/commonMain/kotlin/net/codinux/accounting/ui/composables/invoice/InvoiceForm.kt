@@ -61,9 +61,15 @@ fun InvoiceForm() {
 
     val details by remember(historicalData) { mutableStateOf(InvoiceDetailsViewModel(historicalData.lastCreatedInvoice?.details)) }
 
-    var supplier by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.supplier)) }
+    val areInvoiceDetailsValid by details.isValid.collectAsState()
+
+    val supplier by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.supplier)) }
+
+    val isSupplierValid by supplier.isValid.collectAsState()
 
     val customer by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.customer)) }
+
+    val isCustomerValid by customer.isValid.collectAsState()
 
     val bankDetails by remember(historicalData) { mutableStateOf(BankDetailsViewModel(historicalData.lastCreatedInvoice?.supplier?.bankDetails)) }
 
@@ -77,6 +83,15 @@ fun InvoiceForm() {
     val invoiceItems: MutableList<InvoiceItemViewModel> = remember(historicalData) { mutableStateListOf(
         *(historicalData.lastCreatedInvoice?.items?.map { InvoiceItemViewModel(it) }?.toTypedArray() ?: arrayOf(InvoiceItemViewModel()))
     ) }
+
+    val areInvoiceItemsValid = combine(invoiceItems.map { it.isValid }) {
+        it.all { it }
+    }.collectAsState(false)
+
+    val isValid by remember(areInvoiceDetailsValid, isSupplierValid, isCustomerValid, areInvoiceItemsValid) {
+        // TODO: Date of delivery or performance of the service is also required
+        derivedStateOf { areInvoiceDetailsValid and isSupplierValid and isCustomerValid and invoiceItems.isNotEmpty() and areInvoiceItemsValid.value }
+    }
 
 
     var selectedEInvoiceXmlFormat by remember(historicalData) { mutableStateOf(historicalData.selectedEInvoiceXmlFormat) }
@@ -244,7 +259,7 @@ fun InvoiceForm() {
 
                 Spacer(Modifier.width(1.dp).weight(1f))
 
-                TextButton({ createEInvoice() }) {
+                TextButton({ createEInvoice() }, enabled = isValid) {
                     Text(stringResource(Res.string.create), color = Colors.CodinuxSecondaryColor)
                 }
             }

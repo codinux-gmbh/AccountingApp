@@ -56,7 +56,10 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun InvoiceForm(historicalData: HistoricalInvoiceData) {
+fun InvoiceForm() {
+
+    val historicalData = DI.uiState.historicalInvoiceData.collectAsState().value
+
 
     var invoiceDate by remember { mutableStateOf(LocalDate.now()) }
 

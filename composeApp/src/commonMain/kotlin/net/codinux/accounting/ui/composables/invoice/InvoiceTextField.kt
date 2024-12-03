@@ -3,6 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,6 +23,7 @@ fun InvoiceTextField(labelResource: StringResource, value: String, modifier: Mod
         { valueChanged(it) },
         modifier,
         label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext.copy(keyboardType = keyboardType)
     )
 }

@@ -22,7 +22,7 @@ import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
 import io.github.vinceglb.filekit.core.baseName
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
@@ -34,9 +34,7 @@ import net.codinux.accounting.platform.isDesktop
 import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
-import net.codinux.accounting.ui.composables.invoice.model.BankDetailsViewModel
-import net.codinux.accounting.ui.composables.invoice.model.InvoiceDetailsViewModel
-import net.codinux.accounting.ui.composables.invoice.model.PartyViewModel
+import net.codinux.accounting.ui.composables.invoice.model.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
@@ -76,8 +74,8 @@ fun InvoiceForm() {
     var servicePeriodStart by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
     var servicePeriodEnd by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
 
-    val invoiceItems: MutableList<EditableInvoiceItem> = remember(historicalData) { mutableStateListOf(
-        *(historicalData.lastCreatedInvoice?.items?.map { it.toEditable() }?.toTypedArray() ?: arrayOf(EditableInvoiceItem()))
+    val invoiceItems: MutableList<InvoiceItemViewModel> = remember(historicalData) { mutableStateListOf(
+        *(historicalData.lastCreatedInvoice?.items?.map { InvoiceItemViewModel(it) }?.toTypedArray() ?: arrayOf(InvoiceItemViewModel()))
     ) }
 
 
@@ -141,8 +139,7 @@ fun InvoiceForm() {
             InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value),
             Party(supplier.name.value, supplier.address.value, null, supplier.postalCode.value, supplier.city.value, null, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = mappedBankDetails),
             Party(customer.name.value, customer.address.value, null, customer.postalCode.value, customer.city.value, null, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
-            // TODO: add check if values are really set and add error handling
-            invoiceItems.map { InvoiceItem(it.name, it.quantity!!, it.unit, it.unitPrice!!, it.vatRate!!, it.description) }
+            invoiceItems.map { InvoiceItem(it.name.value, it.quantity.value!!, it.unit.value, it.unitPrice.value!!, it.vatRate.value!!, it.description.value) }
         )
     }
 
@@ -208,12 +205,12 @@ fun InvoiceForm() {
 
                     Spacer(Modifier.weight(1f))
 
-                    TextButton({ invoiceItems.add(EditableInvoiceItem()) }, contentPadding = PaddingValues(0.dp)) {
+                    TextButton({ invoiceItems.add(InvoiceItemViewModel()) }, contentPadding = PaddingValues(0.dp)) {
                         Icon(Icons.Outlined.Add, "Add invoice item", Modifier.width(48.dp).fillMaxHeight(), Colors.CodinuxSecondaryColor)
                     }
                 }
 
-                invoiceItems.toList().forEach { item ->
+                invoiceItems.forEach { item ->
                     InvoiceItemForm(item)
                 }
             }

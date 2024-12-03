@@ -20,11 +20,11 @@ fun InvoiceDetailsForm(viewModel: InvoiceDetailsViewModel, isLargeDisplay: Boole
 
 
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        DatePicker(Res.string.invoice_date, invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true) { viewModel.invoiceDateChanged(it) }
+        DatePicker(Res.string.invoice_date, invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true, required = true) { viewModel.invoiceDateChanged(it) }
 
         Spacer(Modifier.width(6.dp))
 
-        InvoiceTextField(Res.string.invoice_number, invoiceNumber) { viewModel.invoiceNumberChanged(it) }
+        InvoiceTextField(Res.string.invoice_number, invoiceNumber, true) { viewModel.invoiceNumberChanged(it) }
     }
 
 }

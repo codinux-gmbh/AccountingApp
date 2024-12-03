@@ -3,13 +3,11 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isMobile
@@ -20,13 +18,12 @@ import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.extensions.ImeNext
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 import java.math.BigDecimal
 
 
 private val isCompactScreen = Platform.isMobile
 
-private val SmallerFieldsWidth = 85.dp
+private val SmallerFieldsWidth = 92.dp
 
 private val FieldsSpace = 4.dp
 
@@ -51,46 +48,46 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
         Column(Modifier.fillMaxWidth().padding(all = 4.dp)) {
             if (isCompactScreen) { // on small screens we use two lines
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    InvoiceTextField(Res.string.name, name) { item.nameChanged(it) }
+                    InvoiceTextField(Res.string.name, name, true) { item.nameChanged(it) }
                 }
 
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        InvoiceItemNumberTextField(Res.string.quantity, quantity) { item.quantityChanged(it) }
+                        InvoiceItemNumberTextField(Res.string.quantity, quantity, true) { item.quantityChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceTextField(Res.string.unit, unit) { item.unitChanged(it) }
+                        InvoiceTextField(Res.string.unit, unit, true) { item.unitChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceItemNumberTextField(Res.string.unit_price, unitPrice) { item.unitPriceChanged(it) }
+                        InvoiceItemNumberTextField(Res.string.unit_price, unitPrice, true) { item.unitPriceChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceItemNumberTextField(Res.string.vat_rate, vatRate) { item.vatRateChanged(it) }
+                        InvoiceItemNumberTextField(Res.string.vat_rate, vatRate, true) { item.vatRateChanged(it) }
                     }
                 }
             } else { // on large screens one line
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        InvoiceTextField(Res.string.name, name) { item.nameChanged(it) }
+                        InvoiceTextField(Res.string.name, name, true) { item.nameChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemNumberTextField(Res.string.quantity, quantity) { item.quantityChanged(it) }
+                        InvoiceItemNumberTextField(Res.string.quantity, quantity, true) { item.quantityChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceTextField(Res.string.unit, unit) { item.unitChanged(it) }
+                        InvoiceTextField(Res.string.unit, unit, true) { item.unitChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemNumberTextField(Res.string.unit_price, unitPrice) { item.unitPriceChanged(it) }
+                        InvoiceItemNumberTextField(Res.string.unit_price, unitPrice, true) { item.unitPriceChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceItemNumberTextField(Res.string.vat_rate, vatRate) { item.vatRateChanged(it) }
+                        InvoiceItemNumberTextField(Res.string.vat_rate, vatRate, true) { item.vatRateChanged(it) }
                     }
                 }
             }
@@ -99,12 +96,13 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
 }
 
 @Composable
-private fun InvoiceItemNumberTextField(labelResource: StringResource, value: BigDecimal?, modifier: Modifier = Modifier.fillMaxWidth(), valueChanged: (BigDecimal?) -> Unit) {
+private fun InvoiceItemNumberTextField(labelResource: StringResource, value: BigDecimal?, required: Boolean = false, modifier: Modifier = Modifier.fillMaxWidth(), valueChanged: (BigDecimal?) -> Unit) {
     OutlinedNumberTextField(
         BigDecimal::class,
         value,
         valueChanged,
         modifier,
+        required = required,
         label = labelResource,
         backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext

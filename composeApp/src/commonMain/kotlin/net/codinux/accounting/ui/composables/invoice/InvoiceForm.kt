@@ -74,11 +74,11 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.supplier) {
-            InvoicePartyForm(supplier)
+            InvoicePartyForm(supplier, true)
         }
 
         Section(Res.string.customer) {
-            InvoicePartyForm(customer)
+            InvoicePartyForm(customer, false)
         }
 
         Section(Res.string.description_of_services) {

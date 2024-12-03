@@ -17,6 +17,7 @@ fun <T> Select(
     onSelectedItemChanged: (T) -> Unit,
     getItemDisplayText: @Composable (T) -> String,
     modifier: Modifier = Modifier,
+    required: Boolean = false,
     textColor: Color? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     dropDownItemContent: @Composable ((T) -> Unit)? = null
@@ -31,6 +32,7 @@ fun <T> Select(
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,
             label = label,
             readOnly = true,
+            required = required,
             maxLines = 1,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(showDropDownMenu) },
             leadingIcon = leadingIcon

@@ -24,6 +24,7 @@ fun PasswordTextField(
     label: StringResource = Res.string.password,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    required: Boolean = false,
     keyboardOptions: KeyboardOptions? = null,
     isError: Boolean = false,
     forceHidePassword: Boolean? = null,
@@ -43,6 +44,7 @@ fun PasswordTextField(
         label = label,
         modifier = modifier.fillMaxWidth(),
         enabled = enabled,
+        required = required,
         isError = isError,
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         trailingIcon = {

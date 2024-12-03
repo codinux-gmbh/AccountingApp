@@ -13,11 +13,12 @@ import net.codinux.accounting.ui.extensions.ImeNext
 import org.jetbrains.compose.resources.StringResource
 
 @Composable
-fun InvoiceTextField(label: StringResource, value: String, modifier: Modifier = Modifier.fillMaxWidth().padding(top = Style.FormVerticalRowPadding), keyboardType: KeyboardType = KeyboardType.Text, valueChanged: (String) -> Unit) {
+fun InvoiceTextField(label: StringResource, value: String, required: Boolean = false, modifier: Modifier = Modifier.fillMaxWidth().padding(top = Style.FormVerticalRowPadding), keyboardType: KeyboardType = KeyboardType.Text, valueChanged: (String) -> Unit) {
     OutlinedTextField(
         value,
         { valueChanged(it) },
         modifier,
+        required = required,
         label = label,
         backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext.copy(keyboardType = keyboardType)

@@ -16,7 +16,7 @@ import net.codinux.accounting.ui.config.Style
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
-fun InvoicePartyForm(viewModel: PartyViewModel) {
+fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean) {
 
     val name by viewModel.name.collectAsState()
 
@@ -35,19 +35,19 @@ fun InvoicePartyForm(viewModel: PartyViewModel) {
     val vatId by viewModel.vatId.collectAsState()
 
 
-    InvoiceTextField(Res.string.name, name) { viewModel.nameChanged(it) }
+    InvoiceTextField(Res.string.name, name, true) { viewModel.nameChanged(it) }
 
-    InvoiceTextField(Res.string.address, address) { viewModel.addressChanged(it) }
+    InvoiceTextField(Res.string.address, address, true) { viewModel.addressChanged(it) }
 
     Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-        InvoiceTextField(Res.string.postal_code, postalCode, Modifier.width(130.dp).height(56.dp).padding(end = 12.dp), KeyboardType.Ascii) { viewModel.postalCodeChanged(it) }
+        InvoiceTextField(Res.string.postal_code, postalCode, true, Modifier.width(130.dp).height(56.dp).padding(end = 12.dp), KeyboardType.Ascii) { viewModel.postalCodeChanged(it) }
 
-        InvoiceTextField(Res.string.city, city, Modifier.weight(1f)) { viewModel.cityChanged(it) }
+        InvoiceTextField(Res.string.city, city, true, Modifier.weight(1f)) { viewModel.cityChanged(it) }
     }
 
     InvoiceTextField(Res.string.email, email, keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
 
     InvoiceTextField(Res.string.phone, phone, keyboardType = KeyboardType.Phone) { viewModel.phoneChanged(it) }
 
-    InvoiceTextField(Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
+    InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
 }

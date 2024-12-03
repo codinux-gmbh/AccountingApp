@@ -33,6 +33,7 @@ fun DatePicker(
     moveFocusOnToNextElementOnSelection: Boolean = true,
     dateFormatter: DateTimeFormatter? = null,
     textColor: Color? = null,
+    required: Boolean = false,
     dateSelected: (LocalDate) -> Unit
 ) {
 
@@ -51,6 +52,7 @@ fun DatePicker(
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,
             label = label,
             readOnly = true,
+            required = required,
             maxLines = 1,
             trailingIcon = if (showCalendarIcon) { { Icon(Icons.Outlined.CalendarMonth, "Select date") } } else null,
         )

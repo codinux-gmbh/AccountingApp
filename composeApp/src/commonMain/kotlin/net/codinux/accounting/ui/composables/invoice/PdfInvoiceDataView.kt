@@ -31,6 +31,7 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
     var showPdfText by remember { mutableStateOf(false) }
 
     val stateVertical = rememberScrollState(0)
+    val stateHorizontal = rememberScrollState(0)
 
 
     Box(Modifier.fillMaxSize()) {
@@ -75,6 +76,18 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
             }
 
         VerticalScrollbar(stateVertical, Modifier.align(Alignment.CenterEnd).fillMaxHeight())
+
+//                VerticalScrollbar(
+//                    modifier = Modifier.align(Alignment.CenterEnd)
+//                        .fillMaxHeight(),
+//                    adapter = rememberScrollbarAdapter(stateVertical)
+//                )
+//        HorizontalScrollbar(
+//            modifier = Modifier.align(Alignment.BottomStart)
+//                .fillMaxWidth()
+//                .padding(end = 12.dp),
+//            adapter = rememberScrollbarAdapter(stateHorizontal)
+//        )
     }
 }
 

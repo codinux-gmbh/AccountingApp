@@ -23,6 +23,7 @@ fun OutlinedTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     readOnly: Boolean = false,
+    required: Boolean = false,
     textStyle: TextStyle = LocalTextStyle.current,
     label: StringResource? = null,
     placeholder: @Composable (() -> Unit)? = null,
@@ -46,6 +47,11 @@ fun OutlinedTextField(
         focusedLabelColor = Colors.CodinuxSecondaryColor,
         backgroundColor = backgroundColor
     )
+
+    var labelText = label?.let { stringResource(label) } ?: ""
+    if (required) {
+        labelText += "*"
+    }
 
     androidx.compose.material.OutlinedTextField(
         value = value,

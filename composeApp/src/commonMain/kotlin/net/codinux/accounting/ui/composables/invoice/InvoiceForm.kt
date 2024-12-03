@@ -83,16 +83,16 @@ fun InvoiceForm() {
 
         Section(Res.string.description_of_services) {
             Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-                Select("", ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).width(if (isLargeDisplay) 210.dp else 185.dp))
+                Select(null, ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).width(if (isLargeDisplay) 210.dp else 185.dp))
 
                 when (selectedServiceDateOption) {
-                    ServiceDateOptions.DeliveryDate -> { DatePicker("", serviceDate) { serviceDate = it } }
-                    ServiceDateOptions.ServiceDate -> { DatePicker("", serviceDate) { serviceDate = it } }
+                    ServiceDateOptions.DeliveryDate -> { DatePicker(null, serviceDate) { serviceDate = it } }
+                    ServiceDateOptions.ServiceDate -> { DatePicker(null, serviceDate) { serviceDate = it } }
                     ServiceDateOptions.ServicePeriodMonth -> { SelectMonth(servicePeriodMonth) { servicePeriodMonth = it } }
                     ServiceDateOptions.ServicePeriodCustom -> {
-                        DatePicker(stringResource(Res.string.service_period_start), servicePeriodStart, moveFocusOnToNextElementOnSelection = false) { servicePeriodStart = it }
+                        DatePicker(Res.string.service_period_start, servicePeriodStart, moveFocusOnToNextElementOnSelection = false) { servicePeriodStart = it }
                         Text("-", textAlign = TextAlign.Center, modifier = Modifier.width(18.dp))
-                        DatePicker(stringResource(Res.string.service_period_end), servicePeriodEnd) { servicePeriodEnd = it }
+                        DatePicker(Res.string.service_period_end, servicePeriodEnd) { servicePeriodEnd = it }
                     }
                 }
             }

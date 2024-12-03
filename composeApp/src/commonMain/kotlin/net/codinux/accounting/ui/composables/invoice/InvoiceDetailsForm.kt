@@ -10,7 +10,6 @@ import net.codinux.accounting.resources.invoice_date
 import net.codinux.accounting.resources.invoice_number
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceDetailsViewModel
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun InvoiceDetailsForm(viewModel: InvoiceDetailsViewModel, isLargeDisplay: Boolean = false) {
@@ -21,7 +20,7 @@ fun InvoiceDetailsForm(viewModel: InvoiceDetailsViewModel, isLargeDisplay: Boole
 
 
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        DatePicker(stringResource(Res.string.invoice_date), invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true) { viewModel.invoiceDateChanged(it) }
+        DatePicker(Res.string.invoice_date, invoiceDate, Modifier.width(if (isLargeDisplay) 125.dp else 120.dp).fillMaxHeight(), true) { viewModel.invoiceDateChanged(it) }
 
         Spacer(Modifier.width(6.dp))
 

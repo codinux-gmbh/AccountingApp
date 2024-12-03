@@ -6,11 +6,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import org.jetbrains.compose.resources.StringResource
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun <T> Select(
-    label: String,
+    label: StringResource?,
     items: Collection<T>,
     selectedItem: T,
     onSelectedItemChanged: (T) -> Unit,
@@ -28,7 +29,7 @@ fun <T> Select(
             onValueChange = { },
             modifier = Modifier.fillMaxWidth(),
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,
-            label = { Text(label, color = textColor ?: Color.Unspecified) },
+            label = label,
             readOnly = true,
             maxLines = 1,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(showDropDownMenu) },

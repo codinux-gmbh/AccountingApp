@@ -88,7 +88,7 @@ private fun MailAccountForm(accountLabel: StringResource, configureAccount: Muta
                     port.value,
                     { port.value = it ?: -1 },
                     Modifier.width(100.dp),
-                    label = { Text(stringResource(Res.string.port), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                    label = Res.string.port,
                     enabled = enabled,
                     backgroundColor = MaterialTheme.colors.surface,
                     keyboardOptions = KeyboardOptions.ImeNext
@@ -99,12 +99,12 @@ private fun MailAccountForm(accountLabel: StringResource, configureAccount: Muta
 }
 
 @Composable
-private fun MailFormTextField(value: MutableState<String>, labelResource: StringResource, enabled: Boolean = true, modifier: Modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding)) {
+private fun MailFormTextField(value: MutableState<String>, label: StringResource, enabled: Boolean = true, modifier: Modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding)) {
     OutlinedTextField(
         value.value,
         { value.value = it },
         modifier,
-        label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        label = label,
         enabled = enabled,
         keyboardOptions = KeyboardOptions.ImeNext
     )

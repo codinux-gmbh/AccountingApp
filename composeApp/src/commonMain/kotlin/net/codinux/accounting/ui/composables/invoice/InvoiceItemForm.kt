@@ -105,7 +105,7 @@ private fun InvoiceItemNumberTextField(labelResource: StringResource, value: Big
         value,
         valueChanged,
         modifier,
-        label = { Text(stringResource(labelResource), color = Colors.PlaceholderTextColor, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        label = labelResource,
         backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext
     )

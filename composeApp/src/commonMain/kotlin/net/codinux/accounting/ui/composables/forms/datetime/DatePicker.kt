@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isDesktop
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.DatePickerDialog
+import org.jetbrains.compose.resources.StringResource
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -26,7 +26,7 @@ private val formatUtil = DI.formatUtil
 
 @Composable
 fun DatePicker(
-    label: String,
+    label: StringResource?,
     selectedDate: LocalDate? = null,
     modifier: Modifier = Modifier.width(if (Platform.isDesktop) 90.dp else 86.dp).heightIn(min = 45.dp),
     showCalendarIcon: Boolean = false,
@@ -49,7 +49,7 @@ fun DatePicker(
             onValueChange = { },
             modifier = Modifier.fillMaxSize().onFocusEvent { state -> if (state.isFocused || state.hasFocus) { showDatePickerDialog = true } },
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,
-            label = { Text(label, fontSize = 10.sp, color = textColor ?: Color.Unspecified) },
+            label = label,
             readOnly = true,
             maxLines = 1,
             trailingIcon = if (showCalendarIcon) { { Icon(Icons.Outlined.CalendarMonth, "Select date") } } else null,

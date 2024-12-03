@@ -76,4 +76,9 @@ class PartyViewModel(party: Party?) : ViewModel() {
         // TODO: country is also a required field. for supplier vatId may is also required. and for XRechnung supplier's contact details are also required
     }
 
+
+    init {
+        validate() // on initialize check if entered historical data are enough so that data is valid
+    }
+
 }

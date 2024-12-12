@@ -17,7 +17,7 @@ class DescriptionOfServicesViewModel(selectedServiceDateOption: ServiceDateOptio
         _serviceDateOption.value = newValue
     }
 
-    private val _currency = MutableStateFlow(invoice?.details?.currency ?: Currency.EUR) // TODO: get user's default currency
+    private val _currency = MutableStateFlow(invoice?.details?.currency ?: Currency.Euro) // TODO: get user's default currency
     val currency: StateFlow<Currency> = _currency.asStateFlow()
 
     fun currencyChanged(newValue: Currency) {

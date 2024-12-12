@@ -48,7 +48,7 @@ class PartyViewModel(party: Party?) : ViewModel() {
         validate()
     }
 
-    private val _country = MutableStateFlow(party?.country ?: Country.DE) // TODO: get users default country // TODO: use English names as Enum names
+    private val _country = MutableStateFlow(party?.country ?: Country.Germany) // TODO: get users default country // TODO: use English names as Enum names
     val country: StateFlow<Country> = _country.asStateFlow()
 
     fun countryChanged(newValue: Country) {

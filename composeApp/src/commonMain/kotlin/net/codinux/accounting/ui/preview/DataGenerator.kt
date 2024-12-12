@@ -23,7 +23,7 @@ object DataGenerator {
     val SupplierAdditionalAddressLine: String? = null
     const val SupplierPostalCode = "12345"
     const val SupplierCity = "Glückstadt"
-    val SupplierCountry = Country.DE
+    val SupplierCountry = Country.Germany
     const val SupplierVatId = "DE123456789"
     const val SupplierEmail = "working-class-hero@rock.me"
     const val SupplierPhone = "+4917012345678"
@@ -34,7 +34,7 @@ object DataGenerator {
     val CustomerAdditionalAddressLine: String? = null
     const val CustomerPostalCode = SupplierPostalCode
     const val CustomerCity = SupplierCity
-    val CustomerCountry = Country.DE
+    val CustomerCountry = SupplierCountry
     const val CustomerVatId = "DE987654321"
     const val CustomerEmail = "exploiter@your.boss"
     const val CustomerPhone = "+491234567890"
@@ -56,7 +56,7 @@ object DataGenerator {
         customer: Party = createParty(CustomerName, CustomerAddress, CustomerAdditionalAddressLine, CustomerPostalCode, CustomerCity, CustomerCountry, CustomerVatId, CustomerEmail, CustomerPhone,
             bankDetails = CustomerBankDetails),
         items: List<InvoiceItem> = listOf(createItem()),
-        currency: Currency = Currency.EUR,
+        currency: Currency = Currency.Euro,
         dueDate: LocalDate? = DueDate,
         paymentDescription: String? = dueDate?.let { "Zahlbar ohne Abzug bis ${DateTimeFormatter.ofPattern("dd.MM.yyyy").format(dueDate)}" },
         customerReferenceNumber: String? = null

@@ -2,6 +2,7 @@ package net.codinux.accounting.ui.extensions
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerIcon
@@ -23,6 +24,11 @@ fun Modifier.horizontalScroll() = this.horizontalScroll(ScrollState(0), enabled 
 fun Modifier.rememberHorizontalScroll() = this.horizontalScroll(rememberScrollState())
 
 fun Modifier.handCursor() = this.pointerHoverIcon(PointerIcon.Hand)
+
+
+fun Modifier.widthForScreen(isCompactScreen: Boolean, widthForCompactScreen: Dp, widthForLargeScreen: Dp) =
+    if (isCompactScreen) this.width(widthForCompactScreen)
+    else this.width(widthForLargeScreen)
 
 
 @Composable

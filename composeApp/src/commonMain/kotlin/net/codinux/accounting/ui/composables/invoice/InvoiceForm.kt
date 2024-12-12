@@ -25,6 +25,7 @@ import net.codinux.accounting.ui.composables.invoice.model.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.accounting.ui.extensions.widthForScreen
 import org.jetbrains.compose.resources.stringResource
 import java.time.LocalDate
 
@@ -83,7 +84,7 @@ fun InvoiceForm() {
 
         Section(Res.string.description_of_services) {
             Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-                Select(null, ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).width(if (isCompactScreen) 185.dp else 210.dp))
+                Select(null, ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).widthForScreen(isCompactScreen, 185.dp, 210.dp))
 
                 when (selectedServiceDateOption) {
                     ServiceDateOptions.DeliveryDate -> { DatePicker(null, serviceDate) { serviceDate = it } }

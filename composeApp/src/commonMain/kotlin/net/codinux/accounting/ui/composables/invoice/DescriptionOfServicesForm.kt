@@ -19,15 +19,37 @@ import net.codinux.accounting.resources.delivered_goods_or_provided_services
 import net.codinux.accounting.ui.composables.invoice.model.DescriptionOfServicesViewModel
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
+import net.codinux.accounting.ui.config.Style
 import org.jetbrains.compose.resources.stringResource
+
+
+private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
 fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompactScreen: Boolean) {
 
+    val currency by viewModel.currency.collectAsState()
+
     val invoiceItems by viewModel.items.collectAsState()
 
 
-    ServiceDateForm(viewModel, isCompactScreen)
+    if (isCompactScreen) {
+        Column(Modifier.fillMaxWidth().padding(top = VerticalRowPadding)) {
+            ServiceDateForm(viewModel, isCompactScreen)
+
+            Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), Arrangement.End, Alignment.CenterVertically) {
+                SelectCurrency(currency) { viewModel.currencyChanged(it) }
+            }
+        }
+    } else {
+        Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+            ServiceDateForm(viewModel, isCompactScreen)
+
+            Spacer(Modifier.weight(1f))
+
+            SelectCurrency(currency) { viewModel.currencyChanged(it) }
+        }
+    }
 
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().padding(top = 12.dp).height(30.dp), verticalAlignment = Alignment.CenterVertically) {

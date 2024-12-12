@@ -118,7 +118,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
         else null
 
         return Invoice(
-            InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value),
+            InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value, descriptionOfServices.currency.value),
             Party(supplier.name.value, supplier.address.value, supplier.additionalAddressLine.value, supplier.postalCode.value, supplier.city.value, supplier.country.value, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = mappedBankDetails),
             Party(customer.name.value, customer.address.value, customer.additionalAddressLine.value, customer.postalCode.value, customer.city.value, customer.country.value, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
             descriptionOfServices.items.value.map { InvoiceItem(it.name.value, it.quantity.value!!, it.unit.value, it.unitPrice.value!!, it.vatRate.value!!, it.description.value) }

@@ -21,18 +21,23 @@ fun <T> Select(
     modifier: Modifier = Modifier,
     required: Boolean = false,
     textColor: Color? = null,
+    textStyle: TextStyle? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     dropDownWidth: Dp? = null,
     dropDownItemContent: @Composable ((T) -> Unit)? = null
 ) {
     var showDropDownMenu by remember { mutableStateOf(false) }
 
+    val effectiveTextStyle = (textStyle ?: LocalTextStyle.current).let {
+        if (textColor != null) it.copy(textColor) else it
+    }
+
     ExposedDropdownMenuBox(showDropDownMenu, { isExpanded -> showDropDownMenu = isExpanded }, modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = getItemDisplayText(selectedItem),
             onValueChange = { },
             modifier = Modifier.fillMaxWidth(),
-            textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,
+            textStyle = effectiveTextStyle,
             label = label,
             readOnly = true,
             required = required,

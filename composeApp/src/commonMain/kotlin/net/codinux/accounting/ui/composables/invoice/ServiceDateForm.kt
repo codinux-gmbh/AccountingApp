@@ -1,6 +1,8 @@
 package net.codinux.accounting.ui.composables.invoice
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -13,13 +15,9 @@ import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
 import net.codinux.accounting.ui.composables.invoice.model.DescriptionOfServicesViewModel
-import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.widthForScreen
 import org.jetbrains.compose.resources.stringResource
 import java.time.LocalDate
-
-
-private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
 fun ServiceDateForm(viewModel: DescriptionOfServicesViewModel, isCompactScreen: Boolean) {
@@ -41,7 +39,7 @@ fun ServiceDateForm(viewModel: DescriptionOfServicesViewModel, isCompactScreen: 
     }
 
 
-    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Select(null, ServiceDateOptions.entries, selectedServiceDateOption, { viewModel.serviceDateOptionChanged(it) }, { getLabel(it) }, Modifier.padding(end = 8.dp).widthForScreen(isCompactScreen, 185.dp, 210.dp))
 
         when (selectedServiceDateOption) {

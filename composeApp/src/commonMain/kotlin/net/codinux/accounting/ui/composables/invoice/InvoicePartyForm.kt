@@ -56,9 +56,11 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         }
     }
 
-    InvoiceTextField(Res.string.email, email, keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
+    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+        InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
 
-    InvoiceTextField(Res.string.phone, phone, keyboardType = KeyboardType.Phone) { viewModel.phoneChanged(it) }
+        InvoiceTextField(Res.string.phone, phone, modifier = Modifier.weight(0.5f).padding(start = 4.dp), keyboardType = KeyboardType.Phone) { viewModel.phoneChanged(it) }
+    }
 
     InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
 }

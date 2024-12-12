@@ -3,13 +3,13 @@ kotlin = "2.0.21"
 kotlinx-coroutines = "1.9.0"
 
 
-invoicing="0.5.0-SNAPSHOT"
-pdfBoxAndroid="2.0.27.0"
-pdfBoxAndroidTextExtractor="0.6.1"
+invoicing = "0.5.0-SNAPSHOT"
+pdfBoxAndroid = "2.0.27.0"
+pdfBoxAndroidTextExtractor = "0.6.1"
 
-jackson="2.18.1"
+jackson = "2.18.1"
 
-klf = "1.6.2"
+klf = "1.8.0"
 
 
 filekit = "0.8.7"

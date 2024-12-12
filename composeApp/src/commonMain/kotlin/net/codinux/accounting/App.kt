@@ -21,7 +21,8 @@ private val typography = Typography(
 @Composable
 @Preview
 fun App() {
-    LoggerFactory.defaultLoggerName = "net.codinux.accounting"
+    LoggerFactory.config.defaultLoggerName = "net.codinux.accounting"
+    LoggerFactory.debugConfig.useCallerMethodIfLoggerNameNotSet = true
 
     val colors = MaterialTheme.colors.copy(primary = Colors.Primary, primaryVariant = Colors.PrimaryDark, onPrimary = Color.White,
         secondary = Colors.Accent, secondaryVariant = Colors.Accent, onSecondary = Color.White)

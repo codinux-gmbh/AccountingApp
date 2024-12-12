@@ -40,7 +40,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean) {
     InvoiceTextField(Res.string.address, address, true) { viewModel.addressChanged(it) }
 
     Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-        InvoiceTextField(Res.string.postal_code, postalCode, true, Modifier.width(130.dp).height(56.dp).padding(end = 12.dp), KeyboardType.Ascii) { viewModel.postalCodeChanged(it) }
+        InvoiceTextField(Res.string.postal_code, postalCode, true, Modifier.width(130.dp).padding(end = 12.dp), KeyboardType.Ascii) { viewModel.postalCodeChanged(it) }
 
         InvoiceTextField(Res.string.city, city, true, Modifier.weight(1f)) { viewModel.cityChanged(it) }
     }

@@ -15,7 +15,7 @@ import net.codinux.invoicing.model.codes.Currency
 @Composable
 fun SelectCurrency(value: Currency, onValueChanged: (Currency) -> Unit) {
 
-    Select(Res.string.currency, Currency.entries.sortedBy { it.alpha3Code }, value, { onValueChanged(it) }, { it.currencySymbol ?: it.alpha3Code },
+    Select(Res.string.currency, Currency.entries.sortedBy { it.englishName }, value, { onValueChanged(it) }, { it.currencySymbol ?: it.alpha3Code }, // TODO: sort by user's display name
         Modifier.width(110.dp), textStyle = TextStyle(textAlign = TextAlign.End), dropDownWidth = 300.dp) { currency ->
         Text("${currency.englishName} (${currency.currencySymbol ?: currency.alpha3Code})") // TODO: translate
     }

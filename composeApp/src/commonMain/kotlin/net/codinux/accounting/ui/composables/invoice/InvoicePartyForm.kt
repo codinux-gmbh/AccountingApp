@@ -50,7 +50,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
 
         InvoiceTextField(Res.string.city, city, true, Modifier.weight(1f)) { viewModel.cityChanged(it) }
 
-        Select(Res.string.country, Country.entries.sortedBy { it.alpha2Code }, country, { viewModel.countryChanged(it) },
+        Select(Res.string.country, Country.entries.sortedBy { it.englishName }, country, { viewModel.countryChanged(it) }, // TODO: sort by user's displayName
             { if (isCompactScreen) it.alpha2Code else it.englishName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp), dropDownWidth = 300.dp) { country ->
             Text(country.englishName) // TODO: translate
         }

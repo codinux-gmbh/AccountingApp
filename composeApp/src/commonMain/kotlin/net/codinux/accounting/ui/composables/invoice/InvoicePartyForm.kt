@@ -1,6 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -9,14 +10,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.PartyViewModel
 import net.codinux.accounting.ui.config.Style
+import net.codinux.accounting.ui.extensions.widthForScreen
+import net.codinux.invoicing.model.codes.Country
 
 
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
-fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean) {
+fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactScreen: Boolean) {
 
     val name by viewModel.name.collectAsState()
 
@@ -25,6 +29,8 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean) {
     val postalCode by viewModel.postalCode.collectAsState()
 
     val city by viewModel.city.collectAsState()
+
+    val country by viewModel.country.collectAsState()
 
 
     val phone by viewModel.phone.collectAsState()
@@ -40,9 +46,14 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean) {
     InvoiceTextField(Res.string.address, address, true) { viewModel.addressChanged(it) }
 
     Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-        InvoiceTextField(Res.string.postal_code, postalCode, true, Modifier.width(130.dp).padding(end = 12.dp), KeyboardType.Ascii) { viewModel.postalCodeChanged(it) }
+        InvoiceTextField(Res.string.postal_code, postalCode, true, Modifier.widthForScreen(isCompactScreen, 114.dp, 130.dp).padding(end = 8.dp), KeyboardType.Ascii) { viewModel.postalCodeChanged(it) }
 
         InvoiceTextField(Res.string.city, city, true, Modifier.weight(1f)) { viewModel.cityChanged(it) }
+
+        Select(Res.string.country, Country.entries.sortedBy { it.alpha2Code }, country, { viewModel.countryChanged(it) },
+            { if (isCompactScreen) it.alpha2Code else it.englishName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp), dropDownWidth = 300.dp) { country ->
+            Text(country.englishName) // TODO: translate
+        }
     }
 
     InvoiceTextField(Res.string.email, email, keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }

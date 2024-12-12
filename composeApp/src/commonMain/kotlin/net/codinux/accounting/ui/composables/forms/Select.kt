@@ -1,11 +1,13 @@
 package net.codinux.accounting.ui.composables.forms
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.Dp
 import org.jetbrains.compose.resources.StringResource
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -20,6 +22,7 @@ fun <T> Select(
     required: Boolean = false,
     textColor: Color? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
+    dropDownWidth: Dp? = null,
     dropDownItemContent: @Composable ((T) -> Unit)? = null
 ) {
     var showDropDownMenu by remember { mutableStateOf(false) }
@@ -40,7 +43,7 @@ fun <T> Select(
 
         // due to a bug (still not fixed since 2021) in ExposedDropdownMenu its popup has a maximum width of 800 pixel / 320dp which is too less to fit
         // TextField's width, see https://issuetracker.google.com/issues/205589613
-        DropdownMenu(showDropDownMenu, { showDropDownMenu = false }, Modifier.exposedDropdownSize(true)) {
+        DropdownMenu(showDropDownMenu, { showDropDownMenu = false }, Modifier.let { if (dropDownWidth != null) it.width(dropDownWidth) else it.exposedDropdownSize(true) }) {
             items.forEach { item ->
                 DropdownMenuItem(
                     onClick = {

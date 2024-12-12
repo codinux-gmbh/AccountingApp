@@ -16,6 +16,7 @@ import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
+import net.codinux.invoicing.model.codes.Currency
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -46,10 +47,10 @@ fun InvoiceView(invoice: Invoice) {
                 Text(stringResource(Res.string.delivered_goods_or_provided_services), Modifier.padding(top = 8.dp), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
                 invoice.items.forEachIndexed { index, item ->
-                    InvoiceItemView(index, item)
+                    InvoiceItemView(index, item, invoice.details.currency)
                 }
 
-                invoice.totals?.let { TotalAmountsView(it, true) }
+                invoice.totals?.let { TotalAmountsView(invoice.details.currency, it, true) }
             }
 
             invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice.supplier) }
@@ -75,7 +76,7 @@ private fun PersonFields(party: Party) {
 }
 
 @Composable
-private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem) {
+private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem, currency: Currency) {
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
         Text("${zeroBasedItemIndex + 1}.", Modifier.padding(start = 4.dp), textAlign = TextAlign.End)
 
@@ -84,7 +85,7 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem) {
         Text(formatUtil.formatQuantity(item.quantity), Modifier.width(32.dp).padding(start = 4.dp), textAlign = TextAlign.End, maxLines = 1)
         Text(item.unit, Modifier.width(32.dp).padding(start = 4.dp), maxLines = 1)
         Text("à", Modifier.padding(start = 4.dp))
-        Text(formatUtil.formatAmountOfMoney(item.unitPrice, true), Modifier.width(64.dp).padding(start = 4.dp), maxLines = 1)
+        Text(formatUtil.formatAmountOfMoney(item.unitPrice, currency, true), Modifier.width(64.dp).padding(start = 4.dp), maxLines = 1)
         // Text(",")
         Text(formatUtil.formatPercentage(item.vatRate), Modifier.width(34.dp).padding(start = 4.dp), maxLines = 1)
     }

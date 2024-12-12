@@ -77,7 +77,7 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
             InvoiceItemForm(item)
         }
 
-        TotalAmountsView(totalAmounts, false)
+        TotalAmountsView(currency, totalAmounts, false)
     }
 
 }

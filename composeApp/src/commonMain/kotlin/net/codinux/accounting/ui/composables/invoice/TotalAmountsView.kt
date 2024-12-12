@@ -15,6 +15,7 @@ import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.invoicing.model.TotalAmounts
+import net.codinux.invoicing.model.codes.Currency
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import java.math.BigDecimal
@@ -23,7 +24,7 @@ import java.math.BigDecimal
 private val formatUtil = DI.formatUtil
 
 @Composable
-fun TotalAmountsView(totals: TotalAmounts, showSeparatorFromPreviousElement: Boolean) {
+fun TotalAmountsView(currency: Currency, totals: TotalAmounts, showSeparatorFromPreviousElement: Boolean) {
     if (showSeparatorFromPreviousElement) {
         Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
             Spacer(Modifier.weight(1f))
@@ -31,24 +32,24 @@ fun TotalAmountsView(totals: TotalAmounts, showSeparatorFromPreviousElement: Boo
         }
     }
 
-    AmountRow(Res.string.net_amount, totals.lineTotalAmount)
-    AmountRow(Res.string.vat_amount, totals.taxTotalAmount)
+    AmountRow(Res.string.net_amount, totals.lineTotalAmount, currency)
+    AmountRow(Res.string.vat_amount, totals.taxTotalAmount, currency)
 
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
         Divider(Modifier.width(160.dp), Color.Black, 1.5.dp)
     }
 
-    AmountRow(Res.string.total_amount, totals.duePayableAmount)
+    AmountRow(Res.string.total_amount, totals.duePayableAmount, currency)
 }
 
 @Composable
-private fun AmountRow(label: StringResource, amount: BigDecimal) {
+private fun AmountRow(label: StringResource, amount: BigDecimal, currency: Currency) {
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
 
         Text(stringResource(label), Modifier.width(70.dp), Colors.FormLabelTextColor, Style.LabelledValueFontSize, maxLines = 1)
 
-        Text(formatUtil.formatAmountOfMoney(amount), Modifier.width(90.dp).padding(start = 4.dp), Colors.FormValueTextColor, Style.LabelledValueFontSize, fontFamily = FontFamily.Monospace, textAlign = TextAlign.End, maxLines = 1)
+        Text(formatUtil.formatAmountOfMoney(amount, currency), Modifier.width(90.dp).padding(start = 4.dp), Colors.FormValueTextColor, Style.LabelledValueFontSize, fontFamily = FontFamily.Monospace, textAlign = TextAlign.End, maxLines = 1)
     }
 }

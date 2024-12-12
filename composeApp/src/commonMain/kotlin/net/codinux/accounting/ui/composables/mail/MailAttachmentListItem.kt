@@ -25,12 +25,13 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
 
     RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp).clickableWithHandCursorIf(attachment.containsEInvoice || attachment.couldExtractPdfInvoiceData) { showInvoice = true }) {
         var displayText = attachment.filename
+
         attachment.invoice?.totals?.duePayableAmount?.let { total ->
-            displayText += " (${formatUtil.formatAmountOfMoney(total, true)})"
+            displayText += " (${formatUtil.formatAmountOfMoney(total, attachment.invoice?.details?.currency, true)})"
         }
         if (attachment.invoice?.totals?.duePayableAmount == null) {
             attachment.pdfInvoiceData?.potentialTotalAmount?.let { total ->
-                displayText += " (${formatUtil.formatAmountOfMoney(total.amount, true)})"
+                displayText += " (${formatUtil.formatAmountOfMoney(total.amount, total.currency, true)})"
             }
         }
 

@@ -1,7 +1,10 @@
 package net.codinux.accounting.ui.service
 
+import net.codinux.invoicing.model.codes.Currency
+import net.codinux.log.Log
 import java.math.BigDecimal
 import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -17,7 +20,12 @@ class FormatUtil {
 
 
         private val CurrencyFormat = DecimalFormat.getCurrencyInstance()
+        private val CurrencyFormatForCustomCurrency = DecimalFormat.getCurrencyInstance()
+
         private val CurrencyFormatWithoutDecimalPlaces = DecimalFormat.getCurrencyInstance().apply {
+            maximumFractionDigits = 0
+        }
+        private val CurrencyFormatWithoutDecimalPlacesForCustomCurrency = DecimalFormat.getCurrencyInstance().apply {
             maximumFractionDigits = 0
         }
 
@@ -43,12 +51,38 @@ class FormatUtil {
         instant.atZone(ZoneId.systemDefault()).toLocalDate()
 
 
-    fun formatAmountOfMoney(amount: BigDecimal, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String =
+    fun formatAmountOfMoney(amount: BigDecimal, currency: Currency? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String =
+        formatAmountOfMoney(amount, currency?.alpha3Code, ignoreEmptyDecimalPlacesForLargerAmounts)
+
+    fun formatAmountOfMoney(amount: BigDecimal, currencyIsoCode: String? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String =
         if (ignoreEmptyDecimalPlacesForLargerAmounts && hasDecimalPlaces(amount) == false && amount.compareTo(BigDecimal(1_000)) >= 0) {
-            CurrencyFormatWithoutDecimalPlaces.format(amount)
+            getForCurrency(CurrencyFormatWithoutDecimalPlaces, CurrencyFormatWithoutDecimalPlacesForCustomCurrency, currencyIsoCode).format(amount)
         } else {
-            CurrencyFormat.format(amount)
+            getForCurrency(CurrencyFormat, CurrencyFormatForCustomCurrency, currencyIsoCode).format(amount)
         }
+
+    private fun getForCurrency(currencyFormat: NumberFormat, currencyFormatForCustomCurrency: NumberFormat, currencyCode: String?): NumberFormat {
+        val currency = try {
+            currencyCode?.let { java.util.Currency.getInstance(currencyCode) }
+        } catch (_: Throwable) {
+            if (currencyCode != null && currencyCode.length < 3) { // then currencyIsoCode is probably the currency symbol
+                Currency.entries.firstOrNull { it.currencySymbol == currencyCode }?.let {
+                    java.util.Currency.getInstance(it.alpha3Code)
+                }
+            } else {
+                Log.warn { "Could not map currency ISO code '$currencyCode' to Currency" }
+                null
+            }
+        }
+
+        return if (currency != null) {
+            currencyFormatForCustomCurrency.apply {
+                this.currency = currency
+            }
+        } else {
+            currencyFormat
+        }
+    }
 
     fun formatPercentage(percentage: BigDecimal): String =
         PercentageFormat.format(percentage.divide(BigDecimal(100)))

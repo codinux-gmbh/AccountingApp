@@ -17,6 +17,7 @@ import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.invoicing.pdf.AmountOfMoney
 import net.codinux.invoicing.pdf.PdfInvoiceData
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -40,11 +41,11 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
                     Section(Res.string.possible_invoice_data) {
                         Text(stringResource(Res.string.possible_invoice_data_explanation), Modifier.padding(vertical = 6.dp))
 
-                        AmountRow(Res.string.total_amount, data.potentialTotalAmount.amount)
+                        AmountRow(Res.string.total_amount, data.potentialTotalAmount)
 
-                        AmountRow(Res.string.net_amount, data.potentialNetAmount?.amount)
+                        AmountRow(Res.string.net_amount, data.potentialNetAmount)
 
-                        AmountRow(Res.string.vat_amount, data.potentialValueAddedTax?.amount)
+                        AmountRow(Res.string.vat_amount, data.potentialValueAddedTax)
 
                         StringValueRow(Res.string.vat_rate, data.potentialValueAddedTaxRate?.let { formatUtil.formatPercentage(it) })
 
@@ -92,8 +93,8 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
 }
 
 @Composable
-private fun AmountRow(label: StringResource, amount: BigDecimal?) {
-    StringValueRow(label, amount?.let { formatUtil.formatAmountOfMoney(amount) })
+private fun AmountRow(label: StringResource, amountOfMoney: AmountOfMoney?) {
+    StringValueRow(label, amountOfMoney?.let { formatUtil.formatAmountOfMoney(it.amount, it.currency) })
 }
 
 @Composable

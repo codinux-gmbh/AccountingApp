@@ -51,13 +51,15 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, selectedServiceDateOption: ServiceDateOptions, invoiceItems: List<InvoiceItemViewModel>, bankDetails: BankDetailsViewModel) {
+fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel) {
 
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
     val isSupplierValid by supplier.isValid.collectAsState()
 
     val isCustomerValid by customer.isValid.collectAsState()
+
+    val invoiceItems by descriptionOfServices.items.collectAsState()
 
     val areInvoiceItemsValid = combine(invoiceItems.map { it.isValid }) {
         it.all { it }
@@ -119,7 +121,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
             InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value),
             Party(supplier.name.value, supplier.address.value, supplier.additionalAddressLine.value, supplier.postalCode.value, supplier.city.value, supplier.country.value, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = mappedBankDetails),
             Party(customer.name.value, customer.address.value, customer.additionalAddressLine.value, customer.postalCode.value, customer.city.value, customer.country.value, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
-            invoiceItems.map { InvoiceItem(it.name.value, it.quantity.value!!, it.unit.value, it.unitPrice.value!!, it.vatRate.value!!, it.description.value) }
+            descriptionOfServices.items.value.map { InvoiceItem(it.name.value, it.quantity.value!!, it.unit.value, it.unitPrice.value!!, it.vatRate.value!!, it.description.value) }
         )
     }
 
@@ -140,7 +142,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                     }
                 }
 
-                invoiceService.saveHistoricalInvoiceData(HistoricalInvoiceData(invoice, selectedServiceDateOption, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
+                invoiceService.saveHistoricalInvoiceData(HistoricalInvoiceData(invoice, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create or save eInvoice" }
 

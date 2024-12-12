@@ -47,7 +47,7 @@ fun AddEmailAccountDialog() {
         confirmButtonEnabled = isAddingAccount == false,
         showProgressIndicatorOnConfirmButton = isAddingAccount,
         backgroundColor = Colors.MainBackgroundColor,
-        useMoreThanPlatformDefaultWidthOnMobile = true,
+        useMoreThanPlatformDefaultWidthOnSmallScreens = true,
         callOnDismissAfterOnConfirm = false,
         onConfirm = { addMailAccount() },
         onDismiss = { dismiss() }

@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isDesktop
+import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.composables.forms.Select
@@ -56,7 +56,7 @@ fun InvoiceForm() {
         *(historicalData.lastCreatedInvoice?.items?.map { InvoiceItemViewModel(it) }?.toTypedArray() ?: arrayOf(InvoiceItemViewModel()))
     ) }
 
-    val isLargeDisplay = Platform.isDesktop
+    val isCompactScreen = Platform.isCompactScreen
 
 
     @Composable
@@ -70,7 +70,7 @@ fun InvoiceForm() {
 
     Column(Modifier.fillMaxWidth()) {
         Section(Res.string.invoice_details) {
-            InvoiceDetailsForm(details, isLargeDisplay)
+            InvoiceDetailsForm(details, isCompactScreen)
         }
 
         Section(Res.string.supplier) {
@@ -83,7 +83,7 @@ fun InvoiceForm() {
 
         Section(Res.string.description_of_services) {
             Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-                Select(null, ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).width(if (isLargeDisplay) 210.dp else 185.dp))
+                Select(null, ServiceDateOptions.entries, selectedServiceDateOption, { selectedServiceDateOption = it }, { getLabel(it) }, Modifier.padding(end = 8.dp).width(if (isCompactScreen) 185.dp else 210.dp))
 
                 when (selectedServiceDateOption) {
                     ServiceDateOptions.DeliveryDate -> { DatePicker(null, serviceDate) { serviceDate = it } }

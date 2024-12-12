@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isDesktop
+import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.DatePickerDialog
@@ -28,7 +28,7 @@ private val formatUtil = DI.formatUtil
 fun DatePicker(
     label: StringResource?,
     selectedDate: LocalDate? = null,
-    modifier: Modifier = Modifier.width(if (Platform.isDesktop) 90.dp else 86.dp).heightIn(min = 45.dp),
+    modifier: Modifier = Modifier.width(if (Platform.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
     showCalendarIcon: Boolean = false,
     moveFocusOnToNextElementOnSelection: Boolean = true,
     dateFormatter: DateTimeFormatter? = null,

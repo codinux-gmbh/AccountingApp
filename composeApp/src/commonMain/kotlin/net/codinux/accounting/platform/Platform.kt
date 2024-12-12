@@ -29,3 +29,6 @@ val Platform.isDesktop: Boolean
 
 val Platform.isAndroid: Boolean
     get() = this.type == PlatformType.Android
+
+val Platform.isCompactScreen: Boolean
+    get() = this.isMobile // TODO: find a better and dynamic way to decide this

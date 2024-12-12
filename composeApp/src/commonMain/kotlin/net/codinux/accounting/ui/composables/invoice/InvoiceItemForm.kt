@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isMobile
+import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.OutlinedNumberTextField
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
@@ -21,7 +21,7 @@ import org.jetbrains.compose.resources.StringResource
 import java.math.BigDecimal
 
 
-private val isCompactScreen = Platform.isMobile
+private val isCompactScreen = Platform.isCompactScreen
 
 private val SmallerFieldsWidth = 92.dp
 

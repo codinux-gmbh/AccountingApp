@@ -27,8 +27,8 @@ fun Modifier.handCursor() = this.pointerHoverIcon(PointerIcon.Hand)
 
 @Composable
 // we need to support three different cases:
-// - normal, non fullscreen dialog, either useMoreThanPlatformDefaultWidthOnMobile is false or soft keyboard is hidden -> apply default vertical padding
-// - normal, non fullscreen dialog, useMoreThanPlatformDefaultWidthOnMobile is true and soft keyboard is visible = applyPlatformPadding == true -> on iOS apply platform padding as
+// - normal, non fullscreen dialog, either useMoreThanPlatformDefaultWidthOnSmallScreens is false or soft keyboard is hidden -> apply default vertical padding
+// - normal, non fullscreen dialog, useMoreThanPlatformDefaultWidthOnSmallScreens is true and soft keyboard is visible = applyPlatformPadding == true -> on iOS apply platform padding as
 //   otherwise dialog title gets hidden by upper system bar, on all other platforms default vertical padding
 // - fullscreen dialog -> on iOS apply platform padding as otherwise dialog title gets hidden by upper system bar, on all other platforms default vertical padding
 fun Modifier.applyPlatformSpecificPaddingIf(applyPlatformPadding: Boolean, minVerticalPadding: Dp = 0.dp): Modifier =

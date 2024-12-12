@@ -16,9 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.PlatformType
-import net.codinux.accounting.platform.isMobile
+import net.codinux.accounting.platform.*
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.CloseButton
 import net.codinux.accounting.ui.composables.HeaderText
@@ -39,7 +37,7 @@ fun BaseDialog(
     confirmButtonEnabled: Boolean = true,
     dismissButtonTitle: String = stringResource(Res.string.cancel),
     showProgressIndicatorOnConfirmButton: Boolean = false,
-    useMoreThanPlatformDefaultWidthOnMobile: Boolean = false,
+    useMoreThanPlatformDefaultWidthOnSmallScreens: Boolean = false,
     backgroundColor: Color = MaterialTheme.colors.surface,
     callOnDismissAfterOnConfirm: Boolean = true,
     onDismiss: () -> Unit,
@@ -47,7 +45,7 @@ fun BaseDialog(
     properties: DialogProperties = DialogProperties(),
     content: @Composable () -> Unit
 ) {
-    val overwriteDefaultWidth = useMoreThanPlatformDefaultWidthOnMobile && Platform.isMobile // TODO: check for UiType.Compact rather
+    val overwriteDefaultWidth = useMoreThanPlatformDefaultWidthOnSmallScreens && Platform.isCompactScreen
 
     var isKeyboardVisible by remember { mutableStateOf(false) }
 

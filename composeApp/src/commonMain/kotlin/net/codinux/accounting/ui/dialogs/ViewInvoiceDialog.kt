@@ -15,7 +15,7 @@ fun ViewInvoiceDialog(invoice: Invoice, onDismiss: () -> Unit) {
         title = stringResource(Res.string.invoice_view),
         centerTitle = true,
         confirmButtonVisible = false,
-        useMoreThanPlatformDefaultWidthOnMobile = true,
+        useMoreThanPlatformDefaultWidthOnSmallScreens = true,
         backgroundColor = Colors.MainBackgroundColor,
         onDismiss = onDismiss
     ) {

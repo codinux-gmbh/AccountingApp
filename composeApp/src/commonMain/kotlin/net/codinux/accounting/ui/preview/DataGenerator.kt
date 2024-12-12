@@ -5,6 +5,8 @@ import net.codinux.invoicing.email.model.ContentDisposition
 import net.codinux.invoicing.email.model.EmailAddress
 import net.codinux.invoicing.email.model.EmailAttachment
 import net.codinux.invoicing.model.*
+import net.codinux.invoicing.model.codes.Country
+import net.codinux.invoicing.model.codes.Currency
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.ZoneId
@@ -18,9 +20,10 @@ object DataGenerator {
 
     const val SupplierName = "Hochwürdiger Leistungserbringer"
     const val SupplierAddress = "Fun Street 1"
+    val SupplierAdditionalAddressLine: String? = null
     const val SupplierPostalCode = "12345"
     const val SupplierCity = "Glückstadt"
-    const val SupplierCountry = "DE"
+    val SupplierCountry = Country.DE
     const val SupplierVatId = "DE123456789"
     const val SupplierEmail = "working-class-hero@rock.me"
     const val SupplierPhone = "+4917012345678"
@@ -28,9 +31,10 @@ object DataGenerator {
 
     const val CustomerName = "Untertänigster Leistungsempfänger"
     const val CustomerAddress = "Party Street 1"
+    val CustomerAdditionalAddressLine: String? = null
     const val CustomerPostalCode = SupplierPostalCode
     const val CustomerCity = SupplierCity
-    const val CustomerCountry = "DE"
+    val CustomerCountry = Country.DE
     const val CustomerVatId = "DE987654321"
     const val CustomerEmail = "exploiter@your.boss"
     const val CustomerPhone = "+491234567890"
@@ -47,29 +51,31 @@ object DataGenerator {
     fun createInvoice(
         invoiceNumber: String = InvoiceNumber,
         invoicingDate: LocalDate = InvoicingDate,
-        supplier: Party = createParty(SupplierName, SupplierAddress, SupplierPostalCode, SupplierCity, SupplierCountry, SupplierVatId, SupplierEmail, SupplierPhone,
+        supplier: Party = createParty(SupplierName, SupplierAddress, SupplierAdditionalAddressLine, SupplierPostalCode, SupplierCity, SupplierCountry, SupplierVatId, SupplierEmail, SupplierPhone,
             bankDetails = SupplierBankDetails),
-        customer: Party = createParty(CustomerName, CustomerAddress, CustomerPostalCode, CustomerCity, CustomerCountry, CustomerVatId, CustomerEmail, CustomerPhone,
+        customer: Party = createParty(CustomerName, CustomerAddress, CustomerAdditionalAddressLine, CustomerPostalCode, CustomerCity, CustomerCountry, CustomerVatId, CustomerEmail, CustomerPhone,
             bankDetails = CustomerBankDetails),
         items: List<InvoiceItem> = listOf(createItem()),
+        currency: Currency = Currency.EUR,
         dueDate: LocalDate? = DueDate,
         paymentDescription: String? = dueDate?.let { "Zahlbar ohne Abzug bis ${DateTimeFormatter.ofPattern("dd.MM.yyyy").format(dueDate)}" },
         customerReferenceNumber: String? = null
-    ) = Invoice(InvoiceDetails(invoiceNumber, invoicingDate, dueDate, paymentDescription), supplier, customer, items, customerReferenceNumber)
+    ) = Invoice(InvoiceDetails(invoiceNumber, invoicingDate, currency, dueDate, paymentDescription), supplier, customer, items, customerReferenceNumber)
 
     fun createParty(
         name: String,
         address: String = SupplierAddress,
+        additionalAddressLine: String? = SupplierAdditionalAddressLine,
         postalCode: String = SupplierPostalCode,
         city: String = SupplierCity,
-        country: String? = SupplierCountry,
+        country: Country = SupplierCountry,
         vatId: String? = SupplierVatId,
         email: String? = SupplierEmail,
         phone: String? = SupplierPhone,
         fax: String? = null,
         contactName: String? = null,
         bankDetails: BankDetails? = null
-    ) = Party(name, address, null, postalCode, city, country, vatId, email, phone, fax, contactName, bankDetails)
+    ) = Party(name, address, additionalAddressLine, postalCode, city, country, vatId, email, phone, fax, contactName, bankDetails)
 
     fun createItem(
         name: String = ItemName,

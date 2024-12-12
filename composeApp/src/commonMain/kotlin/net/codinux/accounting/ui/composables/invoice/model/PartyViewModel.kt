@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.codinux.invoicing.model.Party
+import net.codinux.invoicing.model.codes.Country
 
 class PartyViewModel(party: Party?) : ViewModel() {
 
@@ -24,6 +25,13 @@ class PartyViewModel(party: Party?) : ViewModel() {
         validate()
     }
 
+    private val _additionalAddressLine = MutableStateFlow(party?.additionalAddressLine ?: "")
+    val additionalAddressLine: StateFlow<String> = _additionalAddressLine.asStateFlow()
+
+    fun additionalAddressLineChanged(newValue: String) {
+        _additionalAddressLine.value = newValue
+    }
+
     private val _postalCode = MutableStateFlow(party?.postalCode ?: "")
     val postalCode: StateFlow<String> = _postalCode.asStateFlow()
 
@@ -38,6 +46,13 @@ class PartyViewModel(party: Party?) : ViewModel() {
     fun cityChanged(newValue: String) {
         _city.value = newValue
         validate()
+    }
+
+    private val _country = MutableStateFlow(party?.country ?: Country.DE) // TODO: get users default country // TODO: use English names as Enum names
+    val country: StateFlow<Country> = _country.asStateFlow()
+
+    fun countryChanged(newValue: Country) {
+        _country.value = newValue
     }
 
 

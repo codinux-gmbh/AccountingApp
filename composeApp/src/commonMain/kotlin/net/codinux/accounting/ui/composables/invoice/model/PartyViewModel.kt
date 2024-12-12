@@ -88,7 +88,7 @@ class PartyViewModel(party: Party?) : ViewModel() {
 
     fun validate() {
         _isValid.value = _name.value.isNotBlank() && _address.value.isNotBlank() && _postalCode.value.isNotBlank() && _city.value.isNotBlank()
-        // TODO: country is also a required field. for supplier vatId may is also required. and for XRechnung supplier's contact details are also required
+        // TODO: for supplier vatId may is also required. and for XRechnung supplier's contact details are also required
     }
 
 

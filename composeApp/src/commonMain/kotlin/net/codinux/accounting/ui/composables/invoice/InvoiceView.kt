@@ -65,7 +65,7 @@ private fun PersonFields(party: Party) {
 
     HorizontalLabelledValue(Res.string.address, party.address)
 
-    HorizontalLabelledValue(Res.string.city, "${party.postalCode} ${party.city}${party.country.alpha2Code}") // TODO: translate; // TODO: this can't be valid that all countries have an alpha-2 code
+    HorizontalLabelledValue(Res.string.city, "${party.postalCode} ${party.city} ${party.country.alpha2Code}") // TODO: translate; // TODO: this can't be valid that all countries have an alpha-2 code
 
     HorizontalLabelledValue(Res.string.email, party.email)
     party.phone?.let { HorizontalLabelledValue(Res.string.phone, party.phone) }

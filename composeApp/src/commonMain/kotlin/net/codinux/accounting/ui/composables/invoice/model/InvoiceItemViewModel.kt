@@ -74,4 +74,8 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     init {
         validate() // on initialize check if entered historical data are enough so that data is valid
     }
+
+
+    fun toInvoiceItem() = InvoiceItem(name.value, quantity.value ?: BigDecimal.ZERO, unit.value,
+        unitPrice.value ?: BigDecimal.ZERO, vatRate.value ?: BigDecimal.ZERO, description.value)
 }

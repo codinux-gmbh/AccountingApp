@@ -23,6 +23,8 @@
 
     <string name="month">Monat</string>
 
+    <string name="currency">Währung</string>
+
 
     <!-- errors -->
     <string name="error_message">Fehlermeldung</string>

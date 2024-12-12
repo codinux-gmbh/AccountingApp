@@ -6,9 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -19,9 +17,12 @@ import net.codinux.accounting.resources.delivered_goods_or_provided_services
 import net.codinux.accounting.ui.composables.invoice.model.DescriptionOfServicesViewModel
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
+import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import org.jetbrains.compose.resources.stringResource
 
+
+private val calculationService = DI.calculationService
 
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
@@ -31,6 +32,16 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
     val currency by viewModel.currency.collectAsState()
 
     val invoiceItems by viewModel.items.collectAsState()
+
+    val quantities = invoiceItems.map { it.quantity.collectAsState().value } // to be notified if a quantity, unit price or vat rate changes
+
+    val unitPrices = invoiceItems.map { it.unitPrice.collectAsState().value }
+
+    val vatRates = invoiceItems.map { it.vatRate.collectAsState().value }
+
+    val totalAmounts = remember(invoiceItems, quantities, unitPrices, vatRates) {
+        calculationService.calculateTotalAmounts(invoiceItems)
+    }
 
 
     if (isCompactScreen) {
@@ -65,6 +76,8 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
         invoiceItems.forEach { item ->
             InvoiceItemForm(item)
         }
+
+        TotalAmountsView(totalAmounts, false)
     }
 
 }

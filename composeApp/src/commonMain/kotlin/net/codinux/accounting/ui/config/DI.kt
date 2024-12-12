@@ -3,6 +3,7 @@ package net.codinux.accounting.ui.config
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
+import net.codinux.accounting.domain.invoice.service.CalculationService
 import net.codinux.accounting.domain.invoice.service.InvoiceService
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.MailService
@@ -35,9 +36,13 @@ object DI {
 
     val fileHandler = PlatformDependencies.fileHandler
 
+
     private val invoiceReader = PlatformDependencies.invoiceReader
 
+    val calculationService = CalculationService()
+
     val invoiceService = InvoiceService(uiState, PlatformDependencies.invoiceCreator, invoiceReader, InvoiceRepository(jsonMapper, databaseDirectory), fileHandler, invoicesDirectory)
+
 
     private val invoiceDataExtractor = PdfInvoiceDataExtractor(PlatformDependencies.pdfTextExtractor)
 

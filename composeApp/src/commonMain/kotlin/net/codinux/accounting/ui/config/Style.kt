@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.sp
 
 object Style {
 
-    val ToolbarButtonFontSize = 13.sp
+    val ToolbarButtonFontSize = 12.sp
 
 
     // had to apply it per tab, not commonly in MainScreen, as otherwise tab's scroll container

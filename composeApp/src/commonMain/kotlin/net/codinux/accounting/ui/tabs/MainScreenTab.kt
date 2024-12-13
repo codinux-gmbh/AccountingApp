@@ -5,7 +5,9 @@ enum class MainScreenTab {
 
     BankAccounts,
 
-    Invoices,
+    ViewInvoice,
+
+    CreateInvoice,
 
     Mails
 }

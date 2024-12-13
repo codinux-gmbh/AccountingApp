@@ -10,7 +10,7 @@ import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
 
-    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.Mails)
+    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.ViewInvoice)
 
 
     val historicalInvoiceData = MutableStateFlow(HistoricalInvoiceData())

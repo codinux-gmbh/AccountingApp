@@ -17,7 +17,7 @@ fun ToolbarButton(tab: MainScreenTab, selectedTab: MainScreenTab, icon: ImageVec
 
     val color = LocalContentColor.current.copy(alpha = if (tab == selectedTab) ContentAlpha.medium else ContentAlpha.disabled)
 
-    IconButton({ DI.uiState.selectedMainScreenTab.value = tab }, Modifier.width(100.dp).fillMaxHeight().padding(vertical = 4.dp, horizontal = 12.dp)) {
+    IconButton({ DI.uiState.selectedMainScreenTab.value = tab }, Modifier.width(135.dp).fillMaxHeight().padding(vertical = 4.dp, horizontal = 12.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
                 Icon(icon, label, Modifier.size(24.dp), color)

@@ -31,14 +31,17 @@ fun MainScreen() {
         // deleted when switching tabs. To retain data don't remove tab from composition tree but
         // make it invisible by e.g. shrinking tab height to 0 dp
 
-        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Postings, selectedTab)) {
-            PostingsTab()
+//        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Postings, selectedTab)) {
+//            PostingsTab()
+//        }
+//        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.BankAccounts, selectedTab)) {
+//            BankAccountsTab()
+//        }
+        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.ViewInvoice, selectedTab)) {
+            ViewInvoiceTab()
         }
-        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.BankAccounts, selectedTab)) {
-            BankAccountsTab()
-        }
-        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Invoices, selectedTab)) {
-            InvoicesTab()
+        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.CreateInvoice, selectedTab)) {
+            CreateInvoiceTab()
         }
         Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
             MailsTab(uiState.emails)

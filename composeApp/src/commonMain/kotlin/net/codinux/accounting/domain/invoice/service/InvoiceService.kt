@@ -12,6 +12,7 @@ import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.state.UiState
+import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.EInvoiceCreator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
@@ -35,6 +36,14 @@ class InvoiceService(
     companion object {
         private val InvoicingDateFilenameFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
 
+        private val EuropeanCountries = (Region.WesternEurope.contains + Region.NorthernEurope.contains
+                + Region.EasternEurope.contains + Region.SouthernEurope.contains).toSet()
+
+        private val PrioritizedCountries = listOf(
+            *Country.entries.filter { it.alpha2Code in EuropeanCountries }.toTypedArray(),
+            Country.UnitedStates, Country.Canada, Country.Australia, Country.Russia, Country.India, Country.China, Country.Japan
+        )
+
         private val PrioritizedCurrencies = listOf(
             *Currency.entries.filter { it.isFrequentlyUsedValue }.toTypedArray(),
             Currency.RussianRuble, Currency.YuanRenminbi, Currency.Yen
@@ -42,9 +51,12 @@ class InvoiceService(
     }
 
 
-    private val sortedCountryDisplayNames: List<DisplayName<Country>> by lazy {
-        localizationService.getAllCountryDisplayNames()
-            .sortedBy { it.displayName }
+    private val sortedCountryDisplayNames: PrioritizedDisplayNames<Country> by lazy {
+        val all = localizationService.getAllCountryDisplayNames().sortedBy { it.displayName }
+        val preferredValues = all.filter { it.value in PrioritizedCountries }.sortedBy { it.displayName }
+        val minorValues = all.filter { it.value !in PrioritizedCountries }.sortedBy { it.displayName }
+
+        PrioritizedDisplayNames(all, preferredValues, minorValues)
     }
 
     private val sortedCurrencyDisplayNames: PrioritizedDisplayNames<Currency> by lazy {

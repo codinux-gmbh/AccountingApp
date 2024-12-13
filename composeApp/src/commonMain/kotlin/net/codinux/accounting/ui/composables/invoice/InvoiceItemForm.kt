@@ -3,6 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,9 +15,11 @@ import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.OutlinedNumberTextField
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
+import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.extensions.ImeNext
+import net.codinux.invoicing.model.codes.UnitOfMeasure
 import org.jetbrains.compose.resources.StringResource
 import java.math.BigDecimal
 
@@ -57,7 +60,7 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
-                        InvoiceTextField(Res.string.unit, unit, true) { item.unitChanged(it) }
+                        SelectUnit(unit) { item.unitChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).weight(1f)) {
@@ -79,7 +82,7 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
-                        InvoiceTextField(Res.string.unit, unit, true) { item.unitChanged(it) }
+                        SelectUnit(unit) { item.unitChanged(it) }
                     }
 
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
@@ -107,4 +110,14 @@ private fun InvoiceItemNumberTextField(labelResource: StringResource, value: Big
         backgroundColor = MaterialTheme.colors.surface,
         keyboardOptions = KeyboardOptions.ImeNext
     )
+}
+
+@Composable
+private fun SelectUnit(value: UnitOfMeasure?, onValueChanged: (UnitOfMeasure?) -> Unit) {
+
+    Select(Res.string.unit, UnitOfMeasure.entries.sortedBy { it.englishName }, value, { onValueChanged(it) }, { it?.symbol ?: it?.code ?: "" }, // TODO: sort by user's display name
+        Modifier.width(150.dp), dropDownWidth = 300.dp, backgroundColor = MaterialTheme.colors.surface) { unit ->
+        Text(unit?.let { "${unit.englishName} (${unit.symbol ?: unit.code})" } ?: "")   // TODO: translate
+    }
+
 }

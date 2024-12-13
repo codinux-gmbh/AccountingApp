@@ -83,7 +83,7 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem, currency
         Text(item.name, Modifier.padding(start = 4.dp).weight(1f), maxLines = 1, overflow = TextOverflow.Ellipsis)
 
         Text(formatUtil.formatQuantity(item.quantity), Modifier.width(32.dp).padding(start = 4.dp), textAlign = TextAlign.End, maxLines = 1)
-        Text(item.unit, Modifier.width(32.dp).padding(start = 4.dp), maxLines = 1)
+        Text(item.unit.symbol ?: item.unit.englishName, Modifier.width(32.dp).padding(start = 4.dp), maxLines = 1) // TODO: translate
         Text("à", Modifier.padding(start = 4.dp))
         Text(formatUtil.formatAmountOfMoney(item.unitPrice, currency, true), Modifier.width(64.dp).padding(start = 4.dp), maxLines = 1)
         // Text(",")

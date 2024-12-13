@@ -22,6 +22,7 @@ fun <T> Select(
     required: Boolean = false,
     textColor: Color? = null,
     textStyle: TextStyle? = null,
+    backgroundColor: Color = Color.Transparent,
     leadingIcon: @Composable (() -> Unit)? = null,
     dropDownWidth: Dp? = null,
     dropDownItemContent: @Composable ((T) -> Unit)? = null
@@ -43,7 +44,8 @@ fun <T> Select(
             required = required,
             maxLines = 1,
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(showDropDownMenu) },
-            leadingIcon = leadingIcon
+            leadingIcon = leadingIcon,
+            backgroundColor = backgroundColor
         )
 
         // due to a bug (still not fixed since 2021) in ExposedDropdownMenu its popup has a maximum width of 800 pixel / 320dp which is too less to fit

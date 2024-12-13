@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.codinux.invoicing.model.InvoiceItem
+import net.codinux.invoicing.model.codes.UnitOfMeasure
 import java.math.BigDecimal
 
 class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
@@ -25,10 +26,10 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
         validate()
     }
 
-    private val _unit = MutableStateFlow(item?.unit ?: "")
-    val unit: StateFlow<String> = _unit.asStateFlow()
+    private val _unit = MutableStateFlow(item?.unit)
+    val unit: StateFlow<UnitOfMeasure?> = _unit.asStateFlow()
 
-    fun unitChanged(newValue: String) {
+    fun unitChanged(newValue: UnitOfMeasure?) {
         _unit.value = newValue
         validate()
     }
@@ -64,7 +65,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
 
 
     fun validate() {
-        _isValid.value = _name.value.isNotBlank() && isValid(_quantity) && _unit.value.isNotBlank() && isValid(_unitPrice) && _vatRate.value != null // vatRate may be zero
+        _isValid.value = _name.value.isNotBlank() && isValid(_quantity) && _unit.value != null && isValid(_unitPrice) && _vatRate.value != null // vatRate may be zero
     }
 
     private fun isValid(bigDecimal: MutableStateFlow<BigDecimal?>): Boolean =
@@ -76,6 +77,6 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     }
 
 
-    fun toInvoiceItem() = InvoiceItem(name.value, quantity.value ?: BigDecimal.ZERO, unit.value,
+    fun toInvoiceItem() = InvoiceItem(name.value, quantity.value ?: BigDecimal.ZERO, unit.value ?: UnitOfMeasure.ZZ,
         unitPrice.value ?: BigDecimal.ZERO, vatRate.value ?: BigDecimal.ZERO, description.value)
 }

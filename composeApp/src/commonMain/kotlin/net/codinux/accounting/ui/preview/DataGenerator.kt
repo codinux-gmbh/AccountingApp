@@ -5,8 +5,7 @@ import net.codinux.invoicing.email.model.ContentDisposition
 import net.codinux.invoicing.email.model.EmailAddress
 import net.codinux.invoicing.email.model.EmailAttachment
 import net.codinux.invoicing.model.*
-import net.codinux.invoicing.model.codes.Country
-import net.codinux.invoicing.model.codes.Currency
+import net.codinux.invoicing.model.codes.*
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.ZoneId
@@ -41,7 +40,7 @@ object DataGenerator {
     val CustomerBankDetails: BankDetails? = null
 
     const val ItemName = "Erbrachte Dienstleistungen"
-    const val ItemUnit = "HUR" // EN code for 'hour'
+    val ItemUnit = UnitOfMeasure.HUR
     val ItemQuantity = BigDecimal(1)
     val ItemUnitPrice = BigDecimal(99)
     val ItemVatRate = BigDecimal(19)
@@ -80,7 +79,7 @@ object DataGenerator {
     fun createItem(
         name: String = ItemName,
         quantity: BigDecimal = ItemQuantity,
-        unit: String = ItemUnit,
+        unit: UnitOfMeasure = ItemUnit,
         unitPrice: BigDecimal = ItemUnitPrice,
         vatRate: BigDecimal = ItemVatRate,
         description: String? = ItemDescription,

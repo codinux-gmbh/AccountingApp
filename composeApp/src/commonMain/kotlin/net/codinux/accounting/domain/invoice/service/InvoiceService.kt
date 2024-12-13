@@ -2,8 +2,9 @@ package net.codinux.accounting.domain.invoice.service
 
 import io.github.vinceglb.filekit.core.PlatformFile
 import io.github.vinceglb.filekit.core.extension
-import net.codinux.accounting.domain.common.model.DisplayName
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.domain.common.model.localization.DisplayName
+import net.codinux.accounting.domain.common.model.localization.PrioritizedDisplayNames
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
@@ -33,6 +34,11 @@ class InvoiceService(
 
     companion object {
         private val InvoicingDateFilenameFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+
+        private val PrioritizedCurrencies = listOf(
+            *Currency.entries.filter { it.isFrequentlyUsedValue }.toTypedArray(),
+            Currency.RussianRuble, Currency.YuanRenminbi, Currency.Yen
+        )
     }
 
 
@@ -41,9 +47,12 @@ class InvoiceService(
             .sortedBy { it.displayName }
     }
 
-    private val sortedCurrencyDisplayNames: List<DisplayName<Currency>> by lazy {
-        localizationService.getAllCurrencyDisplayNames()
-            .sortedBy { it.displayName }
+    private val sortedCurrencyDisplayNames: PrioritizedDisplayNames<Currency> by lazy {
+        val all = localizationService.getAllCurrencyDisplayNames().sortedBy { it.displayName }
+        val preferredValues = all.filter { it.value in PrioritizedCurrencies }.sortedBy { it.displayName }
+        val minorValues = all.filter { it.value !in PrioritizedCurrencies }.sortedBy { it.displayName }
+
+        PrioritizedDisplayNames(all, preferredValues, minorValues)
     }
 
     private val log by logger()

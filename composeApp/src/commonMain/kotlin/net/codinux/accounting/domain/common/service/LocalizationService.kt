@@ -1,6 +1,6 @@
 package net.codinux.accounting.domain.common.service
 
-import net.codinux.accounting.domain.common.model.DisplayName
+import net.codinux.accounting.domain.common.model.localization.DisplayName
 import net.codinux.i18n.DisplayNames
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency

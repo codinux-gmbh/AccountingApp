@@ -1,4 +1,4 @@
-package net.codinux.accounting.domain.common.model
+package net.codinux.accounting.domain.common.model.localization
 
 class DisplayName<T>(
     val value: T,

@@ -12,10 +12,12 @@ import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.PartyViewModel
+import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.widthForScreen
-import net.codinux.invoicing.model.codes.Country
 
+
+private val service = DI.invoiceService
 
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
@@ -41,6 +43,9 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
     val vatId by viewModel.vatId.collectAsState()
 
 
+    val countryDisplayNames = service.getCountryDisplayNamesSorted()
+
+
     InvoiceTextField(Res.string.name, name, true) { viewModel.nameChanged(it) }
 
     InvoiceTextField(Res.string.address, address, true) { viewModel.addressChanged(it) }
@@ -50,9 +55,9 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
 
         InvoiceTextField(Res.string.city, city, true, Modifier.weight(1f)) { viewModel.cityChanged(it) }
 
-        Select(Res.string.country, Country.entries.sortedBy { it.englishName }, country, { viewModel.countryChanged(it) }, // TODO: sort by user's displayName
-            { if (isCompactScreen) it.alpha2Code else it.englishName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp), dropDownWidth = 300.dp) { country ->
-            Text(country.englishName) // TODO: translate
+        Select(Res.string.country, countryDisplayNames, countryDisplayNames.first { it.value == country }, { viewModel.countryChanged(it.value) },
+            { if (isCompactScreen) it.value.alpha2Code else it.value.englishName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp), dropDownWidth = 300.dp) { country ->
+            Text(country.displayName)
         }
     }
 

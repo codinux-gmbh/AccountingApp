@@ -2,7 +2,9 @@ package net.codinux.accounting.domain.invoice.service
 
 import io.github.vinceglb.filekit.core.PlatformFile
 import io.github.vinceglb.filekit.core.extension
+import net.codinux.accounting.domain.common.model.DisplayName
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.platform.PlatformFileHandler
@@ -12,6 +14,8 @@ import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.creation.EInvoiceCreator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.model.codes.Country
+import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.log.logger
 import java.io.File
@@ -21,6 +25,7 @@ class InvoiceService(
     private val uiState: UiState,
     private val creator: EInvoiceCreator = PlatformDependencies.invoiceCreator,
     private val reader: EInvoiceReader,
+    private val localizationService: LocalizationService,
     private val repository: InvoiceRepository,
     private val fileHandler: PlatformFileHandler = PlatformDependencies.fileHandler,
     private val invoicesDirectory: File
@@ -30,6 +35,16 @@ class InvoiceService(
         private val InvoicingDateFilenameFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
     }
 
+
+    private val sortedCountryDisplayNames: List<DisplayName<Country>> by lazy {
+        localizationService.getAllCountryDisplayNames()
+            .sortedBy { it.displayName }
+    }
+
+    private val sortedCurrencyDisplayNames: List<DisplayName<Currency>> by lazy {
+        localizationService.getAllCurrencyDisplayNames()
+            .sortedBy { it.displayName }
+    }
 
     private val log by logger()
 
@@ -43,6 +58,11 @@ class InvoiceService(
             uiState.errorOccurred(ErroneousAction.LoadFromDatabase, Res.string.error_message_could_not_load_invoices, e)
         }
     }
+
+
+    fun getCountryDisplayNamesSorted() = sortedCountryDisplayNames
+
+    fun getCurrencyDisplayNamesSorted() = sortedCurrencyDisplayNames
 
 
     // errors handled by init()

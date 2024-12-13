@@ -62,6 +62,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.invoicing)
 
+            implementation(libs.kI18n)
+
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
 
@@ -156,6 +158,7 @@ android {
             pickFirsts += "translation/translatable-texts.xml"
         }
     }
+
     buildTypes {
         named("debug") {
             applicationIdSuffix = ".develop"

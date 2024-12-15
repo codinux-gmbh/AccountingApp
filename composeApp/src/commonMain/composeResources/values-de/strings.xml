@@ -66,6 +66,8 @@
     <string name="error_message_file_is_not_a_pdf">Datei ist keine PDF Datei</string>
     <string name="error_message_pdf_has_no_attachments">PDF hat keine Anhänge</string>
     <string name="error_message_pdf_has_no_xml_attachments">PDF hat keine Anhänge mit (E-Rechnung) XML</string>
+    <string name="error_message_file_is_not_a_valid_xml">Datei ist keine gültige XML Datei</string>
+    <string name="error_message_xml_file_contains_invalid_invoice_data">XML enthält ungültige E-Rechnungs Daten</string>
 
     <string name="invoice_details">Rechnungsdaten</string>
     <string name="invoice_date">Rechnungsdatum</string>

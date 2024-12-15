@@ -20,6 +20,8 @@ import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.invoicing.pdf.PdfAttachmentExtractionResultType
 import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
+import net.codinux.invoicing.reader.ReadEInvoiceXmlResult
+import net.codinux.invoicing.reader.ReadEInvoiceXmlResultType
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -48,6 +50,16 @@ fun SelectEInvoiceFileToDisplay() {
     }
 
 
+    fun showReadXmlError(result: FileEInvoiceExtractionResult, xmlResult: ReadEInvoiceXmlResult) {
+        val stringResource = when (xmlResult.type) {
+            ReadEInvoiceXmlResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
+            ReadEInvoiceXmlResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
+            else -> Res.string.error_message_could_not_read_e_invoice
+        }
+
+        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, result.path)
+    }
+
     lastExtractedEInvoice?.let { result ->
         val invoice = result.invoice
         val pdfResult = result.pdf
@@ -57,7 +69,7 @@ fun SelectEInvoiceFileToDisplay() {
             ViewInvoiceDialog(invoice) { lastExtractedEInvoice = null }
         } else if (pdfResult != null) {
             if (pdfResult.readEInvoiceXmlResult != null) {
-                DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, pdfResult.readEInvoiceXmlResult?.readError, result.path)
+                showReadXmlError(result, pdfResult.readEInvoiceXmlResult!!)
             } else {
                 val stringResource = when (pdfResult.attachmentExtractionResult.type) {
                     PdfAttachmentExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
@@ -70,7 +82,7 @@ fun SelectEInvoiceFileToDisplay() {
                 }
             }
         } else if (xmlResult != null) {
-            DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, xmlResult.readError, result.path)
+            showReadXmlError(result, xmlResult)
         }
     }
 

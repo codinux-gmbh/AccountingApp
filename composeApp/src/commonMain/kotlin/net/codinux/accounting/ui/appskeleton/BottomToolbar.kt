@@ -13,6 +13,7 @@ import net.codinux.accounting.resources.Res
 import net.codinux.accounting.ui.composables.ToolbarButton
 import net.codinux.accounting.ui.tabs.MainScreenTab
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun BottomToolbar(selectedTab: MainScreenTab) {
@@ -24,7 +25,7 @@ fun BottomToolbar(selectedTab: MainScreenTab) {
 
         ToolbarButton(MainScreenTab.ViewInvoice, selectedTab, Icons.AutoMirrored.Outlined.ReceiptLong, stringResource(Res.string.view_invoice))
 
-        ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, Icons.Outlined.EditNote, stringResource(Res.string.create_invoice))
+        ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, vectorResource(Res.drawable.contract_edit), stringResource(Res.string.create_invoice))
 
         ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, stringResource(Res.string.mails))
     }

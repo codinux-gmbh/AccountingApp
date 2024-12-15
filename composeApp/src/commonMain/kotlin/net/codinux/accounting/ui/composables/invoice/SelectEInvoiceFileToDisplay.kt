@@ -11,9 +11,8 @@ import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
-import net.codinux.accounting.resources.Res
-import net.codinux.accounting.resources.select_e_invoice_file
-import net.codinux.accounting.resources.show_e_invoice_file
+import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
@@ -49,8 +48,30 @@ fun SelectEInvoiceFileToDisplay() {
     }
 
 
-    lastExtractedEInvoice?.let {
-        ViewInvoiceDialog(it) { lastExtractedEInvoice = null }
+    lastExtractedEInvoice?.let { result ->
+        val invoice = result.invoice
+        val pdfResult = result.pdf
+        val xmlResult = result.xml
+
+        if (invoice != null) {
+            ViewInvoiceDialog(invoice) { lastExtractedEInvoice = null }
+        } else if (pdfResult != null) {
+            if (pdfResult.readEInvoiceXmlResult != null) {
+                DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, pdfResult.readEInvoiceXmlResult?.readError, result.path)
+            } else {
+                val stringResource = when (pdfResult.attachmentExtractionResult.type) {
+                    PdfAttachmentExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
+                    PdfAttachmentExtractionResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
+                    PdfAttachmentExtractionResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
+                    PdfAttachmentExtractionResultType.HasXmlAttachments -> null // should never come to here
+                }
+                if (stringResource != null) {
+                    DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource)
+                }
+            }
+        } else if (xmlResult != null) {
+            DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, xmlResult.readError, result.path)
+        }
     }
 
 }

@@ -109,9 +109,9 @@ class InvoiceService(
     fun readEInvoice(file: PlatformFile): Invoice? =
         try {
             if (file.extension.lowercase() == "xml") {
-                reader.extractFromXml(fileHandler.getInputStream(file)!!)
+                reader.extractFromXml(fileHandler.getInputStream(file)!!).invoice
             } else {
-                reader.extractFromPdf(fileHandler.getInputStream(file)!!)
+                reader.extractFromPdf(fileHandler.getInputStream(file)!!).invoice
             }
         } catch (e: Throwable) {
             log.error(e) { "Could not extract eInvoice data from file ${file.path}" }

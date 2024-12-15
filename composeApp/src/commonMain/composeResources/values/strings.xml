@@ -48,9 +48,9 @@
     <string name="imap_server_address">IMAP server address</string>
     <string name="smtp_server_address">SMTP server address</string>
 
-    <string name="error_message_checking_email_account_credentials_failed">Could not connect to email account: %s</string>
+    <string name="error_message_checking_email_account_credentials_failed">Could not connect to email account: %1$s</string>
     <string name="error_message_could_not_fetch_emails">Could not fetch emails</string>
-    <string name="error_message_could_not_listen_for_new_emails">Listening for new emails failed for account '%s'.\nTo restart listening for new emails application has to be restarted.</string>
+    <string name="error_message_could_not_listen_for_new_emails">Listening for new emails failed for account '%1$s'.\nTo restart listening for new emails application has to be restarted.</string>
     <string name="error_message_could_not_load_emails">Could not load emails</string>
     <string name="error_message_could_not_persist_emails">Could not persist emails</string>
 
@@ -60,7 +60,7 @@
 
     <string name="show_e_invoice_file">Show eInvoice file</string>
     <string name="select_e_invoice_file">Select eInvoice file ...</string>
-    <string name="error_message_could_not_read_e_invoice">Could not read eInvoice from file %s</string>
+    <string name="error_message_could_not_read_e_invoice">Could not read eInvoice from file %1$s</string>
 
     <string name="invoice_details">Invoice details</string>
     <string name="invoice_date">Invoice date</string>

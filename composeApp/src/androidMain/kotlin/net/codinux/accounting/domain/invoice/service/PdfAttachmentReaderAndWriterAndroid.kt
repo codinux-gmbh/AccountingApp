@@ -39,7 +39,8 @@ class PdfAttachmentReaderAndWriterAndroid(
 
                 return fileMap.mapNotNull { (name, fileSpec) ->
                     if (name.lowercase().endsWith(".xml") || fileSpec.filename.lowercase().endsWith(".xml")) {
-                        name to fileSpec.embeddedFile.cosObject.toTextString()
+//                        name to fileSpec.embeddedFile.cosObject.toTextString() // seems to get the encoding wrong
+                        name to String(fileSpec.embeddedFile.toByteArray())
                     } else {
                         null
                     }
@@ -90,4 +91,5 @@ class PdfAttachmentReaderAndWriterAndroid(
             log.error(e) { "Could not add XML file attachments to PDF" }
         }
     }
+
 }

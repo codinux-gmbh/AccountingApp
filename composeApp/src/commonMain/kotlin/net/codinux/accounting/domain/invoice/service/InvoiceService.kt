@@ -19,6 +19,7 @@ import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
+import net.codinux.invoicing.model.codes.UnitOfMeasure
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
 import net.codinux.log.logger
@@ -50,6 +51,19 @@ class InvoiceService(
             *Currency.entries.filter { it.isFrequentlyUsedValue }.toTypedArray(),
             Currency.RussianRuble, Currency.YuanRenminbi, Currency.Yen
         )
+
+        private val PrioritizedUnitOfMeasure = listOf(
+            UnitOfMeasure.NAR, UnitOfMeasure.C62, UnitOfMeasure.PR, UnitOfMeasure.SET,
+            UnitOfMeasure.DAY, UnitOfMeasure.HUR, UnitOfMeasure.MIN, UnitOfMeasure.SEC,
+            UnitOfMeasure.LTR, UnitOfMeasure.MLT, UnitOfMeasure.MTQ,
+            UnitOfMeasure.MTR, UnitOfMeasure.CMT, UnitOfMeasure.MMT, UnitOfMeasure.MTK,
+            UnitOfMeasure.GRM, UnitOfMeasure.KGM, UnitOfMeasure.TNE,
+            UnitOfMeasure.AMP,
+            UnitOfMeasure.KWT, UnitOfMeasure.MAW, UnitOfMeasure.A90,
+            UnitOfMeasure.WHR, UnitOfMeasure.KWH, UnitOfMeasure.MWH, UnitOfMeasure.GWH,
+            UnitOfMeasure.JOU, UnitOfMeasure.KJO, UnitOfMeasure._3B, UnitOfMeasure.GV,
+            UnitOfMeasure.ZZ
+        )
     }
 
 
@@ -65,6 +79,15 @@ class InvoiceService(
         val all = localizationService.getAllCurrencyDisplayNames().sortedBy { it.displayName }
         val preferredValues = all.filter { it.value in PrioritizedCurrencies }.sortedBy { it.displayName }
         val minorValues = all.filter { it.value !in PrioritizedCurrencies }.sortedBy { it.displayName }
+
+        PrioritizedDisplayNames(all, preferredValues, minorValues)
+    }
+
+    private val sortedUnitOfMeasure: PrioritizedDisplayNames<UnitOfMeasure> by lazy {
+        val all = UnitOfMeasure.entries.map { DisplayName(it, it.englishName) }.sortedBy { it.value.englishName } // TODO: translate
+        val allByCode = all.associateBy { it.value.code }
+        val preferredValues = PrioritizedUnitOfMeasure.map { allByCode[it.code]!! }
+        val minorValues = all.toMutableList().apply { removeAll(preferredValues) }
 
         PrioritizedDisplayNames(all, preferredValues, minorValues)
     }
@@ -86,6 +109,8 @@ class InvoiceService(
     fun getCountryDisplayNamesSorted() = sortedCountryDisplayNames
 
     fun getCurrencyDisplayNamesSorted() = sortedCurrencyDisplayNames
+
+    fun getUnitOfMeasureDisplayNamesSorted() = sortedUnitOfMeasure
 
 
     // errors handled by init()

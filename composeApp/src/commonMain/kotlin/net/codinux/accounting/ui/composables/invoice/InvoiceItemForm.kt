@@ -18,11 +18,14 @@ import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
 import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
+import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.ImeNext
 import net.codinux.invoicing.model.codes.UnitOfMeasure
 import org.jetbrains.compose.resources.StringResource
 import java.math.BigDecimal
 
+
+private val unitsOfMeasure by lazy { DI.invoiceService.getUnitOfMeasureDisplayNamesSorted() }
 
 private val isCompactScreen = Platform.isCompactScreen
 
@@ -115,9 +118,9 @@ private fun InvoiceItemNumberTextField(labelResource: StringResource, value: Big
 @Composable
 private fun SelectUnit(value: UnitOfMeasure?, onValueChanged: (UnitOfMeasure?) -> Unit) {
 
-    Select(Res.string.unit, UnitOfMeasure.entries.sortedBy { it.englishName }, value, { onValueChanged(it) }, { it?.symbol ?: it?.code ?: "" }, // TODO: sort by user's display name
-        Modifier.width(150.dp), dropDownWidth = 300.dp, backgroundColor = MaterialTheme.colors.surface) { unit ->
-        Text(unit?.let { "${unit.englishName} (${unit.symbol ?: unit.code})" } ?: "")   // TODO: translate
+    Select(Res.string.unit, unitsOfMeasure.preferredValues + unitsOfMeasure.minorValues, unitsOfMeasure.all.firstOrNull { it.value == value}, { onValueChanged(it?.value) }, { it?.value?.symbol ?: it?.value?.code ?: "" },
+        Modifier.width(150.dp), dropDownWidth = 300.dp, addSeparatorAfterItem = unitsOfMeasure.preferredValues.size, backgroundColor = MaterialTheme.colors.surface) { unit ->
+        Text(unit?.let { "${unit.value.englishName} (${unit.value.symbol ?: unit.value.code})" } ?: "")   // TODO: translate
     }
 
 }

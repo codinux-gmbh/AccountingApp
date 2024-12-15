@@ -19,15 +19,15 @@ import org.jetbrains.compose.resources.vectorResource
 fun BottomToolbar(selectedTab: MainScreenTab) {
 
     BottomNavigation(Modifier.height(56.dp)) {
-//        ToolbarButton(MainScreenTab.Postings, selectedTab, Icons.Outlined.Book, stringResource(Res.string.postings))
+//        ToolbarButton(MainScreenTab.Postings, selectedTab, Icons.Outlined.Book, Res.string.postings)
 //
-//        ToolbarButton(MainScreenTab.BankAccounts, selectedTab, Icons.Outlined.AccountBalance, stringResource(Res.string.bank_accounts))
+//        ToolbarButton(MainScreenTab.BankAccounts, selectedTab, Icons.Outlined.AccountBalance, Res.string.bank_accounts)
 
-        ToolbarButton(MainScreenTab.ViewInvoice, selectedTab, Icons.AutoMirrored.Outlined.ReceiptLong, stringResource(Res.string.view_invoice))
+        ToolbarButton(MainScreenTab.ViewInvoice, selectedTab, Icons.AutoMirrored.Outlined.ReceiptLong, Res.string.view_invoice)
 
-        ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, vectorResource(Res.drawable.contract_edit), stringResource(Res.string.create_invoice))
+        ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, vectorResource(Res.drawable.contract_edit), Res.string.create_invoice)
 
-        ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, stringResource(Res.string.mails))
+        ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, Res.string.mails)
     }
 
 }

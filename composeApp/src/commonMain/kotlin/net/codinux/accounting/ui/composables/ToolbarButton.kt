@@ -11,10 +11,13 @@ import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.tabs.MainScreenTab
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ToolbarButton(tab: MainScreenTab, selectedTab: MainScreenTab, icon: ImageVector, label: String) {
+fun ToolbarButton(tab: MainScreenTab, selectedTab: MainScreenTab, icon: ImageVector, labelResource: StringResource) {
 
+    val label = stringResource(labelResource)
     val color = LocalContentColor.current.copy(alpha = if (tab == selectedTab) ContentAlpha.medium else ContentAlpha.disabled)
 
     IconButton({ DI.uiState.selectedMainScreenTab.value = tab }, Modifier.width(136.dp).fillMaxHeight().padding(vertical = 4.dp, horizontal = 6.dp)) {

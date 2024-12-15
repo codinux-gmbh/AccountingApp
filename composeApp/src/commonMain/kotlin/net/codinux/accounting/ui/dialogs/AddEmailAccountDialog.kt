@@ -8,6 +8,7 @@ import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.mail.AddEmailAccountDialogContent
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
+import net.codinux.invoicing.email.model.EmailAccount
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -17,6 +18,17 @@ private val mailService = DI.mailService
 fun AddEmailAccountDialog() {
 
     val account by remember { mutableStateOf(MailAccountConfiguration()) }
+
+    fun isAccountValid(account: EmailAccount?) =
+        account == null || (account.username.isNotBlank() && account.password.isNotBlank() && account.serverAddress.isNotBlank() && (account.port == null || (account.port ?: 0) > 0))
+
+    val isValid by remember(account.receiveEmailConfiguration, account.receiveEmailConfiguration?.username, account.receiveEmailConfiguration?.password, account.receiveEmailConfiguration?.serverAddress, account.receiveEmailConfiguration?.port,
+        account.sendEmailConfiguration, account.sendEmailConfiguration?.username, account.sendEmailConfiguration?.password, account.sendEmailConfiguration?.serverAddress, account.sendEmailConfiguration?.port) {
+        derivedStateOf {
+            (account.receiveEmailConfiguration != null || account.sendEmailConfiguration != null) &&
+                    isAccountValid(account.receiveEmailConfiguration) && isAccountValid(account.sendEmailConfiguration)
+        }
+    }
 
     var isAddingAccount by remember { mutableStateOf(false) }
 
@@ -44,7 +56,7 @@ fun AddEmailAccountDialog() {
     BaseDialog(
         title = stringResource(Res.string.add_email_account),
         confirmButtonTitle = stringResource(Res.string.add),
-        confirmButtonEnabled = isAddingAccount == false,
+        confirmButtonEnabled = isValid,
         showProgressIndicatorOnConfirmButton = isAddingAccount,
         backgroundColor = Colors.MainBackgroundColor,
         useMoreThanPlatformDefaultWidthOnSmallScreens = true,

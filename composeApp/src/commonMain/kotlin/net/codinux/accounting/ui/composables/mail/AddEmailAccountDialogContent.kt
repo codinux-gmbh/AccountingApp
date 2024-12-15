@@ -31,13 +31,13 @@ fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
     var receiveEmailsUsername = remember { mutableStateOf("") }
     var receiveEmailsPassword = remember { mutableStateOf("") }
     var receiveEmailsImapServerAddress = remember { mutableStateOf("") }
-    var receiveEmailsPort = remember { mutableStateOf(993) }
+    var receiveEmailsPort = remember { mutableStateOf<Int?>(993) }
 
     var sendEmails = remember { mutableStateOf(false) }
     var sendEmailsUsername = remember { mutableStateOf("") }
     var sendEmailsPassword = remember { mutableStateOf("") }
     var sendEmailsSmtpServerAddress = remember { mutableStateOf("") }
-    var sendEmailsPort = remember { mutableStateOf(587) }
+    var sendEmailsPort = remember { mutableStateOf<Int?>(587) }
 
 
     Column {
@@ -67,7 +67,7 @@ fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
 }
 
 @Composable
-private fun MailAccountForm(accountLabel: StringResource, configureAccount: MutableState<Boolean>, username: MutableState<String>, password: MutableState<String>, serverAddressLabel: StringResource, serverAddress: MutableState<String>, port: MutableState<Int>, topPadding: Dp = 0.dp) {
+private fun MailAccountForm(accountLabel: StringResource, configureAccount: MutableState<Boolean>, username: MutableState<String>, password: MutableState<String>, serverAddressLabel: StringResource, serverAddress: MutableState<String>, port: MutableState<Int?>, topPadding: Dp = 0.dp) {
     val enabled = configureAccount.value
 
     RoundedCornersCard(Modifier.fillMaxWidth().padding(top = topPadding)) {
@@ -78,7 +78,7 @@ private fun MailAccountForm(accountLabel: StringResource, configureAccount: Muta
 
             MailFormTextField(username, Res.string.username, enabled)
 
-            PasswordTextField(password.value, enabled = enabled, modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding), keyboardOptions = KeyboardOptions.ImeNext) { password.value = it }
+            PasswordTextField(password.value, enabled = enabled, required = enabled, modifier = Modifier.fillMaxWidth().padding(top = VerticalRowPadding), keyboardOptions = KeyboardOptions.ImeNext) { password.value = it }
 
             Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
                 MailFormTextField(serverAddress, serverAddressLabel, enabled, Modifier.weight(1f).padding(end = 12.dp))
@@ -86,7 +86,7 @@ private fun MailAccountForm(accountLabel: StringResource, configureAccount: Muta
                 OutlinedNumberTextField(
                     Int::class,
                     port.value,
-                    { port.value = it ?: -1 },
+                    { port.value = it },
                     Modifier.width(100.dp),
                     label = Res.string.port,
                     enabled = enabled,
@@ -106,6 +106,7 @@ private fun MailFormTextField(value: MutableState<String>, label: StringResource
         modifier,
         label = label,
         enabled = enabled,
+        required = enabled,
         keyboardOptions = KeyboardOptions.ImeNext
     )
 }

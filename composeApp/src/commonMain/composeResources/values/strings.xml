@@ -40,6 +40,8 @@
 
 
     <!-- mails -->
+    <string name="reason_for_adding_email_account">Add an e-mail account to view all received e-invoices and to be continuously notified of new e-invoices.</string>
+
     <string name="add_email_account">Add email account</string>
 
     <string name="receive_emails">Receive emails</string>

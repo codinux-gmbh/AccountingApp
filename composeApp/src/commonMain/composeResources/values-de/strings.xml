@@ -40,6 +40,8 @@
 
 
     <!-- mails -->
+    <string name="reason_for_adding_email_account">Fügen Sie ein E-Mail Konto hinzu um alle empfangen E-Rechnungen anzuzeigen und fortlaufend über neue E-Rechnungen informiert zu werden.</string>
+
     <string name="add_email_account">E-Mail Konto hinzufügen</string>
 
     <string name="receive_emails">E-Mails abrufen</string>

@@ -19,7 +19,8 @@ import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.parent
-import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.pdf.PdfAttachmentExtractionResultType
+import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -27,7 +28,7 @@ fun SelectEInvoiceFileToDisplay() {
 
     var lastSelectedInvoiceFile by remember { mutableStateOf<PlatformFile?>(null) }
 
-    var lastExtractedEInvoice by remember { mutableStateOf<Invoice?>(null) }
+    var lastExtractedEInvoice by remember { mutableStateOf<FileEInvoiceExtractionResult?>(null) }
 
     val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(
         PickerType.File(listOf("pdf", "xml")), stringResource(Res.string.select_e_invoice_file), lastSelectedInvoiceFile?.parent) { selectedFile ->

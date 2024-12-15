@@ -11,6 +11,7 @@ import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.PlatformDependencies
+import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.EInvoiceCreator
@@ -19,6 +20,7 @@ import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.reader.EInvoiceReader
+import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
 import net.codinux.log.logger
 import java.io.File
 import java.time.format.DateTimeFormatter
@@ -106,20 +108,8 @@ class InvoiceService(
     }
 
 
-    fun readEInvoice(file: PlatformFile): Invoice? =
-        try {
-            if (file.extension.lowercase() == "xml") {
-                reader.extractFromXml(fileHandler.getInputStream(file)!!).invoice
-            } else {
-                reader.extractFromPdf(fileHandler.getInputStream(file)!!).invoice
-            }
-        } catch (e: Throwable) {
-            log.error(e) { "Could not extract eInvoice data from file ${file.path}" }
-
-            uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, e, file.path ?: "")
-
-            null
-        }
+    fun readEInvoice(file: PlatformFile): FileEInvoiceExtractionResult =
+        reader.extractFromFile(fileHandler.getInputStream(file)!!, file.name, file.parent, null)
 
 
     // errors handled by InvoiceForm.createEInvoice()

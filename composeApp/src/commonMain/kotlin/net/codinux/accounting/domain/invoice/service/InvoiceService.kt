@@ -116,7 +116,7 @@ class InvoiceService(
         } catch (e: Throwable) {
             log.error(e) { "Could not extract eInvoice data from file ${file.path}" }
 
-            uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, e)
+            uiState.errorOccurred(ErroneousAction.ReadEInvoice, Res.string.error_message_could_not_read_e_invoice, e, file.path ?: "")
 
             null
         }

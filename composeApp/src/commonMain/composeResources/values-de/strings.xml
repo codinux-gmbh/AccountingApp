@@ -3,8 +3,8 @@
     <string name="postings">Buchungen</string>
     <string name="bank_accounts">Konto</string>
     <string name="invoices">Rechnungen</string>
-    <string name="view_invoice">Rechnung anzeigen</string>
-    <string name="create_invoice">Rechnung erstellen</string>
+    <string name="view_invoice">E-Rechnung anzeigen</string>
+    <string name="create_invoice">E-Rechnung erstellen</string>
     <string name="mails">E-Mail</string>
 
 

@@ -41,10 +41,14 @@ fun SelectEInvoiceFileToDisplay() {
     }
 
 
-    Section(Res.string.show_e_invoice_file) {
-        Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-            TextButton(onClick = { openExistingInvoiceFileLauncher.launch() }, Modifier.fillMaxWidth().height(70.dp)) {
-                Text(stringResource(Res.string.select_e_invoice_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(Modifier.widthIn(max = 600.dp)) {
+            Section(Res.string.show_e_invoice_file) {
+                Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = { openExistingInvoiceFileLauncher.launch() }, Modifier.fillMaxWidth().height(70.dp)) {
+                        Text(stringResource(Res.string.select_e_invoice_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+                    }
+                }
             }
         }
     }

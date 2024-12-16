@@ -26,7 +26,7 @@ fun MailsTab(uiState: EmailsUiState) {
 
     if (mails.isEmpty()) {
         Column(Modifier.fillMaxSize().padding(horizontal = 36.dp), Arrangement.Center, Alignment.CenterHorizontally) {
-            Text(stringResource(Res.string.reason_for_adding_email_account), fontSize = 18.sp, textAlign = TextAlign.Center)
+            Text(stringResource(Res.string.reason_for_adding_email_account), Modifier.widthIn(max = 600.dp), fontSize = 18.sp, textAlign = TextAlign.Center)
         }
     } else {
         MailsList(uiState, mails)

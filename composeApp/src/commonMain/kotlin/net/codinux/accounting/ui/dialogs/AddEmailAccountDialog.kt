@@ -56,7 +56,7 @@ fun AddEmailAccountDialog() {
     BaseDialog(
         title = stringResource(Res.string.add_email_account),
         confirmButtonTitle = stringResource(Res.string.add),
-        confirmButtonEnabled = isValid,
+//        confirmButtonEnabled = isValid, // does not work as MailAccountConfiguration is not a ViewModel so we're not getting notified about changes
         showProgressIndicatorOnConfirmButton = isAddingAccount,
         backgroundColor = Colors.MainBackgroundColor,
         useMoreThanPlatformDefaultWidthOnSmallScreens = true,

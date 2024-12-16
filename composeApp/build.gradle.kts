@@ -188,6 +188,16 @@ android {
             exclude(group = "org.apache.pdfbox", module = "pdfbox")
         }
     }
+
+    signingConfigs {
+        named("debug") {
+            // so that all machines have the same signing key, no matter if app is installed from developer's machine or from Jenkins
+            storeFile = file("src/androidMain/debug-keystore.jks")
+            storePassword = "find_my_bugs_before_releasing_me"
+            keyAlias = "DebugKey"
+            keyPassword = "find_my_bugs_before_releasing_me"
+        }
+    }
 }
 
 

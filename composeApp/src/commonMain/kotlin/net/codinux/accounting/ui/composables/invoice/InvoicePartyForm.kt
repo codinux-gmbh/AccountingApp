@@ -55,9 +55,9 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
 
         InvoiceTextField(Res.string.city, city, true, Modifier.weight(1f)) { viewModel.cityChanged(it) }
 
-        Select(Res.string.country, countryDisplayNames.preferredValues + countryDisplayNames.minorValues, countryDisplayNames.all.first { it.value == country },
+        Select(Res.string.country, countryDisplayNames.preferredValues /*+ countryDisplayNames.minorValues*/, countryDisplayNames.all.first { it.value == country },
             { viewModel.countryChanged(it.value) }, { if (isCompactScreen) it.value.alpha2Code else it.value.englishName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp),
-            dropDownWidth = 300.dp, addSeparatorAfterItem = countryDisplayNames.preferredValues.size) { country ->
+            dropDownWidth = 300.dp, /*addSeparatorAfterItem = countryDisplayNames.preferredValues.size*/) { country ->
             Text(country.displayName)
         }
     }

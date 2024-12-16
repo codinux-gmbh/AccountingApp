@@ -118,8 +118,8 @@ private fun InvoiceItemNumberTextField(labelResource: StringResource, value: Big
 @Composable
 private fun SelectUnit(value: UnitOfMeasure?, onValueChanged: (UnitOfMeasure?) -> Unit) {
 
-    Select(Res.string.unit, unitsOfMeasure.preferredValues + unitsOfMeasure.minorValues, unitsOfMeasure.all.firstOrNull { it.value == value}, { onValueChanged(it?.value) }, { it?.value?.symbol ?: it?.value?.code ?: "" },
-        Modifier.width(150.dp), dropDownWidth = 300.dp, addSeparatorAfterItem = unitsOfMeasure.preferredValues.size, backgroundColor = MaterialTheme.colors.surface) { unit ->
+    Select(Res.string.unit, unitsOfMeasure.preferredValues /*+ unitsOfMeasure.minorValues */, unitsOfMeasure.all.firstOrNull { it.value == value}, { onValueChanged(it?.value) }, { it?.value?.symbol ?: it?.value?.code ?: "" },
+        Modifier.width(150.dp), dropDownWidth = 300.dp, /* addSeparatorAfterItem = unitsOfMeasure.preferredValues.size, */ backgroundColor = MaterialTheme.colors.surface) { unit ->
         Text(unit?.let { "${unit.value.englishName} (${unit.value.symbol ?: unit.value.code})" } ?: "")   // TODO: translate
     }
 

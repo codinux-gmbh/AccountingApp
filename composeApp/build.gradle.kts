@@ -175,6 +175,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+    dependencies {
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+
+        debugImplementation(compose.uiTooling)
+    }
+
     configurations {
         implementation {
             // remove dependency on PDFBox, which was included by codinx:invoicing -> mustang, as it
@@ -182,12 +188,6 @@ android {
             exclude(group = "org.apache.pdfbox", module = "pdfbox")
         }
     }
-}
-
-dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
-
-    debugImplementation(compose.uiTooling)
 }
 
 

@@ -16,6 +16,7 @@ fun PdfInvoiceDataDialog(pdfInvoiceData: PdfInvoiceData, onDismiss: () -> Unit) 
         centerTitle = true,
         confirmButtonVisible = false,
         useMoreThanPlatformDefaultWidthOnSmallScreens = true,
+        restrictMaxHeightForFullHeightDialogs = true,
         backgroundColor = Colors.MainBackgroundColor,
         onDismiss = onDismiss
     ) {

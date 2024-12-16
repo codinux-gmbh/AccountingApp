@@ -13,6 +13,7 @@
     <!-- common -->
     <string name="ok">OK</string>
     <string name="cancel">Abbrechen</string>
+    <string name="close">Schließen</string>
 
     <string name="save">Speichern</string>
     <string name="add">Hinzufügen</string>

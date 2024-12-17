@@ -4,12 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import net.codinux.accounting.domain.mail.model.Email
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
-import net.codinux.accounting.ui.config.DI
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 
 class MailRepository(
-    private val jsonMapper: ObjectMapper = DI.jsonMapper,
+    private val jsonMapper: ObjectMapper,
     dataDirectory: File
 ) {
 

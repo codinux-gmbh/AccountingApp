@@ -22,18 +22,18 @@ object DI {
 
     val formatUtil = FormatUtil()
 
-    val jsonMapper = ObjectMapper().apply {
+    private val jsonMapper = ObjectMapper().apply {
         findAndRegisterModules()
 
         disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
     }
 
 
-    val applicationDataDirectory = PlatformDependencies.applicationDataDirectory
+    private val applicationDataDirectory = PlatformDependencies.applicationDataDirectory
 
-    val databaseDirectory = ensureDirectory(applicationDataDirectory, "db")
+    private val databaseDirectory = ensureDirectory(applicationDataDirectory, "db")
 
-    val invoicesDirectory = ensureDirectory(applicationDataDirectory, "invoices")
+    private val invoicesDirectory = ensureDirectory(applicationDataDirectory, "invoices")
 
     val fileHandler = PlatformDependencies.fileHandler
 

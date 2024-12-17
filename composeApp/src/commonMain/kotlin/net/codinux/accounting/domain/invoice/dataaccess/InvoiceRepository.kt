@@ -3,11 +3,10 @@ package net.codinux.accounting.domain.invoice.dataaccess
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
-import net.codinux.accounting.ui.config.DI
 import java.io.File
 
 class InvoiceRepository(
-    private val jsonMapper: ObjectMapper = DI.jsonMapper,
+    private val jsonMapper: ObjectMapper,
     dataDirectory: File
 ) {
 

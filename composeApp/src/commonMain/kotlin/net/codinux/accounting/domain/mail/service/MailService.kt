@@ -116,6 +116,7 @@ class MailService(
         uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_could_not_fetch_emails, e)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private suspend fun persistEmailsBatched(configuration: MailAccountConfiguration, channel: Channel<Email>, isFetchingMails: AtomicBoolean) {
         while (isFetchingMails.get() || channel.isEmpty == false) {
             delay(1_000) // to reduce disk I/O batch received emails and persist them only once a second

@@ -158,7 +158,7 @@ class InvoiceService(
         val xml = createEInvoiceXml(invoice, format)
 
         val directory = File(invoicesDirectory, invoice.details.invoiceDate.year.toString()).also { it.mkdirs() }
-        val filename = "${InvoicingDateFilenameFormat.format(invoice.details.invoiceDate)} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
+        val filename = "${InvoicingDateFilenameFormat.format(invoice.details.invoiceDate.toJvmDate())} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
         val pdfFile = File(directory, filename + ".pdf")
 
         creator.createPdfWithAttachedXml(xml, format, pdfFile)

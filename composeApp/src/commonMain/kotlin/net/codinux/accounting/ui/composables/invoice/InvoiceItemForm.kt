@@ -20,9 +20,9 @@ import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.ImeNext
+import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.codes.UnitOfMeasure
 import org.jetbrains.compose.resources.StringResource
-import java.math.BigDecimal
 
 
 private val unitsOfMeasure by lazy { DI.invoiceService.getUnitOfMeasureDisplayNamesSorted() }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import net.codinux.invoicing.model.InvoiceDetails
-import java.time.LocalDate
+import net.codinux.invoicing.model.LocalDate
 
 class InvoiceDetailsViewModel(details: InvoiceDetails?) : ViewModel() {
 

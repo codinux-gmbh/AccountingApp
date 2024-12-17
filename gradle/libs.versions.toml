@@ -3,7 +3,7 @@ kotlin = "2.0.21"
 kotlinx-coroutines = "1.9.0"
 
 
-invoicing = "0.5.1"
+invoicing = "0.6.0-SNAPSHOT"
 
 jackson = "2.18.2"
 

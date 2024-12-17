@@ -6,16 +6,12 @@ import net.codinux.invoicing.email.model.EmailAddress
 import net.codinux.invoicing.email.model.EmailAttachment
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.*
-import java.math.BigDecimal
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 object DataGenerator {
 
     const val InvoiceNumber = "12345"
-    val InvoicingDate = LocalDate.of(2015, 10, 21)
-    val DueDate = LocalDate.of(2016, 6, 15)
+    val InvoicingDate = LocalDate(2015, 10, 21)
+    val DueDate = LocalDate(2016, 6, 15)
 
     const val SupplierName = "Hochwürdiger Leistungserbringer"
     const val SupplierAddress = "Fun Street 1"
@@ -57,7 +53,7 @@ object DataGenerator {
         items: List<InvoiceItem> = listOf(createItem()),
         currency: Currency = Currency.Euro,
         dueDate: LocalDate? = DueDate,
-        paymentDescription: String? = dueDate?.let { "Zahlbar ohne Abzug bis ${DateTimeFormatter.ofPattern("dd.MM.yyyy").format(dueDate)}" },
+        paymentDescription: String? = dueDate?.let { "Zahlbar ohne Abzug bis ${dueDate.dayOfMonth}.${dueDate.month}.${dueDate.year}}" },
         customerReferenceNumber: String? = null
     ) = Invoice(InvoiceDetails(invoiceNumber, invoicingDate, currency, dueDate, paymentDescription), supplier, customer, items, customerReferenceNumber)
 
@@ -87,7 +83,7 @@ object DataGenerator {
 
 
     fun createMail(invoice: Invoice, messageId: Long = 1) =
-        Email(messageId, messageId, messageId, invoice.supplier.email?.let { EmailAddress(it) }, "Invoice No. ${invoice.details.invoiceNumber}", invoice.details.invoiceDate.atStartOfDay(ZoneId.systemDefault()).toInstant(),
+        Email(messageId, messageId, messageId, invoice.supplier.email?.let { EmailAddress(it) }, "Invoice No. ${invoice.details.invoiceNumber}", invoice.details.invoiceDate.toInstantAtSystemDefaultZone().toEInvoicingInstant(),
             "Sehr geehrter Herr Sowieso,\nanbei unsere völlig überzogene Rechnung für unsere nutzlosen Dienstleistung mit Bitte um Überweisung innerhalb 24 Minuten.\nGezeichnet,\nHerr Geier",
             attachments = listOf(EmailAttachment("invoice.pdf", "pdf", null, ContentDisposition.Attachment, "application/pdf", null, invoice, null))
         )

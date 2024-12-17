@@ -14,11 +14,11 @@ import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.TotalAmounts
 import net.codinux.invoicing.model.codes.Currency
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import java.math.BigDecimal
 
 
 private val formatUtil = DI.formatUtil

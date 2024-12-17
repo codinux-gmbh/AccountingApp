@@ -17,8 +17,8 @@ import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.DatePickerDialog
+import net.codinux.invoicing.model.LocalDate
 import org.jetbrains.compose.resources.StringResource
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
@@ -46,7 +46,7 @@ fun DatePicker(
 
     Column(modifier.clickableWithRipple { showDatePickerDialog = true }, verticalArrangement = Arrangement.Center) {
         OutlinedTextField(
-            value = selectedDate?.let { dateFormatter?.format(it) ?: formatUtil.formatShortDate(it) } ?: "",
+            value = selectedDate?.let { dateFormatter?.format(it.toJvmDate()) ?: formatUtil.formatShortDate(it) } ?: "",
             onValueChange = { },
             modifier = Modifier.fillMaxSize().onFocusEvent { state -> if (state.isFocused || state.hasFocus) { showDatePickerDialog = true } },
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,

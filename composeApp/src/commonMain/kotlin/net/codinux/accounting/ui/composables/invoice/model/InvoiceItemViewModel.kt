@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.InvoiceItem
 import net.codinux.invoicing.model.codes.UnitOfMeasure
-import java.math.BigDecimal
 
 class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
 
@@ -69,7 +69,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     }
 
     private fun isValid(bigDecimal: MutableStateFlow<BigDecimal?>): Boolean =
-        bigDecimal.value != null && bigDecimal.value != BigDecimal.ZERO
+        bigDecimal.value != null && bigDecimal.value != BigDecimal.Zero
 
 
     init {
@@ -77,6 +77,6 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     }
 
 
-    fun toInvoiceItem() = InvoiceItem(name.value, quantity.value ?: BigDecimal.ZERO, unit.value ?: UnitOfMeasure.ZZ,
-        unitPrice.value ?: BigDecimal.ZERO, vatRate.value ?: BigDecimal.ZERO, description.value)
+    fun toInvoiceItem() = InvoiceItem(name.value, quantity.value ?: BigDecimal.Zero, unit.value ?: UnitOfMeasure.ZZ,
+        unitPrice.value ?: BigDecimal.Zero, vatRate.value ?: BigDecimal.Zero, description.value)
 }

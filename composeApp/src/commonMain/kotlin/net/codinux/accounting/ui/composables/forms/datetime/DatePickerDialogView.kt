@@ -19,19 +19,20 @@ import com.kizitonwose.calendar.core.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import net.codinux.accounting.ui.config.Colors
-import java.time.LocalDate
+import net.codinux.invoicing.model.LocalDate
+import net.codinux.invoicing.model.toEInvoicingDate
 import java.util.*
 
 // copied from: https://github.com/kizitonwose/Calendar/blob/64b7adbce7c6c7581895575a359fcc8e5d188416/compose-multiplatform/sample/src/commonMain/kotlin/Utils.kt
 @Composable
 fun DatePickerDialogView(selectedDate: LocalDate? = null, adjacentMonths: Int = 500, dateSelected: (LocalDate) -> Unit) {
 
-    val currentMonth = remember { selectedDate?.let { YearMonth(it.year, it.monthValue) } ?: YearMonth.now() }
+    val currentMonth = remember { selectedDate?.let { YearMonth(it.year, it.month) } ?: YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(adjacentMonths) }
     val endMonth = remember { currentMonth.plusMonths(adjacentMonths) }
     val selections = remember { mutableStateListOf<CalendarDay>().also {
         if (selectedDate != null) {
-            it.add(CalendarDay(selectedDate.toKotlinLocalDate(), DayPosition.MonthDate))
+            it.add(CalendarDay(selectedDate.toJvmDate().toKotlinLocalDate(), DayPosition.MonthDate))
         }
     } }
     val daysOfWeek = remember { daysOfWeek() }
@@ -76,7 +77,7 @@ fun DatePickerDialogView(selectedDate: LocalDate? = null, adjacentMonths: Int = 
                         selections.add(clickedDate)
                     }
 
-                    dateSelected(clickedDate.date.toJavaLocalDate())
+                    dateSelected(clickedDate.date.toJavaLocalDate().toEInvoicingDate())
                 }
             },
             monthHeader = {

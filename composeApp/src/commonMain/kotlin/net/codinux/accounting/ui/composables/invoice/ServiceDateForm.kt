@@ -16,18 +16,19 @@ import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
 import net.codinux.accounting.ui.composables.invoice.model.DescriptionOfServicesViewModel
 import net.codinux.accounting.ui.extensions.widthForScreen
+import net.codinux.invoicing.model.LocalDate
+import net.codinux.invoicing.model.toEInvoicingDate
 import org.jetbrains.compose.resources.stringResource
-import java.time.LocalDate
 
 @Composable
 fun ServiceDateForm(viewModel: DescriptionOfServicesViewModel, isCompactScreen: Boolean) {
 
     val selectedServiceDateOption by viewModel.serviceDateOption.collectAsState()
-    val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
+    val servicePeriodDefaultMonth = java.time.LocalDate.now().minusMonths(1).toEInvoicingDate()
     var serviceDate by remember { mutableStateOf(LocalDate.now()) }
-    var servicePeriodMonth by remember { mutableStateOf(servicePeriodDefaultMonth.month) }
-    var servicePeriodStart by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
-    var servicePeriodEnd by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
+    var servicePeriodMonth by remember { mutableStateOf(servicePeriodDefaultMonth.toJvmDate().month) }
+    var servicePeriodStart by remember { mutableStateOf(servicePeriodDefaultMonth.toJvmDate().withDayOfMonth(1).toEInvoicingDate()) }
+    var servicePeriodEnd by remember { mutableStateOf(servicePeriodDefaultMonth.toJvmDate().withDayOfMonth(servicePeriodDefaultMonth.toJvmDate().lengthOfMonth()).toEInvoicingDate()) }
 
 
     @Composable

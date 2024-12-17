@@ -13,17 +13,17 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import net.codinux.invoicing.model.BigDecimal
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.StringResource
-import java.math.BigDecimal
 import kotlin.reflect.KClass
 
 
-private val FloatingPointDataTypes = listOf(BigDecimal::class, Double::class, Float::class)
+private val FloatingPointDataTypes: List<KClass<*>> = listOf(BigDecimal::class, Double::class, Float::class)
 
 
 @Composable
-fun <T : Number> OutlinedNumberTextField(
+fun <T : Any> OutlinedNumberTextField(
     valueClass: KClass<T>,
     value: T? = null,
     onValueChange: (T?) -> Unit,

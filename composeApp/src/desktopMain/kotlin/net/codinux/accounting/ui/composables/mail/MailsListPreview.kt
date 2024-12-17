@@ -4,7 +4,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
 import net.codinux.accounting.ui.preview.DataGenerator
 import net.codinux.accounting.ui.state.EmailsUiState
-import java.time.LocalDate
+import net.codinux.invoicing.model.LocalDate
 
 @Preview
 @Composable
@@ -13,7 +13,7 @@ fun MailsListPreview() {
         EmailsUiState(),
         listOf(
             DataGenerator.createMail(DataGenerator.createInvoice(), 2),
-            DataGenerator.createMail(DataGenerator.createInvoice("RE-789", LocalDate.of(2015, 10, 21)), 1)
+            DataGenerator.createMail(DataGenerator.createInvoice("RE-789", LocalDate(2015, 10, 21)), 1)
         )
     )
 }

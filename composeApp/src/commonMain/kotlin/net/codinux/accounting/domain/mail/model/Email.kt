@@ -2,8 +2,7 @@ package net.codinux.accounting.domain.mail.model
 
 import net.codinux.invoicing.email.model.EmailAddress
 import net.codinux.invoicing.email.model.EmailAttachment
-import java.time.Instant
-import java.time.ZoneId
+import net.codinux.invoicing.model.Instant
 
 class Email(
     val id: Long,
@@ -28,5 +27,5 @@ class Email(
 
     val hasPdfAttachment: Boolean by lazy { attachments.any { it.isPdfFile } }
 
-    override fun toString() = "${date.atZone(ZoneId.systemDefault()).toLocalDate()} $sender: $subject, ${attachments.size} attachment(s)"
+    override fun toString() = "${date.toLocalDateAtSystemDefaultZone()} $sender: $subject, ${attachments.size} attachment(s)"
 }

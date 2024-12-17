@@ -21,7 +21,6 @@ import net.codinux.invoicing.pdf.AmountOfMoney
 import net.codinux.invoicing.pdf.PdfInvoiceData
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
-import java.math.BigDecimal
 
 
 private val formatUtil = DI.formatUtil

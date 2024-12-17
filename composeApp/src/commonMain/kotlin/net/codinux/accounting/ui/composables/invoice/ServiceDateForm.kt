@@ -9,6 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.kizitonwose.calendar.core.minusMonths
+import kotlinx.datetime.LocalDate
+import net.codinux.accounting.domain.common.extensions.lengthOfMonth
+import net.codinux.accounting.domain.common.extensions.now
+import net.codinux.accounting.domain.common.extensions.withDayOfMonth
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.Select
@@ -16,19 +21,17 @@ import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.forms.datetime.SelectMonth
 import net.codinux.accounting.ui.composables.invoice.model.DescriptionOfServicesViewModel
 import net.codinux.accounting.ui.extensions.widthForScreen
-import net.codinux.invoicing.model.LocalDate
-import net.codinux.invoicing.model.toEInvoicingDate
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ServiceDateForm(viewModel: DescriptionOfServicesViewModel, isCompactScreen: Boolean) {
 
     val selectedServiceDateOption by viewModel.serviceDateOption.collectAsState()
-    val servicePeriodDefaultMonth = java.time.LocalDate.now().minusMonths(1).toEInvoicingDate()
+    val servicePeriodDefaultMonth = LocalDate.now().minusMonths(1)
     var serviceDate by remember { mutableStateOf(LocalDate.now()) }
-    var servicePeriodMonth by remember { mutableStateOf(servicePeriodDefaultMonth.toJvmDate().month) }
-    var servicePeriodStart by remember { mutableStateOf(servicePeriodDefaultMonth.toJvmDate().withDayOfMonth(1).toEInvoicingDate()) }
-    var servicePeriodEnd by remember { mutableStateOf(servicePeriodDefaultMonth.toJvmDate().withDayOfMonth(servicePeriodDefaultMonth.toJvmDate().lengthOfMonth()).toEInvoicingDate()) }
+    var servicePeriodMonth by remember { mutableStateOf(servicePeriodDefaultMonth.month) }
+    var servicePeriodStart by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(1)) }
+    var servicePeriodEnd by remember { mutableStateOf(servicePeriodDefaultMonth.withDayOfMonth(servicePeriodDefaultMonth.lengthOfMonth())) }
 
 
     @Composable

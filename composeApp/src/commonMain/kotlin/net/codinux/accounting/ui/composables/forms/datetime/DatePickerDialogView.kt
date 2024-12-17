@@ -19,9 +19,10 @@ import com.kizitonwose.calendar.core.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import net.codinux.accounting.ui.config.Colors
-import net.codinux.invoicing.model.LocalDate
-import net.codinux.invoicing.model.toEInvoicingDate
-import java.util.*
+import net.codinux.accounting.ui.config.DI
+
+
+private val formatUtil = DI.formatUtil
 
 // copied from: https://github.com/kizitonwose/Calendar/blob/64b7adbce7c6c7581895575a359fcc8e5d188416/compose-multiplatform/sample/src/commonMain/kotlin/Utils.kt
 @Composable
@@ -32,7 +33,7 @@ fun DatePickerDialogView(selectedDate: LocalDate? = null, adjacentMonths: Int = 
     val endMonth = remember { currentMonth.plusMonths(adjacentMonths) }
     val selections = remember { mutableStateListOf<CalendarDay>().also {
         if (selectedDate != null) {
-            it.add(CalendarDay(selectedDate.toJvmDate().toKotlinLocalDate(), DayPosition.MonthDate))
+            it.add(CalendarDay(selectedDate, DayPosition.MonthDate))
         }
     } }
     val daysOfWeek = remember { daysOfWeek() }
@@ -77,7 +78,7 @@ fun DatePickerDialogView(selectedDate: LocalDate? = null, adjacentMonths: Int = 
                         selections.add(clickedDate)
                     }
 
-                    dateSelected(clickedDate.date.toJavaLocalDate().toEInvoicingDate())
+                    dateSelected(clickedDate.date)
                 }
             },
             monthHeader = {
@@ -98,7 +99,7 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 fontSize = 15.sp,
-                text = dayOfWeek.displayText(),
+                text = formatUtil.formatDay(dayOfWeek),
                 fontWeight = FontWeight.Medium,
             )
         }
@@ -135,32 +136,5 @@ private fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) ->
 }
 
 fun YearMonth.displayText(short: Boolean = false): String {
-    return "${month.displayText(short = short)} $year"
+    return "${formatUtil.formatMonth(month, short)} $year"
 }
-
-fun Month.displayText(short: Boolean = true): String {
-    return getDisplayName(short, defaultLocale)
-}
-
-fun DayOfWeek.displayText(uppercase: Boolean = false, narrow: Boolean = false): String {
-    return getDisplayName(narrow, defaultLocale).let { value ->
-        if (uppercase) value.uppercase() else value
-    }
-}
-
-//expect fun Month.getDisplayName(short: Boolean, locale: Locale): String
-//
-//expect fun DayOfWeek.getDisplayName(narrow: Boolean = false, locale: Locale): String
-
-fun Month.getDisplayName(short: Boolean, locale: Locale): String {
-    val style = if (short) java.time.format.TextStyle.SHORT else java.time.format.TextStyle.FULL
-    return getDisplayName(style, java.util.Locale.forLanguageTag(locale.toLanguageTag()))
-}
-
-fun DayOfWeek.getDisplayName(narrow: Boolean, locale: Locale): String {
-    val style = if (narrow) java.time.format.TextStyle.NARROW else java.time.format.TextStyle.SHORT
-    return getDisplayName(style, java.util.Locale.forLanguageTag(locale.toLanguageTag()))
-}
-
-//private val defaultLocale = Locale("en-US")
-private val defaultLocale = Locale.getDefault()

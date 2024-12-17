@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
-import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.BooleanOption

@@ -1,8 +1,8 @@
 package net.codinux.accounting.ui.dialogs
 
 import androidx.compose.runtime.Composable
+import kotlinx.datetime.LocalDate
 import net.codinux.accounting.ui.composables.forms.datetime.DatePickerDialogView
-import net.codinux.invoicing.model.LocalDate
 
 @Composable
 fun DatePickerDialog(

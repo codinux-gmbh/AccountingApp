@@ -12,17 +12,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import kotlinx.datetime.LocalDate
+import net.codinux.accounting.domain.common.extensions.toEInvoicingDate
+import net.codinux.accounting.domain.common.extensions.toKotlinLocalDate
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.DatePickerDialog
-import net.codinux.invoicing.model.LocalDate
 import org.jetbrains.compose.resources.StringResource
-import java.time.format.DateTimeFormatter
 
 
 private val formatUtil = DI.formatUtil
+
+@Composable
+fun DatePicker(
+    label: StringResource?,
+    selectedDate: net.codinux.invoicing.model.LocalDate? = null,
+    modifier: Modifier = Modifier.width(if (Platform.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
+    showCalendarIcon: Boolean = false,
+    moveFocusOnToNextElementOnSelection: Boolean = true,
+    textColor: Color? = null,
+    required: Boolean = false,
+    dateSelected: (net.codinux.invoicing.model.LocalDate) -> Unit
+) {
+    DatePicker(label, selectedDate?.toKotlinLocalDate(), modifier, showCalendarIcon, moveFocusOnToNextElementOnSelection, textColor, required) { dateSelected(it.toEInvoicingDate()) }
+}
 
 @Composable
 fun DatePicker(
@@ -31,7 +46,6 @@ fun DatePicker(
     modifier: Modifier = Modifier.width(if (Platform.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
     showCalendarIcon: Boolean = false,
     moveFocusOnToNextElementOnSelection: Boolean = true,
-    dateFormatter: DateTimeFormatter? = null,
     textColor: Color? = null,
     required: Boolean = false,
     dateSelected: (LocalDate) -> Unit
@@ -46,7 +60,7 @@ fun DatePicker(
 
     Column(modifier.clickableWithRipple { showDatePickerDialog = true }, verticalArrangement = Arrangement.Center) {
         OutlinedTextField(
-            value = selectedDate?.let { dateFormatter?.format(it.toJvmDate()) ?: formatUtil.formatShortDate(it) } ?: "",
+            value = selectedDate?.let { formatUtil.formatShortDate(it) } ?: "",
             onValueChange = { },
             modifier = Modifier.fillMaxSize().onFocusEvent { state -> if (state.isFocused || state.hasFocus) { showDatePickerDialog = true } },
             textStyle = if (textColor != null) TextStyle(textColor) else LocalTextStyle.current,

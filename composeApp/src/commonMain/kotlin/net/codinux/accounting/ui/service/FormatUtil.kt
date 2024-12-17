@@ -1,5 +1,9 @@
 package net.codinux.accounting.ui.service
 
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Month
+import net.codinux.accounting.domain.common.extensions.toEInvoicingDate
+import net.codinux.i18n.LanguageTag
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.log.Log
@@ -8,6 +12,7 @@ import java.text.NumberFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 class FormatUtil {
 
@@ -15,6 +20,9 @@ class FormatUtil {
         val DayAndMonthDateFormat = DateTimeFormatter.ofPattern("dd. MMM")
 
         val ShortDateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+
+
+        val LongMonthFormat = DateTimeFormatter.ofPattern("MMMM")
 
 
         private val CurrencyFormat = DecimalFormat.getCurrencyInstance()
@@ -38,11 +46,32 @@ class FormatUtil {
         formatDateToDayAndMonth(toDate(instant))
 
 
+    fun formatShortDate(date: kotlinx.datetime.LocalDate): String =
+        formatShortDate(date.toEInvoicingDate())
+
     fun formatShortDate(date: LocalDate): String =
         ShortDateFormat.format(date.toJvmDate())
 
     fun formatShortDate(instant: Instant): String =
         formatShortDate(toDate(instant))
+
+
+    fun getMonthName(month: Month): String =
+        LongMonthFormat.format(java.time.Month.valueOf(month.name))
+
+    fun formatMonth(month: Month, short: Boolean = true, locale: LanguageTag = LanguageTag.current): String {
+        val style = if (short) java.time.format.TextStyle.SHORT else java.time.format.TextStyle.FULL
+
+        return month.getDisplayName(style, Locale.forLanguageTag(locale.tag))
+    }
+
+    fun formatDay(day: DayOfWeek, uppercase: Boolean = false, narrow: Boolean = false, locale: LanguageTag = LanguageTag.current): String {
+        val style = if (narrow) java.time.format.TextStyle.NARROW else java.time.format.TextStyle.SHORT
+
+        return day.getDisplayName(style, Locale.forLanguageTag(locale.tag)).let { value ->
+            if (uppercase) value.uppercase() else value
+        }
+    }
 
 
     private fun toDate(instant: Instant): LocalDate =

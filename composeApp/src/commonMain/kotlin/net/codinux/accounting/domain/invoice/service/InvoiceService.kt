@@ -17,6 +17,7 @@ import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.EInvoiceCreator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.model.toDotSeparatedIsoDate
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
@@ -24,7 +25,6 @@ import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
 import net.codinux.log.logger
 import java.io.File
-import java.time.format.DateTimeFormatter
 
 class InvoiceService(
     private val uiState: UiState,
@@ -37,8 +37,6 @@ class InvoiceService(
 ) {
 
     companion object {
-        private val InvoicingDateFilenameFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
-
         private val EuropeanCountries = (Region.WesternEurope.contains + Region.NorthernEurope.contains
                 + Region.EasternEurope.contains + Region.SouthernEurope.contains).toSet()
 
@@ -158,7 +156,7 @@ class InvoiceService(
         val xml = createEInvoiceXml(invoice, format)
 
         val directory = File(invoicesDirectory, invoice.details.invoiceDate.year.toString()).also { it.mkdirs() }
-        val filename = "${InvoicingDateFilenameFormat.format(invoice.details.invoiceDate.toJvmDate())} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
+        val filename = "${invoice.details.invoiceDate.toDotSeparatedIsoDate()} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
         val pdfFile = File(directory, filename + ".pdf")
 
         creator.createPdfWithAttachedXml(xml, format, pdfFile)

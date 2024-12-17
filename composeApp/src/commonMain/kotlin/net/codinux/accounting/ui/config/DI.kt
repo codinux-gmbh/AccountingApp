@@ -12,7 +12,7 @@ import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.service.FormatUtil
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.EmailsFetcher
-import net.codinux.invoicing.pdf.PdfInvoiceDataExtractor
+import net.codinux.invoicing.reader.EInvoiceReader
 import java.io.File
 
 object DI {
@@ -38,7 +38,7 @@ object DI {
     val fileHandler = PlatformDependencies.fileHandler
 
 
-    private val invoiceReader = PlatformDependencies.invoiceReader
+    private val invoiceReader = EInvoiceReader()
 
     val calculationService = CalculationService()
 
@@ -46,9 +46,7 @@ object DI {
         LocalizationService(), InvoiceRepository(jsonMapper, databaseDirectory), fileHandler, invoicesDirectory)
 
 
-    private val invoiceDataExtractor = PdfInvoiceDataExtractor(PlatformDependencies.pdfTextExtractor)
-
-    val mailService = MailService(uiState, EmailsFetcher(invoiceReader, invoiceDataExtractor), MailRepository(jsonMapper, databaseDirectory))
+    val mailService = MailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper, databaseDirectory))
 
 
     suspend fun init() {

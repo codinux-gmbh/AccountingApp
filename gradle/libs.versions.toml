@@ -7,7 +7,7 @@ invoicing = "0.5.1"
 pdfBoxAndroid = "2.0.27.0"
 pdfBoxAndroidTextExtractor = "0.6.1"
 
-jackson = "2.18.1"
+jackson = "2.18.2"
 
 kI18n = "0.5.1"
 
@@ -20,7 +20,7 @@ calendarCompose = "2.6.0-beta01"
 
 compose-multiplatform = "1.7.1"
 
-agp = "8.5.2"
+agp = "8.7.3"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"

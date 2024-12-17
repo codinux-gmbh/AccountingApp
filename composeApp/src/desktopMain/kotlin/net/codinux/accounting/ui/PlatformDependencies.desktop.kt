@@ -1,7 +1,8 @@
 package net.codinux.accounting.ui
 
 import net.codinux.accounting.platform.PlatformFileHandler
-import net.codinux.invoicing.creation.EInvoiceCreator
+import net.codinux.invoicing.creation.EInvoicePdfCreator
+import net.codinux.invoicing.creation.JvmEInvoicePdfCreator
 import java.io.File
 import java.nio.file.Files
 import kotlin.io.path.Path
@@ -14,7 +15,7 @@ actual object PlatformDependencies {
     actual val fileHandler = PlatformFileHandler()
 
 
-    actual val invoiceCreator = EInvoiceCreator()
+    actual val pdfCreator: EInvoicePdfCreator? = JvmEInvoicePdfCreator()
 
 
 

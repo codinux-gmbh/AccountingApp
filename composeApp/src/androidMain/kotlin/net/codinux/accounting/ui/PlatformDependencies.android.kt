@@ -1,8 +1,7 @@
 package net.codinux.accounting.ui
 
-import net.codinux.accounting.domain.invoice.service.*
 import net.codinux.accounting.platform.PlatformFileHandler
-import net.codinux.invoicing.creation.EInvoiceCreator
+import net.codinux.invoicing.creation.EInvoicePdfCreator
 
 actual object PlatformDependencies {
 
@@ -13,8 +12,6 @@ actual object PlatformDependencies {
     actual val fileHandler = PlatformFileHandler(applicationContext)
 
 
-    private val attachmentReaderAndWriter = PdfAttachmentReaderAndWriterAndroid(applicationContext)
-
-    actual val invoiceCreator: EInvoiceCreator = EInvoiceCreatorAndroid(attachmentReaderAndWriter)
+    actual val pdfCreator: EInvoicePdfCreator? = null
 
 }

@@ -14,7 +14,7 @@ import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.i18n.Region
-import net.codinux.invoicing.creation.EInvoiceCreator
+import net.codinux.invoicing.creation.*
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.model.toDotSeparatedIsoDate
@@ -28,12 +28,14 @@ import java.io.File
 
 class InvoiceService(
     private val uiState: UiState,
-    private val creator: EInvoiceCreator = PlatformDependencies.invoiceCreator,
     private val reader: EInvoiceReader,
-    private val localizationService: LocalizationService,
     private val repository: InvoiceRepository,
     private val fileHandler: PlatformFileHandler = PlatformDependencies.fileHandler,
-    private val invoicesDirectory: File
+    private val invoicesDirectory: File,
+    private val pdfCreator: EInvoicePdfCreator? = PlatformDependencies.pdfCreator,
+    private val pdfAttacher: EInvoiceXmlToPdfAttacher = EInvoiceXmlToPdfAttacher(),
+    private val xmlCreator: EInvoiceXmlCreator = EInvoiceXmlCreator(),
+    private val localizationService: LocalizationService = LocalizationService(),
 ) {
 
     companion object {
@@ -137,8 +139,8 @@ class InvoiceService(
 
     // errors handled by InvoiceForm.createEInvoice()
     fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): String = when (format) {
-        EInvoiceXmlFormat.FacturX -> creator.createFacturXXml(invoice)
-        EInvoiceXmlFormat.XRechnung -> creator.createXRechnungXml(invoice)
+        EInvoiceXmlFormat.FacturX -> xmlCreator.createFacturXXml(invoice)
+        EInvoiceXmlFormat.XRechnung -> xmlCreator.createXRechnungXml(invoice)
     }
 
     // errors handled by InvoiceForm.createEInvoice()
@@ -146,7 +148,7 @@ class InvoiceService(
         val xml = createEInvoiceXml(invoice, format)
         val pdfBytes = pdfFile.readBytes() // as it's not possible to read and write from/to the same file at the same time, read PDF first (what PDFBox does anyway) before overwriting it
 
-        creator.attachInvoiceXmlToPdf(xml, format, pdfBytes, fileHandler.getOutputStream(pdfFile)!!)
+        pdfAttacher.attachInvoiceXmlToPdf(xml, format, pdfBytes, fileHandler.getOutputStream(pdfFile)!!)
 
         return xml
     }
@@ -159,7 +161,7 @@ class InvoiceService(
         val filename = "${invoice.details.invoiceDate.toDotSeparatedIsoDate()} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
         val pdfFile = File(directory, filename + ".pdf")
 
-        creator.createPdfWithAttachedXml(xml, format, pdfFile)
+        pdfCreator?.createPdfWithAttachedXml(xml, format, pdfFile)
 
         File(directory, filename + ".xml").writeText(xml)
 

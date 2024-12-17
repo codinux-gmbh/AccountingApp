@@ -94,7 +94,8 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
-        jvmTest.dependencies {
+        val desktopTest by getting
+        desktopTest.dependencies {
             implementation(libs.kotlin.test.junit)
         }
         

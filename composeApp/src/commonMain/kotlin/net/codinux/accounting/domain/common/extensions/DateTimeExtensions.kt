@@ -8,6 +8,8 @@ fun net.codinux.invoicing.model.LocalDate.toKotlinLocalDate() = LocalDate(this.y
 
 fun LocalDate.toEInvoicingDate() = net.codinux.invoicing.model.LocalDate(this.year, this.monthNumber, this.dayOfMonth)
 
+fun net.codinux.invoicing.model.LocalDate.toI18nDate() = net.codinux.i18n.datetime.LocalDate(this.year, this.month, this.dayOfMonth)
+
 
 fun net.codinux.invoicing.model.Instant.toKotlinInstant() = Instant.fromEpochSeconds(this.epochSeconds, this.nanosecondsOfSecond)
 

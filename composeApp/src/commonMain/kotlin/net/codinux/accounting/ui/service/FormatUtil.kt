@@ -2,27 +2,25 @@ package net.codinux.accounting.ui.service
 
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
+import kotlinx.datetime.number
 import net.codinux.accounting.domain.common.extensions.toEInvoicingDate
+import net.codinux.accounting.domain.common.extensions.toI18nDate
 import net.codinux.i18n.LanguageTag
+import net.codinux.i18n.datetime.DateFieldWidth
+import net.codinux.i18n.datetime.DateTimeFormatter
+import net.codinux.i18n.datetime.WeekDayStyle
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.log.Log
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import java.util.*
 
-class FormatUtil {
+class FormatUtil(
+    private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter()
+) {
 
     companion object {
-        val DayAndMonthDateFormat = DateTimeFormatter.ofPattern("dd. MMM")
-
-        val ShortDateFormat = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-
-
-        val LongMonthFormat = DateTimeFormatter.ofPattern("MMMM")
+        val DayAndMonthDateFormatPattern = "dd. MMM"
 
 
         private val CurrencyFormat = DecimalFormat.getCurrencyInstance()
@@ -40,7 +38,7 @@ class FormatUtil {
 
 
     fun formatDateToDayAndMonth(date: LocalDate): String =
-        DayAndMonthDateFormat.format(date.toJvmDate())
+        dateTimeFormatter.formatDate(date.toI18nDate(), DayAndMonthDateFormatPattern)
 
     fun formatDateToDayAndMonth(instant: Instant): String =
         formatDateToDayAndMonth(toDate(instant))
@@ -50,32 +48,29 @@ class FormatUtil {
         formatShortDate(date.toEInvoicingDate())
 
     fun formatShortDate(date: LocalDate): String =
-        ShortDateFormat.format(date.toJvmDate())
-
-    fun formatShortDate(instant: Instant): String =
-        formatShortDate(toDate(instant))
+        dateTimeFormatter.formatDate(date.toI18nDate(), net.codinux.i18n.datetime.FormatStyle.Short)
 
 
     fun getMonthName(month: Month): String =
-        LongMonthFormat.format(java.time.Month.valueOf(month.name))
+        formatMonth(month, false)
 
     fun formatMonth(month: Month, short: Boolean = true, locale: LanguageTag = LanguageTag.current): String {
-        val style = if (short) java.time.format.TextStyle.SHORT else java.time.format.TextStyle.FULL
+        val style = if (short) DateFieldWidth.Abbreviated else DateFieldWidth.Wide
 
-        return month.getDisplayName(style, Locale.forLanguageTag(locale.tag))
+        return dateTimeFormatter.format(net.codinux.i18n.datetime.Month.entries.first { it.monthNumber == month.number }, style, locale)
     }
 
     fun formatDay(day: DayOfWeek, uppercase: Boolean = false, narrow: Boolean = false, locale: LanguageTag = LanguageTag.current): String {
-        val style = if (narrow) java.time.format.TextStyle.NARROW else java.time.format.TextStyle.SHORT
+        val style = if (narrow) WeekDayStyle.Narrow else WeekDayStyle.Short
 
-        return day.getDisplayName(style, Locale.forLanguageTag(locale.tag)).let { value ->
+        return dateTimeFormatter.format(net.codinux.i18n.datetime.DayOfWeek.entries.first { it.ordinal == day.ordinal }, style, locale).let { value ->
             if (uppercase) value.uppercase() else value
         }
     }
 
 
     private fun toDate(instant: Instant): LocalDate =
-        instant.toJvmInstant().atZone(ZoneId.systemDefault()).toLocalDate().toEInvoicingDate()
+        instant.toLocalDateAtSystemDefaultZone()
 
 
     fun formatAmountOfMoney(amount: BigDecimal, currency: Currency? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String =

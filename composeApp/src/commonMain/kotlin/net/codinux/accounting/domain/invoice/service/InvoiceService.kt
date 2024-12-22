@@ -138,10 +138,8 @@ class InvoiceService(
 
 
     // errors handled by InvoiceForm.createEInvoice()
-    fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): String = when (format) {
-        EInvoiceXmlFormat.FacturX -> xmlCreator.createFacturXXml(invoice)
-        EInvoiceXmlFormat.XRechnung -> xmlCreator.createXRechnungXml(invoice)
-    }
+    fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): String =
+        xmlCreator.createInvoiceXml(invoice, format)
 
     // errors handled by InvoiceForm.createEInvoice()
     suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceXmlFormat, pdfFile: PlatformFile): String {

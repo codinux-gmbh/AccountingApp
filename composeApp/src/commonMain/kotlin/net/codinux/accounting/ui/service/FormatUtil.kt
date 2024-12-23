@@ -9,31 +9,17 @@ import net.codinux.i18n.LanguageTag
 import net.codinux.i18n.datetime.DateFieldWidth
 import net.codinux.i18n.datetime.DateTimeFormatter
 import net.codinux.i18n.datetime.WeekDayStyle
+import net.codinux.i18n.formatter.NumberFormatter
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
-import net.codinux.log.Log
-import java.text.DecimalFormat
-import java.text.NumberFormat
 
 class FormatUtil(
+    private val numberFormatter: NumberFormatter = NumberFormatter(),
     private val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter()
 ) {
 
     companion object {
         val DayAndMonthDateFormatPattern = "dd. MMM"
-
-
-        private val CurrencyFormat = DecimalFormat.getCurrencyInstance()
-        private val CurrencyFormatForCustomCurrency = DecimalFormat.getCurrencyInstance()
-
-        private val CurrencyFormatWithoutDecimalPlaces = DecimalFormat.getCurrencyInstance().apply {
-            maximumFractionDigits = 0
-        }
-        private val CurrencyFormatWithoutDecimalPlacesForCustomCurrency = DecimalFormat.getCurrencyInstance().apply {
-            maximumFractionDigits = 0
-        }
-
-        private val PercentageFormat = DecimalFormat.getPercentInstance()
     }
 
 
@@ -76,44 +62,19 @@ class FormatUtil(
     fun formatAmountOfMoney(amount: BigDecimal, currency: Currency? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String =
         formatAmountOfMoney(amount, currency?.alpha3Code, ignoreEmptyDecimalPlacesForLargerAmounts)
 
-    fun formatAmountOfMoney(amount: BigDecimal, currencyIsoCode: String? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String =
-        if (ignoreEmptyDecimalPlacesForLargerAmounts && hasDecimalPlaces(amount) == false && amount.compareTo(BigDecimal(1_000)) >= 0) {
-            getForCurrency(CurrencyFormatWithoutDecimalPlaces, CurrencyFormatWithoutDecimalPlacesForCustomCurrency, currencyIsoCode).format(amount.toJvmBigDecimal())
-        } else {
-            getForCurrency(CurrencyFormat, CurrencyFormatForCustomCurrency, currencyIsoCode).format(amount.toJvmBigDecimal())
-        }
+    fun formatAmountOfMoney(amount: BigDecimal, currencyIsoCode: String? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String {
+        val currency = net.codinux.i18n.Currency.entries.first { it.alpha3Code == currencyIsoCode || it.symbol == currencyIsoCode } // bug in TextInfoExtractor that extracts e.g. '€' as isoCode
+        val amountDouble = amount.toPlainString().toDouble()
+        val countFractionalDigitsOverride = if (ignoreEmptyDecimalPlacesForLargerAmounts && amountDouble > 1_000) 0 else null
 
-    private fun getForCurrency(currencyFormat: NumberFormat, currencyFormatForCustomCurrency: NumberFormat, currencyCode: String?): NumberFormat {
-        val currency = try {
-            currencyCode?.let { java.util.Currency.getInstance(currencyCode) }
-        } catch (_: Throwable) {
-            if (currencyCode != null && currencyCode.length < 3) { // then currencyIsoCode is probably the currency symbol
-                Currency.entries.firstOrNull { it.currencySymbol == currencyCode }?.let {
-                    java.util.Currency.getInstance(it.alpha3Code)
-                }
-            } else {
-                Log.warn { "Could not map currency ISO code '$currencyCode' to Currency" }
-                null
-            }
-        }
-
-        return if (currency != null) {
-            currencyFormatForCustomCurrency.apply {
-                this.currency = currency
-            }
-        } else {
-            currencyFormat
-        }
+        return numberFormatter.formatCurrency(amountDouble, currency, countFractionalDigits = countFractionalDigitsOverride)
     }
 
     fun formatPercentage(percentage: BigDecimal): String =
-        PercentageFormat.format(percentage.toJvmBigDecimal().divide(java.math.BigDecimal(100)))
+        numberFormatter.formatPercent(percentage.toPlainString().toDouble() / 100.0)
 
     fun formatQuantity(quantity: BigDecimal): String =
         quantity.setScale(getCountDecimalPlaces(quantity)).toPlainString()
-
-    private fun hasDecimalPlaces(value: BigDecimal): Boolean =
-        value.toJvmBigDecimal().stripTrailingZeros().scale() < value.toJvmBigDecimal().scale()
 
     private fun getCountDecimalPlaces(value: BigDecimal): Int =
         value.toJvmBigDecimal().stripTrailingZeros().scale()

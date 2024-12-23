@@ -74,9 +74,26 @@ class FormatUtil(
         numberFormatter.formatPercent(percentage.toPlainString().toDouble() / 100.0)
 
     fun formatQuantity(quantity: BigDecimal): String =
-        quantity.setScale(getCountDecimalPlaces(quantity)).toPlainString()
+        stripTrailingZeros(quantity.toPlainString())
 
-    private fun getCountDecimalPlaces(value: BigDecimal): Int =
-        value.toJvmBigDecimal().stripTrailingZeros().scale()
+    private fun stripTrailingZeros(numberString: String): String {
+        if (numberString.contains('.') && numberString.endsWith('0')) {
+            var lastNonZeroIndex = numberString.lastIndex
+
+            while (lastNonZeroIndex > 0 && numberString[lastNonZeroIndex] == '0') {
+                lastNonZeroIndex--
+            }
+
+            if (lastNonZeroIndex > 0 && numberString[lastNonZeroIndex] == '.') {
+                lastNonZeroIndex--
+            }
+
+            if (lastNonZeroIndex != numberString.lastIndex) {
+                return numberString.substring(0, lastNonZeroIndex + 1) // .substring() end is exclusive, but we determined index inclusive
+            }
+        }
+
+        return numberString
+    }
 
 }

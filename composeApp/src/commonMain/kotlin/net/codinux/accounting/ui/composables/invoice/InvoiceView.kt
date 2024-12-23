@@ -87,7 +87,7 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem, currency
         Text("à", Modifier.padding(start = 4.dp))
         Text(formatUtil.formatAmountOfMoney(item.unitPrice, currency, true), Modifier.width(64.dp).padding(start = 4.dp), maxLines = 1)
         // Text(",")
-        Text(formatUtil.formatPercentage(item.vatRate), Modifier.width(34.dp).padding(start = 4.dp), maxLines = 1)
+        Text(formatUtil.formatPercentage(item.vatRate), Modifier.width(36.dp).padding(start = 4.dp), textAlign = TextAlign.End, maxLines = 1)
     }
 }
 

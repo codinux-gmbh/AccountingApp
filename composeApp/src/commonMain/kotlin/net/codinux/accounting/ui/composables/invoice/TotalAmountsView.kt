@@ -37,7 +37,7 @@ fun TotalAmountsView(currency: Currency, totals: TotalAmounts, showSeparatorFrom
 
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
-        Divider(Modifier.width(160.dp), Color.Black, 1.5.dp)
+        Divider(Modifier.width(185.dp), Color.Black, 1.5.dp)
     }
 
     AmountRow(Res.string.total_amount, totals.duePayableAmount, currency)
@@ -50,6 +50,6 @@ private fun AmountRow(label: StringResource, amount: BigDecimal, currency: Curre
 
         Text(stringResource(label), Modifier.width(70.dp), Colors.FormLabelTextColor, Style.LabelledValueFontSize, maxLines = 1)
 
-        Text(formatUtil.formatAmountOfMoney(amount, currency), Modifier.width(90.dp).padding(start = 4.dp), Colors.FormValueTextColor, Style.LabelledValueFontSize, fontFamily = FontFamily.Monospace, textAlign = TextAlign.End, maxLines = 1)
+        Text(formatUtil.formatAmountOfMoney(amount, currency), Modifier.width(115.dp).padding(start = 4.dp), Colors.FormValueTextColor, Style.LabelledValueFontSize, fontFamily = FontFamily.Monospace, textAlign = TextAlign.End, maxLines = 1)
     }
 }

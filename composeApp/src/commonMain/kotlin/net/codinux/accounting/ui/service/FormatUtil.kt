@@ -64,14 +64,14 @@ class FormatUtil(
 
     fun formatAmountOfMoney(amount: BigDecimal, currencyIsoCode: String? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String {
         val currency = net.codinux.i18n.Currency.entries.first { it.alpha3Code == currencyIsoCode || it.symbol == currencyIsoCode } // bug in TextInfoExtractor that extracts e.g. '€' as isoCode
-        val amountDouble = amount.toPlainString().toDouble()
+        val amountDouble = amount.toDouble()
         val countFractionalDigitsOverride = if (ignoreEmptyDecimalPlacesForLargerAmounts && amountDouble > 1_000) 0 else null
 
         return numberFormatter.formatCurrency(amountDouble, currency, countFractionalDigits = countFractionalDigitsOverride)
     }
 
     fun formatPercentage(percentage: BigDecimal): String =
-        numberFormatter.formatPercent(percentage.toPlainString().toDouble() / 100.0)
+        numberFormatter.formatPercent(percentage.toDouble() / 100.0)
 
     fun formatQuantity(quantity: BigDecimal): String =
         stripTrailingZeros(quantity.toPlainString())

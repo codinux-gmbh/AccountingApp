@@ -20,7 +20,7 @@ import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.invoicing.pdf.PdfAttachmentExtractionResultType
 import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
-import net.codinux.invoicing.reader.ReadEInvoiceXmlResult
+import net.codinux.invoicing.reader.ReadEInvoiceXmlResultJvm
 import net.codinux.invoicing.reader.ReadEInvoiceXmlResultType
 import org.jetbrains.compose.resources.stringResource
 
@@ -54,7 +54,7 @@ fun SelectEInvoiceFileToDisplay() {
     }
 
 
-    fun showReadXmlError(result: FileEInvoiceExtractionResult, xmlResult: ReadEInvoiceXmlResult) {
+    fun showReadXmlError(result: FileEInvoiceExtractionResult, xmlResult: ReadEInvoiceXmlResultJvm) {
         val stringResource = when (xmlResult.type) {
             ReadEInvoiceXmlResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
             ReadEInvoiceXmlResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data

@@ -7,7 +7,7 @@ invoicing = "0.6.0-SNAPSHOT"
 
 jackson = "2.18.2"
 
-kI18n = "0.5.2-SNAPSHOT"
+kI18n = "0.6.0"
 
 klf = "1.8.0"
 

@@ -27,6 +27,7 @@ import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.copy
+import net.codinux.accounting.ui.IoOrDefault
 import net.codinux.accounting.ui.composables.forms.BooleanOption
 import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.*
@@ -121,7 +122,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     }
 
     fun createEInvoice() {
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.launch(Dispatchers.IoOrDefault) {
             try {
                 val invoice = createInvoice()
 
@@ -131,7 +132,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)?.let { (xml, pdf) ->
                         createdPdfFile = pdf
                         if (pdf != null) {
-                            coroutineScope.launch(Dispatchers.IO) {
+                            coroutineScope.launch(Dispatchers.IoOrDefault) {
                                 DI.fileHandler.openFileInDefaultViewer(pdf, "application/pdf")
                             }
                         }

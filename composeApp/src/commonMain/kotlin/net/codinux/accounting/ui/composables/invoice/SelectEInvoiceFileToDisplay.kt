@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.IoOrDefault
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
@@ -38,7 +39,7 @@ fun SelectEInvoiceFileToDisplay() {
         selectedFile?.let {
             lastSelectedInvoiceFile = it
 
-            coroutineScope.launch(Dispatchers.IO) {
+            coroutineScope.launch(Dispatchers.IoOrDefault) {
                 lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
             }
         }

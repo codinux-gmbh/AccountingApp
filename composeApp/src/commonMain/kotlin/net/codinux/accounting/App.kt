@@ -8,6 +8,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.codinux.accounting.ui.IoOrDefault
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.screens.MainScreen
@@ -41,7 +42,7 @@ fun App() {
         if (isInitialized == false) {
             isInitialized = true
 
-            coroutineScope.launch(Dispatchers.IO) {
+            coroutineScope.launch(Dispatchers.IoOrDefault) {
                 DI.init()
             }
         }

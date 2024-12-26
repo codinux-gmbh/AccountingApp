@@ -2,6 +2,7 @@ package net.codinux.accounting.ui
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
+import kotlinx.coroutines.Dispatchers
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.JvmMailService
@@ -12,8 +13,14 @@ import net.codinux.invoicing.email.EmailsFetcher
 import net.codinux.invoicing.reader.EInvoiceReader
 import java.io.File
 import java.nio.file.Files
+import kotlin.coroutines.CoroutineContext
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+
+
+actual val Dispatchers.IoOrDefault: CoroutineContext
+    get() = Dispatchers.IO
+
 
 actual class PlatformDependencies actual constructor(uiState: UiState, invoiceReader: EInvoiceReader){
 

@@ -35,6 +35,7 @@
     <string name="error_message">Fehlermeldung</string>
     <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
     <string name="error_read_e_invoice">E-Rechnung konnte nicht gelesen werden</string>
+    <string name="error_show_e_invoice">E-Rechnung konnte nicht angezeigt werden</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
     <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
     <string name="error_listening_for_new_emails">Fehler beim Lauschen auf neue E-Mails</string>
@@ -130,6 +131,8 @@
     <string name="save_pdf">PDF speichern</string>
 
     <string name="error_message_could_not_create_invoice">E-Rechnung konnte nicht erstellt werden</string>
+    <string name="error_message_no_application_found_to_show_file_of_type">Keine App gefunden um Datei von Typ %1$s anzuzeigen.</string>
+    <string name="error_message_created_invoice_cannot_be_displayed">Erstellte E-Rechnung kann nicht angezeigt werden</string>
     <string name="error_message_could_not_load_invoices">Rechnungsdaten konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_message_could_not_persist_historical_invoice_data">Rechnungs-Autovervollständigungsdaten konnten nicht gespeichert werden</string>
 

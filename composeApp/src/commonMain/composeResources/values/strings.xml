@@ -35,6 +35,7 @@
     <string name="error_message">Error message</string>
     <string name="error_create_invoice">Invoice could not be created</string>
     <string name="error_read_e_invoice">Could not read eInvoice</string>
+    <string name="error_show_e_invoice">Could not show eInvoice</string>
     <string name="error_add_email_account">Email account could not be added</string>
     <string name="error_fetch_emails">Failed fetching emails</string>
     <string name="error_listening_for_new_emails">Failed listening for new emails</string>
@@ -130,6 +131,8 @@
     <string name="save_pdf">Save PDF</string>
 
     <string name="error_message_could_not_create_invoice">Could not create invoice</string>
+    <string name="error_message_no_application_found_to_show_file_of_type">No app found to show file of type %1$s</string>
+    <string name="error_message_created_invoice_cannot_be_displayed">Created invoice cannot be displayed</string>
     <string name="error_message_could_not_load_invoices">Could not load invoice data from database</string>
     <string name="error_message_could_not_persist_historical_invoice_data">Could not persist historical invoice data</string>
 

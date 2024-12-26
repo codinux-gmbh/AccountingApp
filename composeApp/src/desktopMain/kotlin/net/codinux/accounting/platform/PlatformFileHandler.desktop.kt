@@ -1,6 +1,9 @@
 package net.codinux.accounting.platform
 
 import io.github.vinceglb.filekit.core.PlatformFile
+import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.config.DI
 import net.codinux.log.logger
 import java.awt.Desktop
 import java.io.File
@@ -28,7 +31,9 @@ actual class PlatformFileHandler {
                 desktop.open(file.file)
             } catch (e: Throwable) {
                 log.error(e) { "Could not open file '${file.file}" }
-                // TODO: show error to user
+
+                // TODO: it's may not always the created invoice
+                DI.uiState.errorOccurred(ErroneousAction.ShowEInvoice, Res.string.error_message_created_invoice_cannot_be_displayed, e)
             }
         }
     }

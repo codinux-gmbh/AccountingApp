@@ -49,7 +49,7 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel) {
+fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
 
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
@@ -181,24 +181,48 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     }
 
     generatedEInvoiceXml?.let { generatedEInvoiceXml ->
-        Row(Modifier.padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-            TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml)) }, contentPadding = PaddingValues(0.dp)) {
-                Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
-            }
+        if (isCompactScreen && createdPdfFile != null) { // two lines on mobile
+            Row(Modifier.fillMaxWidth().padding(top = 12.dp).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
+                TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }) {
+                    Text(stringResource(Res.string.save_xml), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
+                }
 
-            TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }, contentPadding = PaddingValues(0.dp)) {
-                Text(stringResource(Res.string.save_xml), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
-            }
-
-            createdPdfFile?.let { createdPdfFile ->
-                TextButton(onClick = { saveFileLauncher.launch(null, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
-                    Text(stringResource(Res.string.save_pdf), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                createdPdfFile?.let { createdPdfFile ->
+                    TextButton(onClick = { saveFileLauncher.launch(null, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
+                        Text(stringResource(Res.string.save_pdf), Modifier.width(130.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    }
                 }
             }
 
-            Spacer(Modifier.weight(1f))
+            Row(Modifier.padding(top = VerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
+                TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml)) }) {
+                    Text(stringResource(Res.string.copy), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
+                }
 
-            BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
+                Spacer(Modifier.weight(1f))
+
+                BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
+            }
+        } else { // one line on Desktops
+            Row(Modifier.padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+                TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml)) }, contentPadding = PaddingValues(0.dp)) {
+                    Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                }
+
+                TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }, contentPadding = PaddingValues(0.dp)) {
+                    Text(stringResource(Res.string.save_xml), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                }
+
+                createdPdfFile?.let { createdPdfFile ->
+                    TextButton(onClick = { saveFileLauncher.launch(null, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
+                        Text(stringResource(Res.string.save_pdf), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    }
+                }
+
+                Spacer(Modifier.weight(1f))
+
+                BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
+            }
         }
 
         if (showGeneratedEInvoiceXml) {

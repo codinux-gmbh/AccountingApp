@@ -52,7 +52,7 @@ fun InvoiceForm() {
         }
 
         Section(Res.string.create) {
-            CreateInvoiceForm(historicalData, details, supplier, customer, descriptionOfServices, bankDetails)
+            CreateInvoiceForm(historicalData, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
         }
 
         Spacer(Modifier.padding(bottom = Style.MainScreenTabVerticalPadding))

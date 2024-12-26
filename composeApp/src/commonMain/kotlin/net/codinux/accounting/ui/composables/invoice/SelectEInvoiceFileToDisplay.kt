@@ -66,7 +66,7 @@ fun SelectEInvoiceFileToDisplay() {
         }
 
 //        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, result.path)
-        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, null, result.filename)
+        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, null, lastSelectedInvoiceFile?.path ?: result.filename)
     }
 
     lastExtractedEInvoice?.let { result ->
@@ -81,6 +81,8 @@ fun SelectEInvoiceFileToDisplay() {
                 PdfExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
                 PdfExtractionResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
                 PdfExtractionResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
+                PdfExtractionResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
+                PdfExtractionResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
                 else -> null // should never come to here
             }
             if (stringResource != null) {

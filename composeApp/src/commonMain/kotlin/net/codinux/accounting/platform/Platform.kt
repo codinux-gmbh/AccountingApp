@@ -8,11 +8,6 @@ expect object Platform {
     val type: PlatformType
 
 
-    val supportsCreatingPdfs: Boolean
-
-    val supportsValidatingXml: Boolean
-
-
     @Composable
     fun systemPaddings(): PaddingValues
 

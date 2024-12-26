@@ -9,11 +9,6 @@ actual object Platform {
     actual val type = PlatformType.Android
 
 
-    actual val supportsCreatingPdfs = false
-
-    actual val supportsValidatingXml = false
-
-
     @Composable
     actual fun systemPaddings(): PaddingValues = PaddingValues(0.dp)
 

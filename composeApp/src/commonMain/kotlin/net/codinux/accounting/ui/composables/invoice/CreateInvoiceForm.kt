@@ -45,7 +45,6 @@ import java.io.File
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 private val createEInvoiceOptions = CreateEInvoiceOptions.entries
-    .filter { if (Platform.supportsCreatingPdfs == false && it == CreateEInvoiceOptions.CreateXmlAndPdf) false else true }
 
 private val invoiceService = DI.invoiceService
 

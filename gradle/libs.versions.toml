@@ -11,9 +11,6 @@ kI18n = "0.6.0"
 
 klf = "1.8.0"
 
-pdfBoxAndroid = "2.0.27.0"
-pdfBoxAndroidTextExtractor = "0.6.1"
-
 
 filekit = "0.8.7"
 calendarCompose = "2.6.0-beta01"
@@ -43,9 +40,6 @@ jackson-datetime = { group = "com.fasterxml.jackson.datatype", name = "jackson-d
 kI18n = { module = "net.codinux.i18n:k-i18n", version.ref = "kI18n"}
 
 klf = { group = "net.codinux.log", name = "klf", version.ref = "klf" }
-
-pdfBoxAndroid = { module = "com.tom-roush:pdfbox-android", version.ref = "pdfBoxAndroid" }
-pdfBoxAndroidTextExtractor = { module = "net.dankito.text.extraction:pdfbox-android-text-extractor", version.ref = "pdfBoxAndroidTextExtractor" }
 
 
 filekit = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }

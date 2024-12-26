@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.mail.MailsList
 import net.codinux.accounting.ui.dialogs.AddEmailAccountDialog
@@ -17,7 +18,7 @@ import net.codinux.accounting.ui.state.EmailsUiState
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun MailsTab(uiState: EmailsUiState) {
+fun MailsTab(mailService: MailService, uiState: EmailsUiState) {
 
     val mails = uiState.mails.collectAsState().value
 
@@ -34,7 +35,7 @@ fun MailsTab(uiState: EmailsUiState) {
 
 
     if (showAddMailAccountDialog) {
-        AddEmailAccountDialog()
+        AddEmailAccountDialog(mailService)
     }
 
 }

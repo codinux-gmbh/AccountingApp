@@ -1,19 +1,18 @@
 package net.codinux.accounting.platform
 
 import io.github.vinceglb.filekit.core.PlatformFile
-import java.io.InputStream
-import java.io.OutputStream
+import net.codinux.invoicing.model.Invoice
 
 expect class PlatformFileHandler {
 
     fun fromPath(path: String): PlatformFile
 
 
-    fun getInputStream(file: PlatformFile): InputStream?
-
-    fun getOutputStream(file: PlatformFile): OutputStream?
-
-
     fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String? = null)
+
+
+    fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String): PlatformFile
+
+    fun savePdfWithAttachedXml(pdfFile: PlatformFile, pdfBytes: ByteArray)
 
 }

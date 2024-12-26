@@ -11,8 +11,8 @@ import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.Res
 import net.codinux.accounting.ui.composables.ToolbarButton
+import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.tabs.MainScreenTab
-import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
@@ -27,7 +27,9 @@ fun BottomToolbar(selectedTab: MainScreenTab) {
 
         ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, vectorResource(Res.drawable.contract_edit), Res.string.create_invoice)
 
-        ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, Res.string.mails)
+        if (DI.mailService != null) {
+            ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, Res.string.mails)
+        }
     }
 
 }

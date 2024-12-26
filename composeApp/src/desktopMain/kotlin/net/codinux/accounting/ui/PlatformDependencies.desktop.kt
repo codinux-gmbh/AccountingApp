@@ -1,16 +1,46 @@
 package net.codinux.accounting.ui
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
+import net.codinux.accounting.domain.mail.dataaccess.MailRepository
+import net.codinux.accounting.domain.mail.service.JvmMailService
+import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.platform.PlatformFileHandler
+import net.codinux.accounting.ui.state.UiState
+import net.codinux.invoicing.email.EmailsFetcher
+import net.codinux.invoicing.reader.EInvoiceReader
 import java.io.File
 import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
-actual object PlatformDependencies {
+actual class PlatformDependencies actual constructor(uiState: UiState, invoiceReader: EInvoiceReader){
 
-    actual val applicationDataDirectory = determineDataDirectory()
+    private val jsonMapper = ObjectMapper().apply {
+        findAndRegisterModules()
 
-    actual val fileHandler = PlatformFileHandler()
+        disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+    }
+
+
+    private val applicationDataDirectory = determineDataDirectory()
+
+    private val invoicesDirectory = ensureDirectory(applicationDataDirectory, "invoices")
+
+    private val databaseDirectory = ensureDirectory(applicationDataDirectory, "db")
+
+    actual val fileHandler = PlatformFileHandler(invoicesDirectory)
+
+    actual val invoiceRepository = InvoiceRepository(jsonMapper, databaseDirectory)
+
+    actual val mailService: MailService? = JvmMailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper, databaseDirectory))
+
+
+    // TODO: move to common JVM and Android code
+    private fun ensureDirectory(parentDir: File, directoryName: String): File = File(parentDir, directoryName).also {
+        it.mkdirs()
+    }
 
 
 

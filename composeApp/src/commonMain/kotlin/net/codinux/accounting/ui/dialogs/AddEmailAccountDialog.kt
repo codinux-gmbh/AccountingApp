@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
+import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.mail.AddEmailAccountDialogContent
 import net.codinux.accounting.ui.config.Colors
@@ -12,10 +13,8 @@ import net.codinux.invoicing.email.model.EmailAccount
 import org.jetbrains.compose.resources.stringResource
 
 
-private val mailService = DI.mailService
-
 @Composable
-fun AddEmailAccountDialog() {
+fun AddEmailAccountDialog(mailService: MailService) {
 
     val account by remember { mutableStateOf(MailAccountConfiguration()) }
 

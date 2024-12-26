@@ -25,21 +25,18 @@ import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
-import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.resources.copy
 import net.codinux.accounting.ui.composables.forms.BooleanOption
 import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
-import net.codinux.accounting.ui.extensions.parent
-import net.codinux.accounting.ui.extensions.parentDirName
-import net.codinux.accounting.ui.extensions.rememberHorizontalScroll
+import net.codinux.accounting.ui.extensions.*
 import net.codinux.invoicing.model.*
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.stringResource
-import java.io.File
 
 
 private val VerticalRowPadding = Style.FormVerticalRowPadding
@@ -107,7 +104,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     }
 
     fun parentDirAndFilename(file: PlatformFile?): String? =
-        file?.let { File(it.parentDirName, it.name).path }
+        file?.parentDirAndFilename
 
     fun nullable(value: StateFlow<String>): String? = value.value.takeUnless { it.isBlank() }
 

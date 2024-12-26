@@ -22,7 +22,7 @@ class MailRepository(
 
 
     /**
-     * Does not handle errors, [net.codinux.accounting.domain.mail.service.MailService.init] does this for us
+     * Does not handle errors, [net.codinux.accounting.domain.mail.service.JvmMailService.init] does this for us
      */
     suspend fun loadMails(): List<Email> =
         if (mailsFile.exists()) {

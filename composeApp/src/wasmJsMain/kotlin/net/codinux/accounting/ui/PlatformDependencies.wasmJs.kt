@@ -6,12 +6,12 @@ import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.reader.EInvoiceReader
 
-expect class PlatformDependencies constructor(uiState: UiState, invoiceReader: EInvoiceReader) {
+actual class PlatformDependencies actual constructor(uiState: UiState, invoiceReader: EInvoiceReader) {
 
-    val fileHandler: PlatformFileHandler
+    actual val fileHandler = PlatformFileHandler()
 
-    val invoiceRepository: InvoiceRepository
+    actual val invoiceRepository = InvoiceRepository()
 
-    val mailService: MailService?
+    actual val mailService: MailService? = null
 
 }

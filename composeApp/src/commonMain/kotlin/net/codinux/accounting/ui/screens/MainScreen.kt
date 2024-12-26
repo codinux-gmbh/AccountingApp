@@ -43,8 +43,12 @@ fun MainScreen() {
         Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.CreateInvoice, selectedTab)) {
             CreateInvoiceTab()
         }
-        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
-            MailsTab(uiState.emails)
+
+        val mailService = DI.mailService
+        if (mailService != null) {
+            Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
+                MailsTab(mailService, uiState.emails)
+            }
         }
     }
 

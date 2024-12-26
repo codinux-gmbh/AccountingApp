@@ -16,7 +16,6 @@ import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.*
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
-import net.codinux.invoicing.model.toDotSeparatedIsoDate
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
@@ -24,14 +23,12 @@ import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
 import net.codinux.invoicing.reader.extractFromFile
 import net.codinux.log.logger
-import java.io.File
 
 class InvoiceService(
     private val uiState: UiState,
     private val reader: EInvoiceReader,
     private val repository: InvoiceRepository,
-    private val fileHandler: PlatformFileHandler = PlatformDependencies.fileHandler,
-    private val invoicesDirectory: File,
+    private val fileHandler: PlatformFileHandler,
     private val pdfCreator: EInvoicePdfCreator = EInvoicePdfCreator(),
     private val pdfAttacher: EInvoiceXmlToPdfAttacher = EInvoiceXmlToPdfAttacher(),
     private val xmlCreator: EInvoiceXmlCreator = EInvoiceXmlCreator(),
@@ -150,9 +147,7 @@ class InvoiceService(
 
             val resultPdfBytes = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, format)
             if (resultPdfBytes != null) {
-                fileHandler.getOutputStream(pdfFile)?.use {
-                    it.write(resultPdfBytes)
-                }
+                fileHandler.savePdfWithAttachedXml(pdfFile, resultPdfBytes)
             }
 
             // TODO: detach XML from created PDF and return that one
@@ -171,21 +166,13 @@ class InvoiceService(
             return null
         }
 
-        val directory = File(invoicesDirectory, invoice.details.invoiceDate.year.toString()).also { it.mkdirs() }
-        val filename = "${invoice.details.invoiceDate.toDotSeparatedIsoDate()} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
-        val pdfFile = File(directory, filename + ".pdf")
-
         val pdfBytes = pdfCreator.createFacturXPdf(xml, format)
         if (pdfBytes == null) {
             // TODO: show error message
             return Pair(xml, null)
         }
 
-        pdfFile.writeBytes(pdfBytes)
-
-        File(directory, filename + ".xml").writeText(xml)
-
-        return Pair(xml, fileHandler.fromPath(pdfFile.absolutePath))
+        return Pair(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml))
     }
 
 }

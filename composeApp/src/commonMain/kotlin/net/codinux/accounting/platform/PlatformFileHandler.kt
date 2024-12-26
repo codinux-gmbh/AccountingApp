@@ -14,6 +14,6 @@ expect class PlatformFileHandler {
     fun getOutputStream(file: PlatformFile): OutputStream?
 
 
-    fun openFileInDefaultViewer(file: PlatformFile)
+    fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String? = null)
 
 }

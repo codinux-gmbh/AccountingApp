@@ -30,12 +30,12 @@ actual class PlatformFileHandler(
         applicationContext.contentResolver.openOutputStream(file.uri)
 
 
-    actual fun openFileInDefaultViewer(file: PlatformFile) {
+    actual fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String?) {
         try {
             val uri = file.uri
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, applicationContext.contentResolver.getType(uri))
+                setDataAndType(uri, applicationContext.contentResolver.getType(uri) ?: fallbackMimeType)
                 flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK
             }
 

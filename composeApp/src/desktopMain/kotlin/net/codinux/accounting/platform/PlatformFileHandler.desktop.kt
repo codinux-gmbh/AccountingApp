@@ -23,7 +23,7 @@ actual class PlatformFileHandler {
     actual fun getOutputStream(file: PlatformFile): OutputStream? = file.file.outputStream()
 
 
-    actual fun openFileInDefaultViewer(file: PlatformFile) {
+    actual fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String?) {
         if (Desktop.isDesktopSupported()) {
             try {
                 val desktop = Desktop.getDesktop()

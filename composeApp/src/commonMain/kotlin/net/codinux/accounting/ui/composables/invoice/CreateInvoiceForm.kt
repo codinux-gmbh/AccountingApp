@@ -136,7 +136,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                         createdPdfFile = pdf
                         if (pdf != null) {
                             coroutineScope.launch(Dispatchers.IO) {
-                                DI.fileHandler.openFileInDefaultViewer(pdf)
+                                DI.fileHandler.openFileInDefaultViewer(pdf, "application/pdf")
                             }
                         }
                         xml

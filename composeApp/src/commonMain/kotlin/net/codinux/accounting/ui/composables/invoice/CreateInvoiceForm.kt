@@ -132,10 +132,12 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                 generatedEInvoiceXml = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat).let { (xml, pdf) ->
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)?.let { (xml, pdf) ->
                         createdPdfFile = pdf
-                        coroutineScope.launch(Dispatchers.IO) {
-                            DI.fileHandler.openFileInDefaultViewer(pdf)
+                        if (pdf != null) {
+                            coroutineScope.launch(Dispatchers.IO) {
+                                DI.fileHandler.openFileInDefaultViewer(pdf)
+                            }
                         }
                         xml
                     }

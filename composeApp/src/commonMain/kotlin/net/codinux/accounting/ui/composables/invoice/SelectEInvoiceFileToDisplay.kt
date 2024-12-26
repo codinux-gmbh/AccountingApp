@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.Section
@@ -18,10 +20,7 @@ import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.parent
-import net.codinux.invoicing.pdf.PdfAttachmentExtractionResultType
-import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
-import net.codinux.invoicing.reader.ReadEInvoiceXmlResultJvm
-import net.codinux.invoicing.reader.ReadEInvoiceXmlResultType
+import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -31,12 +30,17 @@ fun SelectEInvoiceFileToDisplay() {
 
     var lastExtractedEInvoice by remember { mutableStateOf<FileEInvoiceExtractionResult?>(null) }
 
+    val coroutineScope = rememberCoroutineScope()
+
+
     val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(
         PickerType.File(listOf("pdf", "xml")), stringResource(Res.string.select_e_invoice_file), lastSelectedInvoiceFile?.parent) { selectedFile ->
         selectedFile?.let {
             lastSelectedInvoiceFile = it
 
-            lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
+            coroutineScope.launch(Dispatchers.IO) {
+                lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
+            }
         }
     }
 
@@ -54,14 +58,15 @@ fun SelectEInvoiceFileToDisplay() {
     }
 
 
-    fun showReadXmlError(result: FileEInvoiceExtractionResult, xmlResult: ReadEInvoiceXmlResultJvm) {
+    fun showReadXmlError(result: FileEInvoiceExtractionResult, xmlResult: ReadEInvoiceXmlResult) {
         val stringResource = when (xmlResult.type) {
             ReadEInvoiceXmlResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
             ReadEInvoiceXmlResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
             else -> Res.string.error_message_could_not_read_e_invoice
         }
 
-        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, result.path)
+//        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, result.path)
+        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, null, result.filename)
     }
 
     lastExtractedEInvoice?.let { result ->
@@ -72,18 +77,14 @@ fun SelectEInvoiceFileToDisplay() {
         if (invoice != null) {
             ViewInvoiceDialog(invoice) { lastExtractedEInvoice = null }
         } else if (pdfResult != null) {
-            if (pdfResult.readEInvoiceXmlResult != null) {
-                showReadXmlError(result, pdfResult.readEInvoiceXmlResult!!)
-            } else {
-                val stringResource = when (pdfResult.attachmentExtractionResult.type) {
-                    PdfAttachmentExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
-                    PdfAttachmentExtractionResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
-                    PdfAttachmentExtractionResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
-                    PdfAttachmentExtractionResultType.HasXmlAttachments -> null // should never come to here
-                }
-                if (stringResource != null) {
-                    DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource)
-                }
+            val stringResource = when (pdfResult.type) {
+                PdfExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
+                PdfExtractionResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
+                PdfExtractionResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
+                else -> null // should never come to here
+            }
+            if (stringResource != null) {
+                DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource)
             }
         } else if (xmlResult != null) {
             showReadXmlError(result, xmlResult)

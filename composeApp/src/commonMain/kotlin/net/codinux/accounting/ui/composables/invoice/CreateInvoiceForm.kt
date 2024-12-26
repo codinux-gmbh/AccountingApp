@@ -125,7 +125,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     }
 
     fun createEInvoice() {
-        coroutineScope.launch(Dispatchers.Default) {
+        coroutineScope.launch(Dispatchers.IO) {
             try {
                 val invoice = createInvoice()
 
@@ -134,7 +134,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat).let { (xml, pdf) ->
                         createdPdfFile = pdf
-                        coroutineScope.launch {
+                        coroutineScope.launch(Dispatchers.IO) {
                             DI.fileHandler.openFileInDefaultViewer(pdf)
                         }
                         xml

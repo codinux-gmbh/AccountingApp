@@ -72,7 +72,7 @@ class MailService(
 
             try {
                 emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(onError = { handleFetchEmailError(account, it) }) { newEmail ->
-                    coroutineScope.launch {
+                    coroutineScope.launch(Dispatchers.IO) {
                         persistEmails(configuration, listOf(newEmail))
                     }
                 })

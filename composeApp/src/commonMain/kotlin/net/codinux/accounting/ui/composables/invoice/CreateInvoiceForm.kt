@@ -233,14 +233,14 @@ private fun SaveButtons(
     details: InvoiceDetailsViewModel,
     buttonWidth: Dp
 ) {
-    val invoiceFilename = "invoice-${details.invoiceNumber.value}"
+    val invoiceFilename = createdPdfFile?.baseName.takeUnless { it.isNullOrBlank() } ?: "invoice-${details.invoiceNumber.value}"
 
     TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml") }, contentPadding = PaddingValues(0.dp)) {
         Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
     }
 
     createdPdfFile?.let {
-        TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, createdPdfFile.baseName.takeUnless { it.isNullOrBlank() } ?: invoiceFilename, "pdf", createdPdfFile.parent) }) {
+        TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", createdPdfFile.parent) }) {
             Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
         }
     }

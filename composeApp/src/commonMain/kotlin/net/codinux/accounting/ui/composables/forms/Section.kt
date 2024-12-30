@@ -12,7 +12,7 @@ import org.jetbrains.compose.resources.StringResource
 
 
 @Composable
-fun Section(titleResource: StringResource, spaceBefore: Dp = 12.dp, innerVerticalPadding: Dp = Style.FormVerticalRowPadding, content: @Composable () -> Unit) {
+fun Section(titleResource: StringResource, spaceBefore: Dp = Style.SectionTopPadding, innerVerticalPadding: Dp = Style.FormVerticalRowPadding, content: @Composable () -> Unit) {
     RoundedCornersCard(Modifier.fillMaxWidth().padding(top = spaceBefore)) {
         Column(Modifier.fillMaxWidth().padding(all = Style.FormCardPadding).padding(vertical = innerVerticalPadding)) {
             SectionHeader(titleResource)

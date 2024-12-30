@@ -69,7 +69,7 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
     }
 
     Column(Modifier.fillMaxWidth()) {
-        Row(Modifier.fillMaxWidth().padding(top = 12.dp).height(30.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding).height(30.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(Res.string.delivered_goods_or_provided_services), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
             Spacer(Modifier.weight(1f))

@@ -29,6 +29,8 @@ object Style {
 
     val FormVerticalRowPadding = 2.dp
 
+    val SectionTopPadding = 12.dp
+
     val LabelledValueFontSize = 15.sp
 
 

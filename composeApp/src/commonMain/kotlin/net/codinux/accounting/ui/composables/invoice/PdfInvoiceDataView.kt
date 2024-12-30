@@ -35,7 +35,7 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
 
 
     Box(Modifier.fillMaxSize()) {
-            Column(Modifier.fillMaxWidth().verticalScroll(stateVertical).padding(end = 12.dp)) {
+            Column(Modifier.fillMaxWidth().verticalScroll(stateVertical).padding(end = Style.SectionTopPadding)) {
                 SelectionContainer(modifier = Modifier.fillMaxWidth()) {
                     Section(Res.string.possible_invoice_data) {
                         Text(stringResource(Res.string.possible_invoice_data_explanation), Modifier.padding(vertical = 6.dp))
@@ -54,7 +54,7 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
                     }
                 }
 
-                Column(Modifier.padding(top = 12.dp)) {
+                Column(Modifier.padding(top = Style.SectionTopPadding)) {
                     Row(Modifier.fillMaxWidth(), Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
                         Spacer(Modifier.weight(1f))
 

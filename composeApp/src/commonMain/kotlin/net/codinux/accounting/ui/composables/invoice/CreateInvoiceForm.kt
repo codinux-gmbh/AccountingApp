@@ -168,7 +168,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
         }
     }
 
-    Row(Modifier.fillMaxWidth().padding(top = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding), verticalAlignment = Alignment.CenterVertically) {
         Select(Res.string.e_invoice_xml_format, EInvoiceXmlFormat.entries, selectedEInvoiceXmlFormat, { selectedEInvoiceXmlFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
 
         Spacer(Modifier.width(1.dp).weight(1f))
@@ -180,7 +180,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
 
     generatedEInvoiceXml?.let { generatedEInvoiceXml ->
         if (isCompactScreen && createdPdfFile != null) { // two lines on mobile
-            Row(Modifier.fillMaxWidth().padding(top = 12.dp).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
                 TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }) {
                     Text(stringResource(Res.string.save_xml), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
                 }

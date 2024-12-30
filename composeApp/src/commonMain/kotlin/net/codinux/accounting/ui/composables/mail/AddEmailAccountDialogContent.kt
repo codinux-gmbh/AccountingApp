@@ -43,7 +43,7 @@ fun AddEmailAccountDialogContent(account: MailAccountConfiguration) {
     Column {
         MailAccountForm(Res.string.receive_emails, receiveEmails, receiveEmailsUsername, receiveEmailsPassword, Res.string.imap_server_address, receiveEmailsImapServerAddress, receiveEmailsPort)
 
-        MailAccountForm(Res.string.send_emails, sendEmails, sendEmailsUsername, sendEmailsPassword, Res.string.smtp_server_address, sendEmailsSmtpServerAddress, sendEmailsPort, 12.dp)
+        MailAccountForm(Res.string.send_emails, sendEmails, sendEmailsUsername, sendEmailsPassword, Res.string.smtp_server_address, sendEmailsSmtpServerAddress, sendEmailsPort, Style.SectionTopPadding)
     }
 
 

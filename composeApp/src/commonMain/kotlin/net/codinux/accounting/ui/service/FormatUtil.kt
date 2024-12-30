@@ -63,7 +63,7 @@ class FormatUtil(
         formatAmountOfMoney(amount, currency?.alpha3Code, ignoreEmptyDecimalPlacesForLargerAmounts)
 
     fun formatAmountOfMoney(amount: BigDecimal, currencyIsoCode: String? = null, ignoreEmptyDecimalPlacesForLargerAmounts: Boolean = false): String {
-        val currency = net.codinux.i18n.Currency.entries.first { it.alpha3Code == currencyIsoCode || it.symbol == currencyIsoCode } // bug in TextInfoExtractor that extracts e.g. '€' as isoCode
+        val currency = net.codinux.i18n.Currency.entries.first { it.alpha3Code.equals(currencyIsoCode, true) || it.symbol == currencyIsoCode } // bug in TextInfoExtractor that extracts e.g. '€' as isoCode; also sometimes ISO code is "Eur" instead of "EUR"
         val amountDouble = amount.toDouble()
         val countFractionalDigitsOverride = if (ignoreEmptyDecimalPlacesForLargerAmounts && amountDouble > 1_000) 0 else null
 

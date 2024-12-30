@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import net.codinux.accounting.platform.Platform
+import net.codinux.accounting.platform.isAndroid
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.Res
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
@@ -64,7 +66,10 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
 
                     if (showPdfText) {
                         SelectionContainer(modifier = Modifier.fillMaxWidth()) {
-                            RoundedCornersCard {
+                            // for long content shadows are really ugly on Desktop and Web (only Android renders them correctly)
+                            val showShadow = Platform.isAndroid || data.pdfText.count { it == '\n' } < 70
+
+                            RoundedCornersCard(shadowElevation = if (showShadow) 2.dp else 0.dp) {
                                 Column(Modifier.fillMaxWidth().padding(horizontal = 6.dp)) {
                                     Text(data.pdfText, Modifier, fontFamily = FontFamily.Monospace)
                                 }

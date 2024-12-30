@@ -12,7 +12,9 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import io.github.vinceglb.filekit.compose.SaverResultLauncher
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.PickerType
@@ -81,6 +83,8 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     var pdfToAttachXmlTo by remember { mutableStateOf<PlatformFile?>(null) }
 
     var createdPdfFile by remember { mutableStateOf<PlatformFile?>(null) }
+    // PlatformFile.readBytes() is a suspend function, so we cannot call it on behalf in non-suspend function when 'Save PDF' is clicked
+    var createdPdfBytes by remember { mutableStateOf<ByteArray?>(null) } // -> do it right after creating PDF and store PDF bytes in createdPdfBytes
 
     val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent) { selectedFile ->
         pdfToAttachXmlTo = selectedFile
@@ -131,6 +135,8 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)?.let { (xml, pdf) ->
                         createdPdfFile = pdf
+                        createdPdfBytes = pdf?.readBytes()
+
                         if (pdf != null) {
                             coroutineScope.launch(Dispatchers.IoOrDefault) {
                                 DI.fileHandler.openFileInDefaultViewer(pdf, "application/pdf")
@@ -181,15 +187,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     generatedEInvoiceXml?.let { generatedEInvoiceXml ->
         if (isCompactScreen && createdPdfFile != null) { // two lines on mobile
             Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }) {
-                    Text(stringResource(Res.string.save_xml), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
-                }
-
-                createdPdfFile?.let { createdPdfFile ->
-                    TextButton(onClick = { saveFileLauncher.launch(null, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
-                        Text(stringResource(Res.string.save_pdf), Modifier.width(130.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
-                    }
-                }
+                SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdPdfFile, createdPdfBytes, details, 130.dp)
             }
 
             Row(Modifier.padding(top = VerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -207,15 +205,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                     Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
                 }
 
-                TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }, contentPadding = PaddingValues(0.dp)) {
-                    Text(stringResource(Res.string.save_xml), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
-                }
-
-                createdPdfFile?.let { createdPdfFile ->
-                    TextButton(onClick = { saveFileLauncher.launch(null, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
-                        Text(stringResource(Res.string.save_pdf), Modifier.width(120.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
-                    }
-                }
+                SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdPdfFile, createdPdfBytes, details, 120.dp)
 
                 Spacer(Modifier.weight(1f))
 
@@ -232,4 +222,24 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
         }
     }
 
+}
+
+@Composable
+private fun SaveButtons(
+    saveFileLauncher: SaverResultLauncher,
+    generatedEInvoiceXml: String,
+    createdPdfFile: PlatformFile?,
+    createdPdfBytes: ByteArray?,
+    details: InvoiceDetailsViewModel,
+    buttonWidth: Dp
+) {
+    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), "invoice-${details.invoiceNumber.value}", "xml") }, contentPadding = PaddingValues(0.dp)) {
+        Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+    }
+
+    createdPdfFile?.let {
+        TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, createdPdfFile.baseName, "pdf", createdPdfFile.parent) }) {
+            Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+        }
+    }
 }

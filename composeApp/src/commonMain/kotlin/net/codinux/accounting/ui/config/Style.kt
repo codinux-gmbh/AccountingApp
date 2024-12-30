@@ -12,7 +12,7 @@ object Style {
 
     // had to apply it per tab, not commonly in MainScreen, as otherwise tab's scroll container
     // would always show some border with background color on top and bottom
-    val MainScreenTabVerticalPadding = 10.dp
+    val ScreenVerticalPadding = 10.dp
 
 
     val DialogTitleTextColor: Color = Colors.Zinc500

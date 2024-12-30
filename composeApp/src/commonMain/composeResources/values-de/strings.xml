@@ -64,6 +64,8 @@
     <!-- invoice -->
     <string name="invoice_view">Rechnungsansicht</string>
 
+    <string name="notification_early_preview_version">Dies ist eine sehr frühe Preview Version, die nur die allernötigsten Funktionen enthält (und noch nicht mal die fehlerfrei). Deshalb bitte mit Vorsicht genießen. Wir arbeiten daran.</string>
+
     <string name="show_e_invoice_file">E-Rechnungsdatei anzeigen</string>
     <string name="select_e_invoice_file">E-Rechnungsdatei auswählen ...</string>
     <string name="error_message_could_not_read_e_invoice">E-Rechnung konnte nicht aus Datei %1$s gelesen werden</string>

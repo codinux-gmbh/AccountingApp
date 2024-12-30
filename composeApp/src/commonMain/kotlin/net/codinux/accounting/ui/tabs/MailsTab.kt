@@ -1,21 +1,14 @@
 package net.codinux.accounting.ui.tabs
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.composables.TextOfMaxWidth
 import net.codinux.accounting.ui.composables.mail.MailsList
 import net.codinux.accounting.ui.dialogs.AddEmailAccountDialog
 import net.codinux.accounting.ui.state.EmailsUiState
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MailsTab(mailService: MailService, uiState: EmailsUiState) {
@@ -26,9 +19,7 @@ fun MailsTab(mailService: MailService, uiState: EmailsUiState) {
 
 
     if (mails.isEmpty()) {
-        Column(Modifier.fillMaxSize().padding(horizontal = 36.dp), Arrangement.Center, Alignment.CenterHorizontally) {
-            Text(stringResource(Res.string.reason_for_adding_email_account), Modifier.widthIn(max = 600.dp), fontSize = 18.sp, textAlign = TextAlign.Center)
-        }
+        TextOfMaxWidth(Res.string.reason_for_adding_email_account)
     } else {
         MailsList(uiState, mails)
     }

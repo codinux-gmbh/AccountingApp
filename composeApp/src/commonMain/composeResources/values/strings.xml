@@ -64,6 +64,8 @@
     <!-- invoice -->
     <string name="invoice_view">Invoice view</string>
 
+    <string name="notification_early_preview_version">This is a very early preview version that contains only the most essential features (and not even those are bug-free). So please use it with caution. We're working on it.</string>
+
     <string name="show_e_invoice_file">Show eInvoice file</string>
     <string name="select_e_invoice_file">Select eInvoice file ...</string>
     <string name="error_message_could_not_read_e_invoice">Could not read eInvoice from file %1$s</string>

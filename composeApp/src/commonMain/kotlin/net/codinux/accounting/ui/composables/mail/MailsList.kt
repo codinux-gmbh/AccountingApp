@@ -31,7 +31,7 @@ fun MailsList(uiState: EmailsUiState, mails: List<Email>) {
 
 
     Box(Modifier.fillMaxSize()) {
-        LazyColumn(Modifier.padding(vertical = Style.MainScreenTabVerticalPadding), scrollState) {
+        LazyColumn(Modifier.padding(vertical = Style.ScreenVerticalPadding), scrollState) {
             itemsIndexed(mails.filter { showEmail(it) }) { index, mail ->
                 key(mail.id) {
                     MailListItem(mail)

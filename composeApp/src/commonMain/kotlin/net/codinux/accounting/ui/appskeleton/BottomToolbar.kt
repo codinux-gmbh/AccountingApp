@@ -1,5 +1,8 @@
 package net.codinux.accounting.ui.appskeleton
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.icons.Icons
@@ -19,16 +22,18 @@ import org.jetbrains.compose.resources.vectorResource
 fun BottomToolbar(selectedTab: MainScreenTab) {
 
     BottomNavigation(Modifier.height(56.dp)) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
 //        ToolbarButton(MainScreenTab.Postings, selectedTab, Icons.Outlined.Book, Res.string.postings)
 //
 //        ToolbarButton(MainScreenTab.BankAccounts, selectedTab, Icons.Outlined.AccountBalance, Res.string.bank_accounts)
 
-        ToolbarButton(MainScreenTab.ViewInvoice, selectedTab, Icons.AutoMirrored.Outlined.ReceiptLong, Res.string.view_invoice)
+            ToolbarButton(MainScreenTab.ViewInvoice, selectedTab, Icons.AutoMirrored.Outlined.ReceiptLong, Res.string.view_invoice)
 
-        ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, vectorResource(Res.drawable.contract_edit), Res.string.create_invoice)
+            ToolbarButton(MainScreenTab.CreateInvoice, selectedTab, vectorResource(Res.drawable.contract_edit), Res.string.create_invoice)
 
-        if (DI.mailService != null) {
-            ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, Res.string.mails)
+            if (DI.mailService != null) {
+                ToolbarButton(MainScreenTab.Mails, selectedTab, Icons.Outlined.Email, Res.string.mails)
+            }
         }
     }
 

@@ -29,16 +29,16 @@ kotlin {
         }
     }
     
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach { iosTarget ->
-//        iosTarget.binaries.framework {
-//            baseName = "Accounting"
-//            isStatic = true
-//        }
-//    }
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "AccountingFramework"
+            isStatic = true
+        }
+    }
 
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {

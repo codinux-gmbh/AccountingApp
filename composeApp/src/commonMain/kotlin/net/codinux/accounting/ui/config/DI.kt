@@ -5,7 +5,6 @@ import net.codinux.accounting.domain.invoice.service.InvoiceService
 import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.service.FormatUtil
 import net.codinux.accounting.ui.state.UiState
-import net.codinux.invoicing.config.DI
 import net.codinux.invoicing.reader.EInvoiceReader
 
 object DI {

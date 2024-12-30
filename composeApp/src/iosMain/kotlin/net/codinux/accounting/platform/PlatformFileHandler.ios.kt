@@ -18,10 +18,10 @@ actual class PlatformFileHandler {
 
     actual fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String, filename: String): PlatformFile {
         val fileManager = NSFileManager.defaultManager
+        val directory = fileManager.URLsForDirectory(NSDocumentDirectory, NSUserDomainMask)[0] as? NSURL
 
-        // TODO: write to user directory
-        val xmlFileComponents = fileManager.temporaryDirectory.pathComponents?.plus(filename + ".xml")
-            ?: throw IllegalStateException("Failed to get temporary directory")
+        val xmlFileComponents = directory?.pathComponents?.plus(filename + ".xml")
+            ?: throw IllegalStateException("Failed to get document directory")
 
         val xmlFile = NSURL.fileURLWithPathComponents(xmlFileComponents)
             ?: throw IllegalStateException("Failed to create XML file URL")
@@ -29,8 +29,8 @@ actual class PlatformFileHandler {
         writeBytesArrayToNsUrl(xml.encodeToByteArray(), xmlFile)
 
 
-        val pdfFileComponents = fileManager.temporaryDirectory.pathComponents?.plus(filename + ".pdf")
-            ?: throw IllegalStateException("Failed to get temporary directory")
+        val pdfFileComponents = directory.pathComponents?.plus(filename + ".pdf")
+            ?: throw IllegalStateException("Failed to get document directory")
 
         val pdfFile = NSURL.fileURLWithPathComponents(pdfFileComponents)
             ?: throw IllegalStateException("Failed to create PDF file URL")

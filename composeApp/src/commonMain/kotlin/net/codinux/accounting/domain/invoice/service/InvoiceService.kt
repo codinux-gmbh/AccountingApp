@@ -158,7 +158,7 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): Pair<String, PlatformFile?>? {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): Triple<String, PlatformFile?, ByteArray?>? {
         val xml = createEInvoiceXml(invoice, format)
         if (xml == null) {
             // TODO: show error message
@@ -168,10 +168,10 @@ class InvoiceService(
         val pdfBytes = pdfCreator.createFacturXPdf(xml, format)
         if (pdfBytes == null) {
             // TODO: show error message
-            return Pair(xml, null)
+            return Triple(xml, null, null)
         }
 
-        return Pair(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml))
+        return Triple(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml), pdfBytes)
     }
 
 }

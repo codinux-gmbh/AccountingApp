@@ -133,9 +133,9 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                 generatedEInvoiceXml = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)?.let { (xml, pdf) ->
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)?.let { (xml, pdf, pdfBytes) ->
                         createdPdfFile = pdf
-                        createdPdfBytes = pdf?.readBytes()
+                        createdPdfBytes = pdfBytes
 
                         if (pdf != null) {
                             coroutineScope.launch(Dispatchers.IoOrDefault) {

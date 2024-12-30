@@ -41,11 +41,9 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
 
     val vatRates = invoiceItems.map { it.vatRate.collectAsState().value }
 
-    var totalAmounts by remember { mutableStateOf(TotalAmounts.Zero) }
-
-    LaunchedEffect(invoiceItems, quantities, unitPrices, vatRates) {
+    val totalAmounts by produceState(TotalAmounts.Zero, invoiceItems, quantities, unitPrices, vatRates) {
         // TODO: show error if calculation fails (e.g. no internet connection)
-        totalAmounts = calculationService.calculateTotalAmounts(invoiceItems)
+        value = calculationService.calculateTotalAmounts(invoiceItems)
             ?: TotalAmounts.Zero
     }
 

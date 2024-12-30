@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.TextOfMaxWidth
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.composables.invoice.model.*
@@ -59,6 +60,6 @@ fun InvoiceForm() {
             CreateInvoiceForm(historicalData, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
         }
 
-        Spacer(Modifier.padding(bottom = Style.MainScreenTabVerticalPadding))
+        AvoidCutOffAtEndOfScreen()
     }
 }

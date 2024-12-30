@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.DI
@@ -54,6 +55,8 @@ fun InvoiceView(invoice: Invoice) {
             }
 
             invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice.supplier) }
+
+            AvoidCutOffAtEndOfScreen()
         }
     }
 

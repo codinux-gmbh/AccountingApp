@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.Res
+import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.VerticalScrollbar
 import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
@@ -69,10 +70,10 @@ fun PdfInvoiceDataView(data: PdfInvoiceData) {
                                 }
                             }
                         }
-
-                        Spacer(Modifier.height(4.dp).background(Colors.CodinuxSecondaryColor))
                     }
                 }
+
+                AvoidCutOffAtEndOfScreen()
             }
 
         VerticalScrollbar(stateVertical, Modifier.align(Alignment.CenterEnd).fillMaxHeight())

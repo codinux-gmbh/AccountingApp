@@ -18,6 +18,7 @@ import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
+import net.codinux.invoicing.model.toDotSeparatedIsoDate
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
 import net.codinux.invoicing.reader.extractFromFile
@@ -171,7 +172,9 @@ class InvoiceService(
             return Triple(xml, null, null)
         }
 
-        return Triple(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml), pdfBytes)
+        val filename = "${invoice.details.invoiceDate.toDotSeparatedIsoDate()} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
+
+        return Triple(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml, filename), pdfBytes)
     }
 
 }

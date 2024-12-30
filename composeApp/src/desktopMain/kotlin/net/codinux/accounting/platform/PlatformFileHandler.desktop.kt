@@ -39,10 +39,9 @@ actual class PlatformFileHandler(
         }
     }
 
-    actual fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String): PlatformFile {
+    actual fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String, filename: String): PlatformFile {
 
         val directory = File(invoicesDirectory, invoice.details.invoiceDate.year.toString()).also { it.mkdirs() }
-        val filename = "${invoice.details.invoiceDate.toDotSeparatedIsoDate()} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
         val pdfFile = File(directory, filename + ".pdf")
 
         pdfFile.writeBytes(pdfBytes)

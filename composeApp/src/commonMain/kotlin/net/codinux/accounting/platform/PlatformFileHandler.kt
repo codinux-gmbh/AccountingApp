@@ -11,7 +11,7 @@ expect class PlatformFileHandler {
     fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String? = null)
 
 
-    fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String): PlatformFile
+    fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String, filename: String): PlatformFile
 
     fun savePdfWithAttachedXml(pdfFile: PlatformFile, pdfBytes: ByteArray)
 

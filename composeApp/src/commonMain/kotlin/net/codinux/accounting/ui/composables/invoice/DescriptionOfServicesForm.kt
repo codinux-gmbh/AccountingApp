@@ -19,6 +19,8 @@ import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.invoicing.model.BigDecimal
+import net.codinux.invoicing.model.TotalAmounts
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -39,8 +41,12 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
 
     val vatRates = invoiceItems.map { it.vatRate.collectAsState().value }
 
-    val totalAmounts = remember(invoiceItems, quantities, unitPrices, vatRates) {
-        calculationService.calculateTotalAmounts(invoiceItems)
+    var totalAmounts by remember { mutableStateOf(TotalAmounts.Zero) }
+
+    LaunchedEffect(invoiceItems, quantities, unitPrices, vatRates) {
+        // TODO: show error if calculation fails (e.g. no internet connection)
+        totalAmounts = calculationService.calculateTotalAmounts(invoiceItems)
+            ?: TotalAmounts.Zero
     }
 
 

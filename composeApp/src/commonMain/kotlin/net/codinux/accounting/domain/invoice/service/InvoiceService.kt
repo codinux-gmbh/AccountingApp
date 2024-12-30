@@ -9,7 +9,6 @@ import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
-import net.codinux.accounting.ui.PlatformDependencies
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.i18n.Region

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import net.codinux.invoicing.calculator.InvoiceItemPrice
 import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.InvoiceItem
 import net.codinux.invoicing.model.codes.UnitOfMeasure
@@ -79,4 +80,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
 
     fun toInvoiceItem() = InvoiceItem(name.value, quantity.value ?: BigDecimal.Zero, unit.value ?: UnitOfMeasure.ZZ,
         unitPrice.value ?: BigDecimal.Zero, vatRate.value ?: BigDecimal.Zero, description.value)
+
+    fun toInvoiceItemPrice() = InvoiceItemPrice(quantity.value ?: BigDecimal.Zero,
+        unitPrice.value ?: BigDecimal.Zero, vatRate.value ?: BigDecimal.Zero)
 }

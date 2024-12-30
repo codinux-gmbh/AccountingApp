@@ -9,7 +9,7 @@ class CalculationService {
     private val calculator = AmountsCalculator()
 
 
-    fun calculateTotalAmounts(items: List<InvoiceItemViewModel>): TotalAmounts =
-        calculator.calculateTotalAmounts(items.map { it.toInvoiceItem() })
+    suspend fun calculateTotalAmounts(items: List<InvoiceItemViewModel>): TotalAmounts? =
+        calculator.calculateTotalAmounts(items.map { it.toInvoiceItemPrice() })
 
 }

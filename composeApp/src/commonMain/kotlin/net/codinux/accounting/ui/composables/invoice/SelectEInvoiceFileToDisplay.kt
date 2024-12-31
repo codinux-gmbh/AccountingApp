@@ -16,17 +16,16 @@ import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.IoOrDefault
-import net.codinux.accounting.ui.composables.ComposableOfMaxWidth
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
-import net.codinux.accounting.ui.dialogs.ViewInvoiceDialog
 import net.codinux.accounting.ui.extensions.parent
+import net.codinux.invoicing.model.Invoice
 import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SelectEInvoiceFileToDisplay() {
+fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (Invoice?) -> Unit) {
 
     var lastSelectedInvoiceFile by remember { mutableStateOf<PlatformFile?>(null) }
 
@@ -42,17 +41,19 @@ fun SelectEInvoiceFileToDisplay() {
 
             coroutineScope.launch(Dispatchers.IoOrDefault) {
                 lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
+
+                lastExtractedEInvoice?.invoice?.let { selectedInvoice ->
+                    selectedInvoiceChanged(selectedInvoice)
+                }
             }
         }
     }
 
 
-    ComposableOfMaxWidth {
-        Section(Res.string.show_e_invoice_file) {
-            Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = { openExistingInvoiceFileLauncher.launch() }, Modifier.fillMaxWidth().height(70.dp)) {
-                    Text(stringResource(Res.string.select_e_invoice_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
-                }
+    Section(Res.string.show_e_invoice_file) {
+        Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
+            TextButton(onClick = { openExistingInvoiceFileLauncher.launch() }, Modifier.fillMaxWidth().height(70.dp)) {
+                Text(stringResource(Res.string.select_e_invoice_file), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
             }
         }
     }
@@ -74,22 +75,22 @@ fun SelectEInvoiceFileToDisplay() {
         val pdfResult = result.pdf
         val xmlResult = result.xml
 
-        if (invoice != null) {
-            ViewInvoiceDialog(invoice) { lastExtractedEInvoice = null }
-        } else if (pdfResult != null) {
-            val stringResource = when (pdfResult.type) {
-                PdfExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
-                PdfExtractionResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
-                PdfExtractionResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
-                PdfExtractionResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
-                PdfExtractionResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
-                else -> null // should never come to here
+        if (invoice == null) {
+            if (pdfResult != null) {
+                val stringResource = when (pdfResult.type) {
+                    PdfExtractionResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
+                    PdfExtractionResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
+                    PdfExtractionResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
+                    PdfExtractionResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
+                    PdfExtractionResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
+                    else -> null // should never come to here
+                }
+                if (stringResource != null) {
+                    DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource)
+                }
+            } else if (xmlResult != null) {
+                showReadXmlError(result, xmlResult)
             }
-            if (stringResource != null) {
-                DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource)
-            }
-        } else if (xmlResult != null) {
-            showReadXmlError(result, xmlResult)
         }
     }
 

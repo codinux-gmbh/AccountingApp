@@ -31,6 +31,10 @@ fun Modifier.widthForScreen(isCompactScreen: Boolean, widthForCompactScreen: Dp,
     else this.width(widthForLargeScreen)
 
 
+fun Modifier.applyIf(condition: Boolean, modifier: (Modifier) -> Modifier): Modifier =
+    if (condition) modifier(this)
+    else this
+
 @Composable
 // we need to support three different cases:
 // - normal, non fullscreen dialog, either useMoreThanPlatformDefaultWidthOnSmallScreens is false or soft keyboard is hidden -> apply default vertical padding

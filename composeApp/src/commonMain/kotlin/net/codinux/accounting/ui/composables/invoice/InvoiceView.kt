@@ -15,6 +15,7 @@ import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.extensions.applyIf
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
@@ -24,10 +25,10 @@ import org.jetbrains.compose.resources.stringResource
 private val formatUtil = DI.formatUtil
 
 @Composable
-fun InvoiceView(invoice: Invoice) {
+fun InvoiceView(invoice: Invoice, enableVerticalScrolling: Boolean = true) {
 
     SelectionContainer(Modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxWidth().verticalScroll()) {
+        Column(Modifier.fillMaxWidth().applyIf(enableVerticalScrolling) { it.verticalScroll() }) {
             Section(Res.string.invoice_details) {
                 HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatShortDate(invoice.details.invoiceDate))
 

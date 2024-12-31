@@ -9,18 +9,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import net.codinux.accounting.platform.Platform
+import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Style
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun HorizontalLabelledValue(label: StringResource, value: String?, labelWidth: Dp = 150.dp, valueTextColor: Color? = null, topPadding: Dp = Style.SectionTopPadding, bottomPadding: Dp = 4.dp, labelMaxLines: Int = 1) {
+fun HorizontalLabelledValue(label: StringResource, value: String?, labelWidth: Dp? = null, valueTextColor: Color? = null, topPadding: Dp = Style.SectionTopPadding, bottomPadding: Dp = 4.dp, labelMaxLines: Int = 1) {
+    val width = labelWidth ?: if (Platform.isCompactScreen) 150.dp else 220.dp
 
     Row(Modifier.fillMaxWidth().padding(top = topPadding, bottom = bottomPadding), verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(label),
-            modifier = Modifier.width(labelWidth),
+            modifier = Modifier.width(width),
             fontSize = Style.LabelledValueFontSize,
             color = Colors.FormLabelTextColor,
             maxLines = labelMaxLines,

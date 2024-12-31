@@ -10,7 +10,6 @@ import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.config.DI
 import net.codinux.invoicing.model.Invoice
-import net.codinux.invoicing.model.toDotSeparatedIsoDate
 import net.codinux.log.logger
 import java.io.File
 import java.io.OutputStream

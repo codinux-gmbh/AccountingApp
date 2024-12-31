@@ -59,6 +59,24 @@ val PlatformFile.parentDirAndFilename: String
         return this.name
     }
 
+fun PlatformFile.getLastPathSegmentsOfMaxLength(maxLength: Int): String {
+    val path = this.path
+
+    return if (path == null) {
+        this.parentDirAndFilename
+    } else {
+        val separator = this.getSeparator()
+        val separatorIndices = path.mapIndexedNotNull { index, char -> if (char == separator) index else null }
+        val index = separatorIndices.firstOrNull { path.length - it < maxLength }
+
+        if (index != null) {
+            path.substring(index + 1)
+        } else {
+            this.parentDirAndFilename
+        }
+    }
+}
+
 fun PlatformFile.getSeparator(): Char =
     if (this.path?.contains('\\') == true && this.path?.contains('/') == false) { // Windows
         '\\'

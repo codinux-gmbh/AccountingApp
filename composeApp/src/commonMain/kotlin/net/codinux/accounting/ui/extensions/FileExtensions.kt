@@ -37,21 +37,26 @@ val PlatformFile.parentDirName: String?
         return null
     }
 
-val PlatformFile.parentDirAndFilename: String?
+val PlatformFile.parentDirAndFilename: String
     get() {
-        val separator = getSeparator()
-        val lastIndex = this.path?.lastIndexOfOrNull(separator)
+        val path = this.path
 
-        return if (lastIndex != null) {
-            val index = this.path?.lastIndexOfOrNull(separator, lastIndex - 1)
-            if (index != null) {
-                this.path?.substring(index)
-            } else {
-                this.path
+        if (path != null) {
+            val separator = getSeparator()
+            val lastIndex = path.lastIndexOfOrNull(separator)
+
+            if (lastIndex != null) {
+                val index = this.path?.lastIndexOfOrNull(separator, lastIndex - 1)
+
+                return if (index != null) {
+                    path.substring(index + 1)
+                } else {
+                    path
+                }
             }
-        } else {
-            this.path
         }
+
+        return this.name
     }
 
 fun PlatformFile.getSeparator(): Char =

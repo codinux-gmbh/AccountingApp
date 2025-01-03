@@ -3,8 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isCompactScreen
+import net.codinux.accounting.platform.*
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.TextOfMaxWidth
@@ -34,7 +33,9 @@ fun InvoiceForm() {
 
 
     Column(Modifier.fillMaxWidth()) {
-        TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.CodinuxSecondaryColor)
+        if (Platform.isIOS == false) {
+            TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.CodinuxSecondaryColor)
+        }
 
         Section(Res.string.invoice_details) {
             InvoiceDetailsForm(details, isCompactScreen)

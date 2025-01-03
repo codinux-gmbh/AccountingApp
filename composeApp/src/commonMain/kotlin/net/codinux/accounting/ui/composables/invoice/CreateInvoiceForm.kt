@@ -3,6 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.*
@@ -73,6 +74,8 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
 
     var selectedCreateEInvoiceOption by remember(historicalData) { mutableStateOf(historicalData.selectedCreateEInvoiceOption) }
 
+    var isCreatingEInvoice by remember { mutableStateOf(false) }
+
     var generatedEInvoiceXml by remember { mutableStateOf<String?>(null) }
 
     var showGeneratedEInvoiceXml by remember(historicalData) { mutableStateOf(historicalData.showGeneratedEInvoiceXml) }
@@ -126,6 +129,8 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     }
 
     fun createEInvoice() {
+        isCreatingEInvoice = true
+
         coroutineScope.launch(Dispatchers.IoOrDefault) {
             try {
                 val invoice = createInvoice()
@@ -145,6 +150,8 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                         xml
                     }
                 }
+
+                isCreatingEInvoice = false
 
                 invoiceService.saveHistoricalInvoiceData(HistoricalInvoiceData(invoice, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
             } catch (e: Throwable) {
@@ -179,8 +186,12 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
 
         Spacer(Modifier.width(1.dp).weight(1f))
 
+        if (isCreatingEInvoice) {
+            CircularProgressIndicator(Modifier.padding(end = 12.dp).size(36.dp), color = Colors.CodinuxSecondaryColor)
+        }
+
         TextButton({ createEInvoice() }, contentPadding = PaddingValues(0.dp), enabled = isValid) {
-            Text(stringResource(Res.string.create), Modifier.width(150.dp),
+            Text(stringResource(Res.string.create), Modifier.applyIf(isCreatingEInvoice == false) { it.width(150.dp) },
                 color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled, textAlign = TextAlign.End)
         }
     }

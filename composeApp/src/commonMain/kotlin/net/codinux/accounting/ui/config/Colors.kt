@@ -36,6 +36,8 @@ object Colors {
 
     val CodinuxSecondaryColor = Color(251, 187, 33)
 
+    val CodinuxSecondaryColorDisabled = CodinuxSecondaryColor.copy(alpha = 0.78f) // 0.38f = ContentAlpha.disabled, 0.74f == ContentAlpha.medium
+
 
     val FormLabelTextColor = Color(0xFF494949)
 

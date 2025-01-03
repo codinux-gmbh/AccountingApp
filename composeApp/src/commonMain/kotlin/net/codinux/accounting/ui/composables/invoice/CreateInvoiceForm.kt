@@ -180,7 +180,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
         Spacer(Modifier.width(1.dp).weight(1f))
 
         TextButton({ createEInvoice() }, enabled = isValid) {
-            Text(stringResource(Res.string.create), color = Colors.CodinuxSecondaryColor)
+            Text(stringResource(Res.string.create), color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled)
         }
     }
 

@@ -179,8 +179,9 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
 
         Spacer(Modifier.width(1.dp).weight(1f))
 
-        TextButton({ createEInvoice() }, enabled = isValid) {
-            Text(stringResource(Res.string.create), color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled)
+        TextButton({ createEInvoice() }, contentPadding = PaddingValues(0.dp), enabled = isValid) {
+            Text(stringResource(Res.string.create), Modifier.width(150.dp),
+                color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled, textAlign = TextAlign.End)
         }
     }
 

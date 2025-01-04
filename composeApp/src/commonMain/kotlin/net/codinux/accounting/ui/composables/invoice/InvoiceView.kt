@@ -15,6 +15,7 @@ import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.applyIf
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
@@ -25,10 +26,25 @@ import org.jetbrains.compose.resources.stringResource
 private val formatUtil = DI.formatUtil
 
 @Composable
-fun InvoiceView(invoice: Invoice, enableVerticalScrolling: Boolean = true) {
+fun InvoiceView(mapInvoiceResult: MapInvoiceResult, enableVerticalScrolling: Boolean = true) {
+
+    val invoice = mapInvoiceResult.invoice
+
 
     SelectionContainer(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().applyIf(enableVerticalScrolling) { it.verticalScroll() }) {
+            if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
+                Section(Res.string.invoice_contains_errors) {
+                    Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding, bottom = 6.dp).padding(horizontal = 12.dp)) {
+                        Text(stringResource(Res.string.error_message_invoice_contains_errors), textAlign = TextAlign.Center)
+                    }
+
+                    mapInvoiceResult.invoiceDataErrors.forEach { dataError ->
+                        InvoiceDataErrorListItem(dataError)
+                    }
+                }
+            }
+
             Section(Res.string.invoice_details) {
                 HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatShortDate(invoice.details.invoiceDate))
 
@@ -62,6 +78,7 @@ fun InvoiceView(invoice: Invoice, enableVerticalScrolling: Boolean = true) {
     }
 
 }
+
 
 @Composable
 private fun PersonFields(party: Party) {
@@ -106,4 +123,24 @@ private fun BankDetailsView(details: BankDetails, accountHolder: Party) {
 
         HorizontalLabelledValue(Res.string.bic, details.bankCode)
     }
+}
+
+@Composable
+fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
+    val fieldName = when (dataError.field) {
+        InvoiceField.Currency -> Res.string.invoice_field_currency
+        InvoiceField.SupplierCountry -> Res.string.invoice_field_supplier_country
+        InvoiceField.CustomerCountry -> Res.string.invoice_field_customer_country
+        InvoiceField.ItemUnit -> Res.string.invoice_field_item_unit
+        InvoiceField.TotalAmount -> Res.string.invoice_field_total_amount
+    }
+
+    val errorMessage = when (dataError.errorType) {
+        InvoiceDataErrorType.ValueNotSet -> Res.string.invoice_data_error_value_not_set
+        InvoiceDataErrorType.ValueNotUpperCase -> Res.string.invoice_data_error_value_not_uppercase
+        InvoiceDataErrorType.ValueIsInvalid -> Res.string.invoice_data_error_value_invalid
+        InvoiceDataErrorType.CalculatedAmountsAreInvalid -> Res.string.invoice_data_error_calculated_amounts_are_invalid
+    }
+
+    HorizontalLabelledValue(fieldName, stringResource(errorMessage, dataError.erroneousValue ?: ""))
 }

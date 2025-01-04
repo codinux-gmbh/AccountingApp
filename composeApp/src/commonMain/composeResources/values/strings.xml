@@ -64,6 +64,18 @@
     <!-- invoice -->
     <string name="invoice_view">Invoice view</string>
 
+    <string name="invoice_contains_errors">Incorrect invoice data</string>
+    <string name="error_message_invoice_contains_errors">⚠️ The invoice data could be read, but they contain the following errors:</string>
+    <string name="invoice_field_currency">Currency</string>
+    <string name="invoice_field_supplier_country">Supplier country</string>
+    <string name="invoice_field_customer_country">Customer country</string>
+    <string name="invoice_field_item_unit">Item unit</string>
+    <string name="invoice_field_total_amount">Total amounts</string>
+    <string name="invoice_data_error_value_not_set">Value is not set.</string>
+    <string name="invoice_data_error_value_not_uppercase">Value is not as according to specification in capital letters.</string>
+    <string name="invoice_data_error_value_invalid">Invalid value '%1$s'</string>
+    <string name="invoice_data_error_calculated_amounts_are_invalid">Invoice amounts are incorrectly calculated.</string>
+
     <string name="notification_early_preview_version">This is a very early preview version that contains only the most essential features (and not even those are bug-free). So please use it with caution. We're working on it.</string>
 
     <string name="show_e_invoice_file">Show eInvoice file</string>

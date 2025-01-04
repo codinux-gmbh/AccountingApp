@@ -25,12 +25,12 @@ import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.getLastPathSegmentsOfMaxLength
 import net.codinux.accounting.ui.extensions.parent
-import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.model.MapInvoiceResult
 import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (Invoice?) -> Unit) {
+fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (MapInvoiceResult?) -> Unit) {
 
     var lastSelectedInvoiceFile by remember { mutableStateOf<PlatformFile?>(null) }
 
@@ -47,7 +47,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (Invoice?) -> Unit) {
             coroutineScope.launch(Dispatchers.IoOrDefault) {
                 lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
 
-                lastExtractedEInvoice?.invoice?.let { selectedInvoice ->
+                lastExtractedEInvoice?.mapInvoiceResult?.let { selectedInvoice ->
                     selectedInvoiceChanged(selectedInvoice)
                 }
             }

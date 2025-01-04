@@ -20,16 +20,18 @@ private val formatUtil = DI.formatUtil
 @Composable
 fun MailAttachmentListItem(attachment: EmailAttachment) {
 
+    val invoice = attachment.invoice
+
     var showInvoice by remember { mutableStateOf(false) }
 
 
     RoundedCornersCard(Modifier.padding(start = 6.dp).widthIn(min = 70.dp).clickableWithHandCursorIf(attachment.containsEInvoice || attachment.couldExtractPdfInvoiceData) { showInvoice = true }) {
         var displayText = attachment.filename
 
-        attachment.invoice?.totals?.duePayableAmount?.let { total ->
-            displayText += " (${formatUtil.formatAmountOfMoney(total, attachment.invoice?.details?.currency, true)})"
+        invoice?.totals?.duePayableAmount?.let { total ->
+            displayText += " (${formatUtil.formatAmountOfMoney(total, invoice?.details?.currency, true)})"
         }
-        if (attachment.invoice?.totals?.duePayableAmount == null) {
+        if (invoice?.totals?.duePayableAmount == null) {
             attachment.pdfInvoiceData?.potentialTotalAmount?.let { total ->
                 displayText += " (${formatUtil.formatAmountOfMoney(total.amount, total.currency, true)})"
             }
@@ -40,13 +42,13 @@ fun MailAttachmentListItem(attachment: EmailAttachment) {
 
 
     if (showInvoice) {
-        attachment.invoice?.let { invoice ->
+        attachment.mapInvoiceResult?.let { invoice ->
             ViewInvoiceDialog(invoice) {
                 showInvoice = false
             }
         }
 
-        if (attachment.invoice == null) {
+        if (invoice == null) {
             attachment.pdfInvoiceData?.let { pdfInvoiceData ->
                 PdfInvoiceDataDialog(pdfInvoiceData) {
                     showInvoice = false

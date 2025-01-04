@@ -8,12 +8,12 @@ import net.codinux.accounting.ui.composables.ComposableOfMaxWidth
 import net.codinux.accounting.ui.composables.invoice.InvoiceView
 import net.codinux.accounting.ui.composables.invoice.SelectEInvoiceFileToDisplay
 import net.codinux.accounting.ui.extensions.verticalScroll
-import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.model.MapInvoiceResult
 
 @Composable
 fun ViewInvoiceTab() {
 
-    var selectedInvoice by remember { mutableStateOf<Invoice?>(null) }
+    var selectedInvoice by remember { mutableStateOf<MapInvoiceResult?>(null) }
 
 
     Column(Modifier.fillMaxSize().verticalScroll(), verticalArrangement = Arrangement.Center) {

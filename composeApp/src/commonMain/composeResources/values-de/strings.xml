@@ -64,6 +64,18 @@
     <!-- invoice -->
     <string name="invoice_view">Rechnungsansicht</string>
 
+    <string name="invoice_contains_errors">Rechnungsdaten fehlerhaft</string>
+    <string name="error_message_invoice_contains_errors">⚠️ Die Rechnungsdaten konnten gelesen werden, aber sie enthalten folgende Fehler:</string>
+    <string name="invoice_field_currency">Währung</string>
+    <string name="invoice_field_supplier_country">Land des Leistungserbringer</string>
+    <string name="invoice_field_customer_country">Land des Leistungsempfänger</string>
+    <string name="invoice_field_item_unit">Einheit des Rechnungspostens</string>
+    <string name="invoice_field_total_amount">Rechnungsbetrag</string>
+    <string name="invoice_data_error_value_not_set">Wert ist nicht gesetzt.</string>
+    <string name="invoice_data_error_value_not_uppercase">Wert ist nicht gemäß Spezifikation in Großbuchstaben.</string>
+    <string name="invoice_data_error_value_invalid">Ungültiger Wert '%1$s'</string>
+    <string name="invoice_data_error_calculated_amounts_are_invalid">Rechnungsbeträge sind falsch berechnet.</string>
+
     <string name="notification_early_preview_version">Dies ist eine sehr frühe Preview Version, die nur die allernötigsten Funktionen enthält (und noch nicht mal die fehlerfrei). Deshalb bitte mit Vorsicht genießen. Wir arbeiten daran.</string>
 
     <string name="show_e_invoice_file">E-Rechnungsdatei anzeigen</string>

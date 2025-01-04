@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -192,7 +193,8 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
 
         TextButton({ createEInvoice() }, contentPadding = PaddingValues(0.dp), enabled = isValid) {
             Text(stringResource(Res.string.create), Modifier.applyIf(isCreatingEInvoice == false) { it.width(150.dp) },
-                color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled, textAlign = TextAlign.End)
+                color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled,
+                fontWeight = if (isValid) FontWeight.SemiBold else FontWeight.Normal, textAlign = TextAlign.End)
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import net.codinux.accounting.platform.*
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
+import net.codinux.accounting.ui.composables.ComposableOfMaxWidth
 import net.codinux.accounting.ui.composables.TextOfMaxWidth
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.composables.invoice.model.*
@@ -32,35 +33,37 @@ fun InvoiceForm() {
     val isCompactScreen = Platform.isCompactScreen
 
 
-    Column(Modifier.fillMaxWidth()) {
-        if (Platform.isIOS == false) {
-            TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.CodinuxSecondaryColor)
-        }
+    ComposableOfMaxWidth {
+        Column(Modifier.fillMaxWidth()) {
+            if (Platform.isIOS == false) {
+                TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.CodinuxSecondaryColor)
+            }
 
-        Section(Res.string.invoice_details) {
-            InvoiceDetailsForm(details, isCompactScreen)
-        }
+            Section(Res.string.invoice_details) {
+                InvoiceDetailsForm(details, isCompactScreen)
+            }
 
-        Section(Res.string.supplier) {
-            InvoicePartyForm(supplier, true, isCompactScreen)
-        }
+            Section(Res.string.supplier) {
+                InvoicePartyForm(supplier, true, isCompactScreen)
+            }
 
-        Section(Res.string.customer) {
-            InvoicePartyForm(customer, false, isCompactScreen)
-        }
+            Section(Res.string.customer) {
+                InvoicePartyForm(customer, false, isCompactScreen)
+            }
 
-        Section(Res.string.description_of_services) {
-            DescriptionOfServicesForm(descriptionOfServices, isCompactScreen)
-        }
+            Section(Res.string.description_of_services) {
+                DescriptionOfServicesForm(descriptionOfServices, isCompactScreen)
+            }
 
-        Section(Res.string.bank_details) {
-            BankDetailsForm(bankDetails)
-        }
+            Section(Res.string.bank_details) {
+                BankDetailsForm(bankDetails)
+            }
 
-        Section(Res.string.create) {
-            CreateInvoiceForm(historicalData, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
-        }
+            Section(Res.string.create) {
+                CreateInvoiceForm(historicalData, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
+            }
 
-        AvoidCutOffAtEndOfScreen()
+            AvoidCutOffAtEndOfScreen()
+        }
     }
 }

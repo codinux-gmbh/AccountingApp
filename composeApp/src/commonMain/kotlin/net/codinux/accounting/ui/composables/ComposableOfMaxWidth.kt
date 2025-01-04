@@ -14,7 +14,7 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ComposableOfMaxWidth(maxWidth: Dp = 700.dp, horizontalPadding: Dp = 36.dp, content: @Composable () -> Unit) {
+fun ComposableOfMaxWidth(maxWidth: Dp = 700.dp, horizontalPadding: Dp = 0.dp, content: @Composable () -> Unit) {
     Column(Modifier.fillMaxSize().padding(horizontal = horizontalPadding), Arrangement.Center, Alignment.CenterHorizontally) {
         Column(Modifier.widthIn(max = maxWidth)) {
             content()

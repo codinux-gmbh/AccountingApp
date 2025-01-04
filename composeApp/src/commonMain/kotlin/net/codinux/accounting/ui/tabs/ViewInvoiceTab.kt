@@ -19,7 +19,7 @@ fun ViewInvoiceTab() {
     Column(Modifier.fillMaxSize().verticalScroll(), verticalArrangement = Arrangement.Center) {
         val invoice = selectedInvoice
 
-        ComposableOfMaxWidth(600.dp, 0.dp) {
+        ComposableOfMaxWidth(600.dp) {
             SelectEInvoiceFileToDisplay { selectedInvoice = it }
 
             if (invoice != null) {

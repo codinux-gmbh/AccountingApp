@@ -81,7 +81,7 @@ class InvoiceService(
     }
 
     private val sortedUnitOfMeasure: PrioritizedDisplayNames<UnitOfMeasure> by lazy {
-        val all = UnitOfMeasure.entries.map { DisplayName(it, it.englishName) }.sortedBy { it.value.englishName } // TODO: translate
+        val all = localizationService.getAllUnitDisplayNames().sortedBy { it.displayName }
         val allByCode = all.associateBy { it.value.code }
         val preferredValues = PrioritizedUnitOfMeasure.map { allByCode[it.code]!! }
         val minorValues = all.toMutableList().apply { removeAll(preferredValues) }

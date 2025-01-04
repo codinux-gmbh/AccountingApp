@@ -6,6 +6,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.TextStyle
@@ -53,10 +54,29 @@ fun OutlinedTextField(
         labelText += "*"
     }
 
+    var isInvalid by remember { mutableStateOf(false) }
+
+    var wasFocusedBefore by remember { mutableStateOf(false) }
+
+    fun focusChanged(focusState: FocusState) {
+        if (wasFocusedBefore == false && focusState.isFocused) {
+            wasFocusedBefore = true
+        }
+    }
+
+
     androidx.compose.material.OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
+        onValueChange = {
+            if (required && wasFocusedBefore && it.isBlank()) {
+                isInvalid = true
+            } else if (isInvalid) {
+                isInvalid = false
+            }
+
+            onValueChange(it)
+        },
+        modifier = modifier.onFocusChanged { focusChanged(it) },
         enabled = enabled,
         readOnly = readOnly,
         textStyle = textStyle,
@@ -64,7 +84,7 @@ fun OutlinedTextField(
         placeholder = placeholder,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
-        isError = isError,
+        isError = isError || isInvalid,
         visualTransformation = visualTransformation,
         keyboardOptions = if (onEnterPressed != null) keyboardOptions.copy(imeAction = ImeAction.Done) else keyboardOptions,
         keyboardActions = if (onEnterPressed != null) KeyboardActions(onDone = { onEnterPressed.invoke() }) else keyboardActions, // onKeyEvent { } only handles input on hardware keyboards, therefore we have also have to overwrite onDone for IME / soft keyboards

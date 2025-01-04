@@ -137,7 +137,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
                 generatedEInvoiceXml = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat)?.let { (xml, pdf, pdfBytes) ->
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat, { generatedEInvoiceXml = it })?.let { (xml, pdf, pdfBytes) ->
                         createdPdfFile = pdf
                         createdPdfBytes = pdfBytes
 

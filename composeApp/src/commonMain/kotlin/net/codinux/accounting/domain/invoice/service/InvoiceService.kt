@@ -159,8 +159,9 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat): Triple<String, PlatformFile?, ByteArray?>? {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat, invoiceXmlCreated: ((String?) -> Unit)? = null): Triple<String, PlatformFile?, ByteArray?>? {
         val xml = createEInvoiceXml(invoice, format)
+        invoiceXmlCreated?.invoke(xml)
         if (xml == null) {
             // TODO: show error message
             return null

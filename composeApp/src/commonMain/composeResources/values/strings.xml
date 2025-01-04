@@ -68,6 +68,8 @@
 
     <string name="show_e_invoice_file">Show eInvoice file</string>
     <string name="select_e_invoice_file">Select eInvoice file ...</string>
+
+    <string name="validation_message_create_invoice_not_all_required_fields_have_been_filled_out">Cannot create e-invoice, not all fields marked with * have been filled out.</string>
     <string name="error_message_could_not_read_e_invoice">Could not read eInvoice from file %1$s</string>
     <string name="error_message_file_is_not_a_pdf">File is not a PDF</string>
     <string name="error_message_pdf_has_no_attachments">PDF has no attachments</string>

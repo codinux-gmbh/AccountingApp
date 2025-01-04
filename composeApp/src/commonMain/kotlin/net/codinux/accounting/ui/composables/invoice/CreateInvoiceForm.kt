@@ -3,9 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -163,6 +161,12 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
         }
     }
 
+
+    if (isValid == false) {
+        Row(Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 6.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(stringResource(Res.string.validation_message_create_invoice_not_all_required_fields_have_been_filled_out), color = MaterialTheme.colors.error, textAlign = TextAlign.Center)
+        }
+    }
 
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Select(null, createEInvoiceOptions, selectedCreateEInvoiceOption, { selectedCreateEInvoiceOption = it }, { getLabel(it) })

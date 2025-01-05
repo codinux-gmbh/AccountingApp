@@ -3,8 +3,11 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,9 +22,7 @@ import androidx.compose.ui.unit.sp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.HeaderText
-import net.codinux.accounting.ui.composables.forms.BooleanOption
-import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
-import net.codinux.accounting.ui.composables.forms.Section
+import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
@@ -166,8 +167,12 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
                 HeaderText(stringResource(Res.string.file_attachments), fontSize = 15.sp)
 
                 readPdfResult.attachmentExtractionResult.attachments.forEach { attachment ->
-                    Row(Modifier.padding(top = 12.dp)) {
-                        Text(attachment.filename + (if (attachment.isProbablyEN16931InvoiceXml) " (${stringResource(Res.string.e_invoice)})" else ""))
+                    RoundedCornersCard(Modifier.padding(top = 12.dp)) {
+                        Row(Modifier.padding(horizontal = 8.dp, vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Outlined.Attachment, "PDF attachment")
+
+                            Text(attachment.filename + (if (attachment.isProbablyEN16931InvoiceXml) " (${stringResource(Res.string.e_invoice)})" else ""), Modifier.padding(start = 4.dp))
+                        }
                     }
                 }
             }

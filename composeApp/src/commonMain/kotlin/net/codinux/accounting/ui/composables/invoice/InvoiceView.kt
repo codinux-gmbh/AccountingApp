@@ -15,8 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
+import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.composables.forms.BooleanOption
 import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
 import net.codinux.accounting.ui.composables.forms.Section
@@ -86,7 +88,7 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
             if (xml != null) {
                 Section(Res.string.invoice_file_details) {
-                    InvoiceFileDetails(xml)
+                    InvoiceFileDetails(xml, readPdfResult)
                 }
             }
 
@@ -143,11 +145,34 @@ private fun BankDetailsView(details: BankDetails, accountHolder: Party) {
 }
 
 @Composable
-private fun InvoiceFileDetails(xml: String) {
+private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult?) {
 
     var showInvoiceXml by remember { mutableStateOf(false) }
 
+    var showPdfDetails by remember { mutableStateOf(false) }
+
     val clipboardManager = LocalClipboardManager.current
+
+
+    if (readPdfResult != null) {
+        Row(Modifier.padding(top = Style.FormVerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
+            Spacer(Modifier.weight(1f))
+
+            BooleanOption(Res.string.show_pdf_details, showPdfDetails) { showPdfDetails = it }
+        }
+
+        if (showPdfDetails) {
+            Column(Modifier.fillMaxWidth().padding(top = Style.FormVerticalRowPadding, bottom = 12.dp).rememberHorizontalScroll()) {
+                HeaderText(stringResource(Res.string.file_attachments), fontSize = 15.sp)
+
+                readPdfResult.attachmentExtractionResult.attachments.forEach { attachment ->
+                    Row(Modifier.padding(top = 12.dp)) {
+                        Text(attachment.filename + (if (attachment.isProbablyEN16931InvoiceXml) " (${stringResource(Res.string.e_invoice)})" else ""))
+                    }
+                }
+            }
+        }
+    }
 
 
     Row(Modifier.padding(top = Style.FormVerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {

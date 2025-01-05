@@ -21,6 +21,8 @@
     <string name="copy_xml">Copy XML</string>
     <string name="create">Create</string>
 
+    <string name="e_invoice">eInvoice</string>
+
     <string name="name">Name</string>
 
     <string name="username">Username</string>
@@ -64,6 +66,10 @@
 
     <!-- invoice -->
     <string name="invoice_view">Invoice view</string>
+
+    <string name="invoice_file_details">Invoice file details</string>
+    <string name="show_pdf_details">Show PDF details</string>
+    <string name="file_attachments">File attachments</string>
 
     <string name="invoice_contains_errors">Incorrect invoice data</string>
     <string name="error_message_invoice_contains_errors">⚠️ The invoice data could be read, but they contain the following errors:</string>
@@ -134,8 +140,6 @@
     <string name="name_of_financial_institution">Bank name</string>
     <string name="iban">IBAN</string>
     <string name="bic">BIC</string>
-
-    <string name="invoice_file_details">Invoice file details</string>
 
     <string name="e_invoice_xml_format">eInvoice XML Format</string>
     <string name="e_invoice_xml_format_x_rechnung">XRechnung</string>

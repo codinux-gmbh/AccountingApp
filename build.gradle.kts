@@ -11,5 +11,5 @@ plugins {
 
 allprojects {
     group = "net.codinux.accounting"
-    version = "0.6.1-SNAPSHOT"
+    version = "0.7.0"
 }

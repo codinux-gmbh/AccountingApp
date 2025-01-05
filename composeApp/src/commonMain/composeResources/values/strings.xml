@@ -18,6 +18,7 @@
     <string name="save">Save</string>
     <string name="add">Add</string>
     <string name="copy">Copy</string>
+    <string name="copy_xml">Copy XML</string>
     <string name="create">Create</string>
 
     <string name="name">Name</string>
@@ -133,6 +134,8 @@
     <string name="name_of_financial_institution">Bank name</string>
     <string name="iban">IBAN</string>
     <string name="bic">BIC</string>
+
+    <string name="invoice_file_details">Invoice file details</string>
 
     <string name="e_invoice_xml_format">eInvoice XML Format</string>
     <string name="e_invoice_xml_format_x_rechnung">XRechnung</string>

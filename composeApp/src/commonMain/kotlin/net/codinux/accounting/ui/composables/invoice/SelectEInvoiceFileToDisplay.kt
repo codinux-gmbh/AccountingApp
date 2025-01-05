@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.sp
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
+import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
@@ -30,25 +31,26 @@ import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (MapInvoiceResult?) -> Unit) {
+fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?, String?) -> Unit) {
 
     var lastSelectedInvoiceFile by remember { mutableStateOf<PlatformFile?>(null) }
 
-    var lastExtractedEInvoice by remember { mutableStateOf<FileEInvoiceExtractionResult?>(null) }
+    var lastExtractedEInvoice by remember { mutableStateOf<ReadEInvoiceFileResult?>(null) }
 
     val coroutineScope = rememberCoroutineScope()
 
 
-    val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(
-        PickerType.File(listOf("pdf", "xml")), stringResource(Res.string.select_e_invoice_file), lastSelectedInvoiceFile?.parent) { selectedFile ->
+    val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf", "xml")),
+        stringResource(Res.string.select_e_invoice_file), lastSelectedInvoiceFile?.parent) { selectedFile ->
         selectedFile?.let {
             lastSelectedInvoiceFile = it
 
             coroutineScope.launch(Dispatchers.IoOrDefault) {
                 lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
 
-                lastExtractedEInvoice?.mapInvoiceResult?.let { selectedInvoice ->
-                    selectedInvoiceChanged(selectedInvoice)
+                lastExtractedEInvoice?.let { selectedInvoice ->
+                    val xml = if (selectedFile.extension.lowercase() == "xml") selectedFile.readBytes().decodeToString() else null
+                    selectedInvoiceChanged(selectedInvoice, xml)
                 }
             }
         }
@@ -68,7 +70,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (MapInvoiceResult?) -> U
     }
 
 
-    fun showReadXmlError(result: FileEInvoiceExtractionResult, xmlResult: ReadEInvoiceXmlResult) {
+    fun showReadXmlError(result: ReadEInvoiceFileResult, xmlResult: ReadEInvoiceXmlResult) {
         val stringResource = when (xmlResult.type) {
             ReadEInvoiceXmlResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
             ReadEInvoiceXmlResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
@@ -81,8 +83,8 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (MapInvoiceResult?) -> U
 
     lastExtractedEInvoice?.let { result ->
         val invoice = result.invoice
-        val pdfResult = result.pdf
-        val xmlResult = result.xml
+        val pdfResult = result.readPdfResult
+        val xmlResult = result.readXmlResult
 
         if (invoice == null) {
             if (pdfResult != null) {

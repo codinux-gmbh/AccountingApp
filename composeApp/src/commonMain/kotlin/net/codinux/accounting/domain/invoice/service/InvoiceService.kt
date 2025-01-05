@@ -20,7 +20,7 @@ import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
 import net.codinux.invoicing.model.toDotSeparatedIsoDate
 import net.codinux.invoicing.reader.EInvoiceReader
-import net.codinux.invoicing.reader.FileEInvoiceExtractionResult
+import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
 import net.codinux.log.logger
 
@@ -130,7 +130,7 @@ class InvoiceService(
     }
 
 
-    suspend fun readEInvoice(file: PlatformFile): FileEInvoiceExtractionResult =
+    suspend fun readEInvoice(file: PlatformFile): ReadEInvoiceFileResult =
         reader.extractFromFile(file.readBytes(), file.name, file.parent, null)
 
 

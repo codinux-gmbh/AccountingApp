@@ -1,34 +1,45 @@
 package net.codinux.accounting.ui.composables.invoice
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.TextButton
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
+import net.codinux.accounting.ui.composables.forms.BooleanOption
 import net.codinux.accounting.ui.composables.forms.HorizontalLabelledValue
 import net.codinux.accounting.ui.composables.forms.Section
+import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.applyIf
+import net.codinux.accounting.ui.extensions.rememberHorizontalScroll
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
+import net.codinux.invoicing.reader.ReadEInvoicePdfResult
 import org.jetbrains.compose.resources.stringResource
 
 
 private val formatUtil = DI.formatUtil
 
 @Composable
-fun InvoiceView(mapInvoiceResult: MapInvoiceResult, enableVerticalScrolling: Boolean = true) {
+fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoicePdfResult? = null, invoiceXml: String? = null, enableVerticalScrolling: Boolean = true) {
 
     val invoice = mapInvoiceResult.invoice
+
+    val xml = invoiceXml ?: readPdfResult?.attachmentExtractionResult?.invoiceXml
 
 
     SelectionContainer(Modifier.fillMaxSize()) {
@@ -72,6 +83,12 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, enableVerticalScrolling: Boo
             }
 
             invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice.supplier) }
+
+            if (xml != null) {
+                Section(Res.string.invoice_file_details) {
+                    InvoiceFileDetails(xml)
+                }
+            }
 
             AvoidCutOffAtEndOfScreen()
         }
@@ -126,7 +143,34 @@ private fun BankDetailsView(details: BankDetails, accountHolder: Party) {
 }
 
 @Composable
-fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
+private fun InvoiceFileDetails(xml: String) {
+
+    var showInvoiceXml by remember { mutableStateOf(false) }
+
+    val clipboardManager = LocalClipboardManager.current
+
+
+    Row(Modifier.padding(top = Style.FormVerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
+        TextButton({ clipboardManager.setText(AnnotatedString(xml)) }) {
+            Text(stringResource(Res.string.copy_xml), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        BooleanOption(Res.string.show_xml, showInvoiceXml) { showInvoiceXml = it }
+    }
+
+    if (showInvoiceXml) {
+        Column(Modifier.padding(top = Style.FormVerticalRowPadding).rememberHorizontalScroll().background(Colors.MainBackgroundColor)) {
+            SelectionContainer(modifier = Modifier.fillMaxSize()) {
+                Text(xml, fontFamily = FontFamily.Monospace)
+            }
+        }
+    }
+}
+
+@Composable
+private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
     val fieldName = when (dataError.field) {
         InvoiceField.Currency -> Res.string.invoice_field_currency
         InvoiceField.SupplierCountry -> Res.string.invoice_field_supplier_country

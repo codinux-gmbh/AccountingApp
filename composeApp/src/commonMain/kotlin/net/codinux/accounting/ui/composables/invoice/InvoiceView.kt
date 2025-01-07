@@ -1,5 +1,6 @@
 package net.codinux.accounting.ui.composables.invoice
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -20,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.PlatformUiFunctions
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.composables.forms.*
@@ -85,7 +87,7 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
                 invoice.totals?.let { TotalAmountsView(invoice.details.currency, it, true) }
             }
 
-            invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice.supplier) }
+            invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice) }
 
             if (xml != null) {
                 Section(Res.string.invoice_file_details) {
@@ -133,15 +135,34 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem, currency
 }
 
 @Composable
-private fun BankDetailsView(details: BankDetails, accountHolder: Party) {
+private fun BankDetailsView(details: BankDetails, invoice: Invoice) {
+    val accountHolderName = details.accountHolderName ?: invoice.supplier.name
+
+    val eqcQrCode by remember { mutableStateOf(DI.invoiceService.generateEpcQrCode(details, invoice, accountHolderName)) }
+
+    var showEpcQrCode by remember { mutableStateOf(false) } // TODO: save selection
+
+
     Section(Res.string.bank_details) {
-        HorizontalLabelledValue(Res.string.account_holder, details.accountHolderName ?: accountHolder.name)
+        HorizontalLabelledValue(Res.string.account_holder, accountHolderName)
 
         HorizontalLabelledValue(Res.string.name_of_financial_institution, details.financialInstitutionName ?: "")
 
         HorizontalLabelledValue(Res.string.iban, details.accountNumber)
 
         HorizontalLabelledValue(Res.string.bic, details.bankCode)
+
+        eqcQrCode?.let { eqcQrCode ->
+            Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding)) {
+                BooleanOption(Res.string.show_epc_qr_code, showEpcQrCode) { showEpcQrCode = it }
+            }
+
+            if (showEpcQrCode) {
+                Row(Modifier.fillMaxWidth().padding(top = 2.dp, bottom = 4.dp).heightIn(max = 250.dp), horizontalArrangement = Arrangement.Center) {
+                    Image(PlatformUiFunctions.createImageBitmap(eqcQrCode), "QR Code with bank details. Scan for easy wire transfer")
+                }
+            }
+        }
     }
 }
 

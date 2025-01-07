@@ -67,6 +67,7 @@
     <!-- invoice -->
     <string name="invoice_view">Invoice view</string>
 
+    <string name="show_epc_qr_code">Show QR for bank transfer (simply scan with your Banking App)</string>
     <string name="invoice_file_details">Invoice file details</string>
     <string name="show_pdf_details">Show PDF details</string>
     <string name="file_attachments">File attachments</string>

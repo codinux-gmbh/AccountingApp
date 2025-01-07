@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
 
+            implementation(libs.epcQrCode)
 
             implementation(libs.klf)
 

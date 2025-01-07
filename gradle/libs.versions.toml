@@ -15,6 +15,8 @@ klf = "1.8.0"
 filekit = "0.8.7"
 calendarCompose = "2.6.1"
 
+epcQrCode = "0.5.0"
+
 
 compose-multiplatform = "1.7.1"
 
@@ -44,6 +46,8 @@ klf = { group = "net.codinux.log", name = "klf", version.ref = "klf" }
 
 filekit = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekit" }
 calendarCompose = { module = "com.kizitonwose.calendar:compose-multiplatform", version.ref = "calendarCompose" }
+
+epcQrCode = { module = "net.codinux.banking.epcqrcode:epc-qr-code", version.ref = "epcQrCode" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }

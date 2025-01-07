@@ -11,14 +11,15 @@ import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.state.UiState
+import net.codinux.banking.epcqrcode.EpcQrCode
+import net.codinux.banking.epcqrcode.EpcQrCodeConfig
+import net.codinux.banking.epcqrcode.EpcQrCodeGenerator
 import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.*
-import net.codinux.invoicing.model.EInvoiceXmlFormat
-import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
-import net.codinux.invoicing.model.toDotSeparatedIsoDate
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
@@ -33,6 +34,7 @@ class InvoiceService(
     private val pdfAttacher: EInvoiceXmlToPdfAttacher = EInvoiceXmlToPdfAttacher(),
     private val xmlCreator: EInvoiceXmlCreator = EInvoiceXmlCreator(),
     private val localizationService: LocalizationService = LocalizationService(),
+    private val epcQrCodeGenerator: EpcQrCodeGenerator = EpcQrCodeGenerator()
 ) {
 
     companion object {
@@ -177,5 +179,17 @@ class InvoiceService(
 
         return Triple(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml, filename), pdfBytes)
     }
+
+
+    fun generateEpcQrCode(details: BankDetails, invoice: Invoice, accountHolderName: String, heightAndWidth: Int = EpcQrCode.DefaultHeightAndWidth): ByteArray? =
+        try {
+            val amount = invoice.totals?.duePayableAmount?.toPlainString()
+            val epcQrCode = epcQrCodeGenerator.generateEpcQrCode(EpcQrCodeConfig(accountHolderName, details.accountNumber, details.bankCode, amount, qrCodeHeightAndWidth = heightAndWidth))
+
+            epcQrCode.bytes
+        } catch (e: Throwable) {
+            log.error(e) { "could not generate EPC QR Code for receiver = '$accountHolderName', IBAN = ${details.accountNumber}, amount = ${invoice.totals?.duePayableAmount}"}
+            null
+        }
 
 }

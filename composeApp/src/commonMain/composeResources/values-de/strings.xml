@@ -67,6 +67,7 @@
     <!-- invoice -->
     <string name="invoice_view">Rechnungsansicht</string>
 
+    <string name="show_epc_qr_code">QR für Überweisung anzeigen (einfach mit Banking App scannen)</string>
     <string name="invoice_file_details">Dateiinfo</string>
     <string name="show_pdf_details">PDF Details anzeigen</string>
     <string name="file_attachments">Dateianhänge</string>

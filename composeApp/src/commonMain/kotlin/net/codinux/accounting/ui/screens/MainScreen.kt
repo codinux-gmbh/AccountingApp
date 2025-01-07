@@ -2,10 +2,11 @@ package net.codinux.accounting.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import net.codinux.accounting.platform.Platform
+import net.codinux.accounting.platform.isIOS
 import net.codinux.accounting.ui.appskeleton.BottomToolbar
 import net.codinux.accounting.ui.appskeleton.MainScreenFloatingActionButton
 import net.codinux.accounting.ui.composables.StateHandler
@@ -20,6 +21,8 @@ fun MainScreen() {
 
     val selectedTab = uiState.selectedMainScreenTab.collectAsState().value
 
+    var isKeyboardVisible by remember { mutableStateOf(false) }
+
 
     Scaffold(
         bottomBar = { BottomToolbar(selectedTab) },
@@ -27,9 +30,10 @@ fun MainScreen() {
         floatingActionButton = { MainScreenFloatingActionButton(uiState, selectedTab) },
     ) { scaffoldPadding -> // scaffoldPadding contains e.g. the size of the bottom toolbar
 
-        // when removing tabs from composition tree, than tab's state, e.g. entered data, gets
-        // deleted when switching tabs. To retain data don't remove tab from composition tree but
-        // make it invisible by e.g. shrinking tab height to 0 dp
+        Column(Modifier.fillMaxSize().paddingForKeyboardState(isKeyboardVisible, scaffoldPadding).padding(horizontal = 10.dp)) {
+            // when removing tabs from composition tree, then tab's state, e.g. entered data, gets
+            // deleted when switching tabs. To retain data don't remove tab from composition tree but
+            // make it invisible by e.g. shrinking tab height to 0 dp
 
 //        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Postings, selectedTab)) {
 //            PostingsTab()
@@ -37,23 +41,33 @@ fun MainScreen() {
 //        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.BankAccounts, selectedTab)) {
 //            BankAccountsTab()
 //        }
-        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.ViewInvoice, selectedTab)) {
-            ViewInvoiceTab()
-        }
-        Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.CreateInvoice, selectedTab)) {
-            CreateInvoiceTab()
-        }
+            Column(Modifier.showIfSelected(MainScreenTab.ViewInvoice, selectedTab)) {
+                ViewInvoiceTab()
+            }
+            Column(Modifier.showIfSelected(MainScreenTab.CreateInvoice, selectedTab)) {
+                CreateInvoiceTab()
+            }
 
-        val mailService = DI.mailService
-        if (mailService != null) {
-            Column(Modifier.tabDefaults(scaffoldPadding).showIfSelected(MainScreenTab.Mails, selectedTab)) {
-                MailsTab(mailService, uiState.emails)
+            val mailService = DI.mailService
+            if (mailService != null) {
+                Column(Modifier.showIfSelected(MainScreenTab.Mails, selectedTab)) {
+                    MailsTab(mailService, uiState.emails)
+                }
             }
         }
     }
 
 
     StateHandler(uiState)
+
+
+    LaunchedEffect(Unit) {
+        if (Platform.isIOS) {
+            Platform.addKeyboardVisibilityListener { visible ->
+                isKeyboardVisible = visible
+            }
+        }
+    }
 }
 
 @Composable
@@ -63,5 +77,10 @@ private fun Modifier.showIfSelected(tab: MainScreenTab, selectedTab: MainScreenT
 }
 
 @Composable
-private fun Modifier.tabDefaults(scaffoldPadding: PaddingValues) =
-    this.fillMaxWidth().padding(scaffoldPadding).padding(horizontal = 10.dp)
+private fun Modifier.paddingForKeyboardState(isKeyboardVisible: Boolean, scaffoldPadding: PaddingValues): Modifier =
+    if (isKeyboardVisible) {
+        this.imePadding()
+    }
+    else {
+        this.padding(scaffoldPadding) // if we want to display BottomToolbar also when keyboard is visible, apply scaffoldPadding in all states (not only when keyboard is hidden)
+    }

@@ -62,16 +62,12 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.invoicing)
+            implementation(project(":AccountingPersistence"))
 
             implementation(libs.kI18n)
 
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
-
-            implementation(libs.kmpBase)
-
-            implementation(libs.klf)
 
             // UI
             implementation(libs.filekit)

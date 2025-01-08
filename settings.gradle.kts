@@ -32,4 +32,8 @@ dependencyResolutionManagement {
     }
 }
 
+
+// had to extract Sql'delight' dependencies to an extra project as they conflict with Compose dependencies on iOS
+include(":AccountingPersistence")
+
 include(":composeApp")

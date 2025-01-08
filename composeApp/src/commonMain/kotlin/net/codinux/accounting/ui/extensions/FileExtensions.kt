@@ -3,7 +3,9 @@ package net.codinux.accounting.ui.extensions
 import io.github.vinceglb.filekit.core.PlatformFile
 import net.codinux.i18n.lastIndexOfOrNull
 import net.codinux.log.Log
-//import java.io.File
+
+val PlatformFile.extension: String
+    get() = this.name.substringAfterLast('.').lowercase()
 
 val PlatformFile.parent: String?
     get() {

@@ -33,7 +33,7 @@ class LocalizationService {
 
     fun getAllUnitDisplayNames(): List<DisplayName<UnitOfMeasure>> {
         return UnitOfMeasure.entries.map { unit ->
-            DisplayName(unit, unitFormatter.getUnitDisplayName(unit.englishName, UnitFormatStyle.Long) ?: unit.englishName) // TODO: what else to use as fallback value?
+            DisplayName(unit, unitFormatter.cleanAndGetUnitDisplayName(unit.englishName, UnitFormatStyle.Long) ?: unit.englishName) // TODO: what else to use as fallback value?
         }
     }
 

@@ -69,8 +69,6 @@ kotlin {
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
 
-            implementation(libs.epcQrCode)
-
             implementation(libs.klf)
 
             // UI
@@ -94,6 +92,10 @@ kotlin {
 
         val javaCommonMain by creating {
             dependsOn(commonMain.get())
+
+            dependencies {
+                implementation(libs.epcQrCode)
+            }
         }
 
         val desktopMain by getting {
@@ -117,6 +119,10 @@ kotlin {
                 implementation(compose.preview)
                 implementation(libs.androidx.activity.compose)
             }
+        }
+
+        iosMain.dependencies {
+            implementation(libs.epcQrCode)
         }
     }
 }

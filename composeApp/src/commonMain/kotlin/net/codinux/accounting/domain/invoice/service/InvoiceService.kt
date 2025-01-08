@@ -11,9 +11,6 @@ import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.state.UiState
-import net.codinux.banking.epcqrcode.EpcQrCode
-import net.codinux.banking.epcqrcode.EpcQrCodeConfig
-import net.codinux.banking.epcqrcode.EpcQrCodeGenerator
 import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.*
 import net.codinux.invoicing.model.*
@@ -30,11 +27,11 @@ class InvoiceService(
     private val reader: EInvoiceReader,
     private val repository: InvoiceRepository,
     private val fileHandler: PlatformFileHandler,
+    private val epcQrCodeGenerator: EpcQrCodeGenerator?,
     private val pdfCreator: EInvoicePdfCreator = EInvoicePdfCreator(),
     private val pdfAttacher: EInvoiceXmlToPdfAttacher = EInvoiceXmlToPdfAttacher(),
     private val xmlCreator: EInvoiceXmlCreator = EInvoiceXmlCreator(),
-    private val localizationService: LocalizationService = LocalizationService(),
-    private val epcQrCodeGenerator: EpcQrCodeGenerator = EpcQrCodeGenerator()
+    private val localizationService: LocalizationService = LocalizationService()
 ) {
 
     companion object {
@@ -181,15 +178,7 @@ class InvoiceService(
     }
 
 
-    fun generateEpcQrCode(details: BankDetails, invoice: Invoice, accountHolderName: String, heightAndWidth: Int = EpcQrCode.DefaultHeightAndWidth): ByteArray? =
-        try {
-            val amount = invoice.totals?.duePayableAmount?.toPlainString()
-            val epcQrCode = epcQrCodeGenerator.generateEpcQrCode(EpcQrCodeConfig(accountHolderName, details.accountNumber, details.bankCode, amount, qrCodeHeightAndWidth = heightAndWidth))
-
-            epcQrCode.bytes
-        } catch (e: Throwable) {
-            log.error(e) { "could not generate EPC QR Code for receiver = '$accountHolderName', IBAN = ${details.accountNumber}, amount = ${invoice.totals?.duePayableAmount}"}
-            null
-        }
+    fun generateEpcQrCode(details: BankDetails, invoice: Invoice, accountHolderName: String, heightAndWidth: Int = 500): ByteArray? =
+        epcQrCodeGenerator?.generateEpcQrCode(details, invoice, accountHolderName, heightAndWidth)
 
 }

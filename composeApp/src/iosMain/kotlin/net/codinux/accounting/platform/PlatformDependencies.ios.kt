@@ -3,6 +3,7 @@ package net.codinux.accounting.ui
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
+import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.ui.state.UiState
@@ -16,6 +17,8 @@ actual class PlatformDependencies actual constructor(
     actual val fileHandler: PlatformFileHandler = PlatformFileHandler()
 
     actual val invoiceRepository: InvoiceRepository = InvoiceRepository()
+
+    actual val epcQrCodeGenerator: EpcQrCodeGenerator? = EpcQrCodeGenerator()
 
     actual val mailService: MailService? = null
 }

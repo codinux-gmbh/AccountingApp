@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.Dispatchers
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
+import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.JvmMailService
 import net.codinux.accounting.domain.mail.service.MailService
@@ -40,6 +41,8 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
     actual val fileHandler = PlatformFileHandler(applicationContext, invoicesDirectory)
 
     actual val invoiceRepository = InvoiceRepository(jsonMapper, databaseDirectory)
+
+    actual val epcQrCodeGenerator: EpcQrCodeGenerator? = EpcQrCodeGenerator()
 
     actual val mailService: MailService? = JvmMailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper, databaseDirectory))
 

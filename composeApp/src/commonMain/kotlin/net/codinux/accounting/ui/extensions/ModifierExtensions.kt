@@ -9,7 +9,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import net.codinux.accounting.platform.Platform
+import net.codinux.accounting.ui.PlatformUiFunctions
 import net.codinux.log.Log
 
 
@@ -52,7 +52,7 @@ fun Modifier.applyPlatformSpecificPaddingIf(applyPlatformPadding: Boolean, minVe
 
 @Composable
 fun Modifier.applyPlatformSpecificPadding(minVerticalPadding: Dp = 0.dp): Modifier {
-    val systemPaddings = Platform.systemPaddings()
+    val systemPaddings = PlatformUiFunctions.systemPaddings()
 
     return this.padding(
         top = maxOf(minVerticalPadding, systemPaddings.calculateTopPadding()),

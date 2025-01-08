@@ -13,6 +13,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import net.codinux.accounting.platform.*
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.PlatformUiFunctions
 import net.codinux.accounting.ui.composables.CloseButton
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.config.Colors
@@ -102,7 +103,7 @@ fun BaseDialog(
 
     LaunchedEffect(Unit) {
         if (Platform.type == PlatformType.iOS) { // on iOS top dialog part gets hidden by top system bar when soft keyboard is visible -> apply system padding then
-            Platform.addKeyboardVisibilityListener { visible ->
+            PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
                 isKeyboardVisible = visible
             }
         }

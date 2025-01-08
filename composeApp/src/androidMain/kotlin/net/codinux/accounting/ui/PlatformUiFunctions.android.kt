@@ -1,6 +1,7 @@
 package net.codinux.accounting.ui
 
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ImageBitmap
@@ -25,6 +26,14 @@ actual object PlatformUiFunctions {
                 widthDp = config.screenWidthDp.dp
             )
         }
+    }
+
+
+    @Composable
+    actual fun systemPaddings(): PaddingValues = PaddingValues(0.dp)
+
+    actual fun addKeyboardVisibilityListener(onKeyboardVisibilityChanged: (Boolean) -> Unit) {
+        // TODO: may implement, but currently only relevant for iOS
     }
 
 }

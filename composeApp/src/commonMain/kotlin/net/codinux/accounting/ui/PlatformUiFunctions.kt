@@ -1,5 +1,6 @@
 package net.codinux.accounting.ui
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.ImageBitmap
 import net.codinux.accounting.ui.state.ScreenSizeInfo
@@ -10,5 +11,10 @@ expect object PlatformUiFunctions {
 
     @Composable
     fun rememberScreenSize(): ScreenSizeInfo
+
+    @Composable
+    fun systemPaddings(): PaddingValues
+
+    fun addKeyboardVisibilityListener(onKeyboardVisibilityChanged: (Boolean) -> Unit)
 
 }

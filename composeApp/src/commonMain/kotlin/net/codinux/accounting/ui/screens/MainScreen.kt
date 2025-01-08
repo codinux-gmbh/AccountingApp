@@ -22,7 +22,7 @@ fun MainScreen() {
 
     val selectedTab = uiState.selectedMainScreenTab.collectAsState().value
 
-    var isKeyboardVisible by remember { mutableStateOf(false) }
+    val isKeyboardVisible = uiState.isKeyboardVisible.collectAsState().value
 
 
     Scaffold(
@@ -60,15 +60,6 @@ fun MainScreen() {
 
 
     StateHandler(uiState)
-
-
-    LaunchedEffect(Unit) {
-        if (Platform.isIOS) {
-            PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
-                isKeyboardVisible = visible
-            }
-        }
-    }
 }
 
 @Composable

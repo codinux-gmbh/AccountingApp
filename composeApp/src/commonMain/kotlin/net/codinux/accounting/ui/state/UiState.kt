@@ -23,6 +23,8 @@ class UiState : ViewModel() {
         this.uiType.value = screenSize.uiType
     }
 
+    val isKeyboardVisible = MutableStateFlow(false)
+
 
     val selectedMainScreenTab = MutableStateFlow(MainScreenTab.ViewInvoice)
 

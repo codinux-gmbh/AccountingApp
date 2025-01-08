@@ -8,6 +8,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.codinux.accounting.platform.Platform
+import net.codinux.accounting.platform.isIOS
 import net.codinux.accounting.ui.IoOrDefault
 import net.codinux.accounting.ui.PlatformUiFunctions
 import net.codinux.accounting.ui.config.Colors
@@ -49,6 +51,12 @@ fun App() {
 
             coroutineScope.launch(Dispatchers.IoOrDefault) {
                 DI.init()
+            }
+
+            if (Platform.isIOS) {
+                PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
+                    DI.uiState.isKeyboardVisible.value = visible
+                }
             }
         }
     }

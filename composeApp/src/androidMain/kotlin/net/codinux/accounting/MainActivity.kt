@@ -13,7 +13,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         AndroidContext.applicationContext = this.applicationContext
-        net.codinux.invoicing.platform.AndroidContext.applicationContext = this.applicationContext
         net.codinux.log.android.AndroidContext.applicationContext = this.applicationContext
 
         setContent {

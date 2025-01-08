@@ -17,8 +17,6 @@ import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.IoOrDefault
 import net.codinux.accounting.ui.composables.forms.Section
@@ -36,6 +34,8 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
     var lastSelectedInvoiceFile by remember { mutableStateOf<PlatformFile?>(null) }
 
     var lastExtractedEInvoice by remember { mutableStateOf<ReadEInvoiceFileResult?>(null) }
+
+    val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -65,7 +65,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
         }
 
         lastSelectedInvoiceFile?.let { selectedFile ->
-            Text(selectedFile.getLastPathSegmentsOfMaxLength(if (Platform.isCompactScreen) 65 else 80), Modifier.padding(top = 12.dp, bottom = 4.dp), fontSize = 13.sp, overflow = TextOverflow.Clip, maxLines = 1)
+            Text(selectedFile.getLastPathSegmentsOfMaxLength(if (isCompactScreen) 65 else 80), Modifier.padding(top = 12.dp, bottom = 4.dp), fontSize = 13.sp, overflow = TextOverflow.Clip, maxLines = 1)
         }
     }
 

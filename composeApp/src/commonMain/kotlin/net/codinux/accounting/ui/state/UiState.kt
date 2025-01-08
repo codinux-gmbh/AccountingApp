@@ -1,5 +1,6 @@
 package net.codinux.accounting.ui.state
 
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import net.codinux.accounting.domain.common.model.error.ApplicationError
@@ -9,6 +10,19 @@ import net.codinux.accounting.ui.tabs.MainScreenTab
 import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
+
+    val screenSize = MutableStateFlow(ScreenSizeInfo(0.dp, 0.dp))
+
+    val uiType = MutableStateFlow(UiType.Compact)
+
+    val isCompactScreen: Boolean
+        get() = uiType.value.isCompactScreen
+
+    fun screenSizeChanged(screenSize: ScreenSizeInfo) {
+        this.screenSize.value = screenSize
+        this.uiType.value = screenSize.uiType
+    }
+
 
     val selectedMainScreenTab = MutableStateFlow(MainScreenTab.ViewInvoice)
 

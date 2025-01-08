@@ -30,7 +30,7 @@ fun InvoiceForm() {
 
     val bankDetails by remember(historicalData) { mutableStateOf(BankDetailsViewModel(historicalData.lastCreatedInvoice?.supplier?.bankDetails)) }
 
-    val isCompactScreen = Platform.isCompactScreen
+    val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
 
     ComposableOfMaxWidth {

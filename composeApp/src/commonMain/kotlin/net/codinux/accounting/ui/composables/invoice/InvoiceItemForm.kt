@@ -10,8 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.forms.OutlinedNumberTextField
 import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
@@ -27,8 +25,6 @@ import org.jetbrains.compose.resources.StringResource
 
 private val unitsOfMeasure by lazy { DI.invoiceService.getUnitOfMeasureDisplayNamesSorted() }
 
-private val isCompactScreen = Platform.isCompactScreen
-
 private val SmallerFieldsWidth = 92.dp
 
 private val FieldsSpace = 4.dp
@@ -36,6 +32,8 @@ private val FieldsSpace = 4.dp
 
 @Composable
 fun InvoiceItemForm(item: InvoiceItemViewModel) {
+
+    val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
     val name by item.name.collectAsState()
 

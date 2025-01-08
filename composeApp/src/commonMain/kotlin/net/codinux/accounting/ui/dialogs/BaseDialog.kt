@@ -3,12 +3,7 @@ package net.codinux.accounting.ui.dialogs
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +20,7 @@ import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.applyPlatformSpecificPaddingIf
 import net.codinux.accounting.ui.extensions.copy
 import net.codinux.accounting.ui.composables.forms.*
+import net.codinux.accounting.ui.config.DI
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -46,7 +42,10 @@ fun BaseDialog(
     properties: DialogProperties = DialogProperties(),
     content: @Composable () -> Unit
 ) {
-    val overwriteDefaultWidth = useMoreThanPlatformDefaultWidthOnSmallScreens && Platform.isCompactScreen
+
+    val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
+
+    val overwriteDefaultWidth = useMoreThanPlatformDefaultWidthOnSmallScreens && isCompactScreen
 
     var isKeyboardVisible by remember { mutableStateOf(false) }
 

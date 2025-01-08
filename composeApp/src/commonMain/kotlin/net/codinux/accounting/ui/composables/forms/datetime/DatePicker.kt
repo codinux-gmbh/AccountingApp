@@ -15,8 +15,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.datetime.LocalDate
 import net.codinux.accounting.domain.common.extensions.toEInvoicingDate
 import net.codinux.accounting.domain.common.extensions.toKotlinLocalDate
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isCompactScreen
 import net.codinux.accounting.ui.composables.forms.OutlinedTextField
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.dialogs.DatePickerDialog
@@ -29,7 +27,7 @@ private val formatUtil = DI.formatUtil
 fun DatePicker(
     label: StringResource?,
     selectedDate: net.codinux.invoicing.model.LocalDate? = null,
-    modifier: Modifier = Modifier.width(if (Platform.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
+    modifier: Modifier = Modifier.width(if (DI.uiState.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
     showCalendarIcon: Boolean = false,
     moveFocusOnToNextElementOnSelection: Boolean = true,
     textColor: Color? = null,
@@ -43,7 +41,7 @@ fun DatePicker(
 fun DatePicker(
     label: StringResource?,
     selectedDate: LocalDate? = null,
-    modifier: Modifier = Modifier.width(if (Platform.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
+    modifier: Modifier = Modifier.width(if (DI.uiState.isCompactScreen) 86.dp else 90.dp).heightIn(min = 45.dp),
     showCalendarIcon: Boolean = false,
     moveFocusOnToNextElementOnSelection: Boolean = true,
     textColor: Color? = null,

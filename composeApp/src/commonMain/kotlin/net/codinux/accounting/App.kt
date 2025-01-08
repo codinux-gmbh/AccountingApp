@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.ui.IoOrDefault
+import net.codinux.accounting.ui.PlatformUiFunctions
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.screens.MainScreen
@@ -27,6 +28,10 @@ fun App() {
 
     val colors = MaterialTheme.colors.copy(primary = Colors.Primary, primaryVariant = Colors.PrimaryDark, onPrimary = Color.White,
         secondary = Colors.Accent, secondaryVariant = Colors.Accent, onSecondary = Color.White)
+
+    val screenSize = PlatformUiFunctions.rememberScreenSize()
+
+    DI.uiState.screenSizeChanged(screenSize)
 
     var isInitialized by remember { mutableStateOf(false) }
 

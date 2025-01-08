@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.codinux.accounting.resources.*
-import net.codinux.accounting.ui.PlatformUiFunctions
+import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.composables.forms.*

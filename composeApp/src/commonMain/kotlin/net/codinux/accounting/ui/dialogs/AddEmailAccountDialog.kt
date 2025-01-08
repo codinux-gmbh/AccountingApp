@@ -6,7 +6,7 @@ import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.mail.model.MailAccountConfiguration
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.resources.*
-import net.codinux.accounting.ui.IoOrDefault
+import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.ui.composables.mail.AddEmailAccountDialogContent
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI

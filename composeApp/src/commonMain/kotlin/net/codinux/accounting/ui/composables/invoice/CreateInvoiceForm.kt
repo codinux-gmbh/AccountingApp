@@ -29,7 +29,7 @@ import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.copy
-import net.codinux.accounting.ui.IoOrDefault
+import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.ui.composables.forms.BooleanOption
 import net.codinux.accounting.ui.composables.forms.Select
 import net.codinux.accounting.ui.composables.invoice.model.*

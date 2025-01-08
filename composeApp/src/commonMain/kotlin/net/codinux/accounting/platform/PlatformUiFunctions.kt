@@ -1,4 +1,4 @@
-package net.codinux.accounting.ui
+package net.codinux.accounting.platform
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable

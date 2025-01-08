@@ -2,7 +2,7 @@ package net.codinux.accounting.ui.config
 
 import net.codinux.accounting.domain.invoice.service.CalculationService
 import net.codinux.accounting.domain.invoice.service.InvoiceService
-import net.codinux.accounting.ui.PlatformDependencies
+import net.codinux.accounting.platform.PlatformDependencies
 import net.codinux.accounting.ui.service.FormatUtil
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.reader.EInvoiceReader

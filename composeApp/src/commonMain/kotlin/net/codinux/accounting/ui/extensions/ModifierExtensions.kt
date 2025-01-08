@@ -9,7 +9,7 @@ import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import net.codinux.accounting.ui.PlatformUiFunctions
+import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.log.Log
 
 

@@ -1,4 +1,4 @@
-package net.codinux.accounting.ui
+package net.codinux.accounting.platform
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -7,7 +7,7 @@ import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.JvmMailService
 import net.codinux.accounting.domain.mail.service.MailService
-import net.codinux.accounting.platform.PlatformFileHandler
+import net.codinux.accounting.ui.AndroidContext
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.EmailsFetcher
 import net.codinux.invoicing.reader.EInvoiceReader

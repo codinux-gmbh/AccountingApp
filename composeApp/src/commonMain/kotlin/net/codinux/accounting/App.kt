@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.platform.Platform
 import net.codinux.accounting.platform.isIOS
-import net.codinux.accounting.ui.IoOrDefault
-import net.codinux.accounting.ui.PlatformUiFunctions
+import net.codinux.accounting.platform.IoOrDefault
+import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.screens.MainScreen

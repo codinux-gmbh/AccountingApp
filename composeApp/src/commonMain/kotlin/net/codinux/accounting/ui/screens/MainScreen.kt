@@ -5,9 +5,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isIOS
-import net.codinux.accounting.ui.PlatformUiFunctions
 import net.codinux.accounting.ui.appskeleton.BottomToolbar
 import net.codinux.accounting.ui.appskeleton.MainScreenFloatingActionButton
 import net.codinux.accounting.ui.composables.StateHandler

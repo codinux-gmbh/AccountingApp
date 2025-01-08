@@ -1,41 +1,39 @@
-package net.codinux.accounting.ui
+package net.codinux.accounting.platform
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.toComposeImageBitmap
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.state.ScreenSizeInfo
-import org.jetbrains.skia.Image
 
 actual object PlatformUiFunctions {
 
     actual fun createImageBitmap(imageBytes: ByteArray): ImageBitmap =
-        Image.makeFromEncoded(imageBytes).toComposeImageBitmap()
+        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size).asImageBitmap()
 
-    @OptIn(ExperimentalComposeUiApi::class)
+
     @Composable
     actual fun rememberScreenSize(): ScreenSizeInfo {
-        val density = LocalDensity.current
-        val config = LocalWindowInfo.current.containerSize
+        val config = LocalConfiguration.current
 
-        return remember(density, config) {
+        return remember(config) {
             ScreenSizeInfo(
-                heightDp = with(density) { config.height.toDp() },
-                widthDp = with(density) { config.width.toDp() }
+                heightDp = config.screenHeightDp.dp,
+                widthDp = config.screenWidthDp.dp
             )
         }
     }
+
 
     @Composable
     actual fun systemPaddings(): PaddingValues = PaddingValues(0.dp)
 
     actual fun addKeyboardVisibilityListener(onKeyboardVisibilityChanged: (Boolean) -> Unit) {
-        // no-op
+        // TODO: may implement, but currently only relevant for iOS
     }
 
 }

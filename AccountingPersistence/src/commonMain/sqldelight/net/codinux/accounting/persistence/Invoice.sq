@@ -1,0 +1,51 @@
+import kotlin.Boolean;
+
+
+CREATE TABLE IF NOT EXISTS CreateInvoiceSettings (
+    id INTEGER PRIMARY KEY,
+
+    lastCreatedInvoice TEXT,
+
+    selectedServiceDateOption TEXT NOT NULL,
+    selectedEInvoiceXmlFormat TEXT NOT NULL,
+    selectedCreateEInvoiceOption TEXT NOT NULL,
+    showGeneratedEInvoiceXml INTEGER AS Boolean NOT NULL,
+
+    lastXmlSaveDirectory TEXT,
+    lastPdfSaveDirectory TEXT,
+    lastOpenFileDirectory TEXT
+);
+
+
+getCreateInvoiceSettings:
+SELECT * FROM CreateInvoiceSettings WHERE id = 1;
+
+upsertCreateInvoiceSettings:
+INSERT OR REPLACE INTO CreateInvoiceSettings(
+    id,
+
+    lastCreatedInvoice,
+
+    selectedServiceDateOption,
+    selectedEInvoiceXmlFormat,
+    selectedCreateEInvoiceOption,
+    showGeneratedEInvoiceXml,
+
+    lastXmlSaveDirectory,
+    lastPdfSaveDirectory,
+    lastOpenFileDirectory
+)
+VALUES(
+    1,
+
+    ?,
+
+    ?,
+    ?,
+    ?,
+    ?,
+
+    ?,
+    ?,
+    ?
+);

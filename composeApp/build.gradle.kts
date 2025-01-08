@@ -92,19 +92,31 @@ kotlin {
             implementation(libs.kotlin.test)
         }
 
-        val desktopMain by getting
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.kotlinx.coroutines.swing)
+        val javaCommonMain by creating {
+            dependsOn(commonMain.get())
         }
+
+        val desktopMain by getting {
+            dependsOn(javaCommonMain)
+
+            dependencies {
+                implementation(compose.desktop.currentOs)
+                implementation(libs.kotlinx.coroutines.swing)
+            }
+        }
+
         val desktopTest by getting
         desktopTest.dependencies {
             implementation(libs.kotlin.test.junit)
         }
         
-        androidMain.dependencies {
-            implementation(compose.preview)
-            implementation(libs.androidx.activity.compose)
+        androidMain {
+            dependsOn(javaCommonMain)
+
+            dependencies {
+                implementation(compose.preview)
+                implementation(libs.androidx.activity.compose)
+            }
         }
     }
 }

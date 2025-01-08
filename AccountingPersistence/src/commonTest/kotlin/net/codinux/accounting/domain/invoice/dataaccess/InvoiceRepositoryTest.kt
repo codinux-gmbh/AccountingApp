@@ -9,6 +9,7 @@ import net.codinux.accounting.domain.AccountingPersistence
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
+import net.codinux.accounting.domain.test.InvoiceAsserter
 import net.codinux.accounting.domain.testdata.DataGenerator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import kotlin.test.Test
@@ -33,9 +34,8 @@ class InvoiceRepositoryTest {
 
 
         assertThat(result).isNotNull()
-        assertThat(result!!.lastCreatedInvoice).isEqualTo(settings.lastCreatedInvoice)
 
-        assertThat(result.selectedServiceDateOption).isEqualByComparingTo(settings.selectedServiceDateOption)
+        assertThat(result!!.selectedServiceDateOption).isEqualByComparingTo(settings.selectedServiceDateOption)
         assertThat(result.selectedEInvoiceXmlFormat).isEqualByComparingTo(settings.selectedEInvoiceXmlFormat)
         assertThat(result.selectedCreateEInvoiceOption).isEqualByComparingTo(settings.selectedCreateEInvoiceOption)
         assertThat(result.showGeneratedEInvoiceXml).isEqualTo(settings.showGeneratedEInvoiceXml)
@@ -43,6 +43,8 @@ class InvoiceRepositoryTest {
         assertThat(result.lastXmlSaveDirectory).isEqualTo(settings.lastXmlSaveDirectory)
         assertThat(result.lastPdfSaveDirectory).isEqualTo(settings.lastPdfSaveDirectory)
         assertThat(result.lastOpenFileDirectory).isEqualTo(settings.lastOpenFileDirectory)
+
+        InvoiceAsserter.assertInvoice(result.lastCreatedInvoice)
     }
 
 }

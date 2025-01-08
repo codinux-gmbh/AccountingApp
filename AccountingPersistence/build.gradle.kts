@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 
 plugins {
@@ -8,6 +7,8 @@ plugins {
     alias(libs.plugins.androidLibrary)
 
     alias(libs.plugins.sqldelight)
+
+    alias(libs.plugins.kotlinxSerialization)
 }
 
 
@@ -52,6 +53,8 @@ kotlin {
                 api(libs.invoicing)
 
                 api(libs.kmpBase)
+
+                implementation(libs.kotlinxSerializationJson)
 
                 api(libs.klf)
             }

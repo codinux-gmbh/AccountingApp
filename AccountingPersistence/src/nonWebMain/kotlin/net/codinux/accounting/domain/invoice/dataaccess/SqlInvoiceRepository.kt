@@ -3,6 +3,7 @@ package net.codinux.accounting.domain.invoice.dataaccess
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
+import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.log.logger
@@ -10,7 +11,7 @@ import kotlin.enums.EnumEntries
 import kotlin.js.JsName
 import kotlin.jvm.JvmName
 
-class SqlInvoiceRepository(database: AccountingDb) : InvoiceRepository2 {
+class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonSerializer) : InvoiceRepository2 {
 
     private val queries = database.invoiceQueries
 
@@ -22,7 +23,7 @@ class SqlInvoiceRepository(database: AccountingDb) : InvoiceRepository2 {
                                            selectedServiceDateOption, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
                                            lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenFileDirectory ->
             HistoricalInvoiceData(
-                null, // TODO: map invoice JSON
+                lastCreatedInvoice?.let { serializer.decode(it) },
 
                 mapToEnum(selectedServiceDateOption, ServiceDateOptions.entries),
                 mapToEnum(selectedEInvoiceXmlFormat, EInvoiceXmlFormat.entries),
@@ -36,8 +37,10 @@ class SqlInvoiceRepository(database: AccountingDb) : InvoiceRepository2 {
 
     override suspend fun saveHistoricalData(data: HistoricalInvoiceData) {
         queries.upsertCreateInvoiceSettings(
-            null, // TODO: map invoice to JSON
-            mapEnum(data.selectedServiceDateOption), mapEnum(data.selectedEInvoiceXmlFormat), mapEnum(data.selectedCreateEInvoiceOption), data.showGeneratedEInvoiceXml,
+            serializer.encodeNullable(data.lastCreatedInvoice),
+
+            mapEnum(data.selectedServiceDateOption), mapEnum(data.selectedEInvoiceXmlFormat),
+            mapEnum(data.selectedCreateEInvoiceOption), data.showGeneratedEInvoiceXml,
 
             data.lastXmlSaveDirectory, data.lastPdfSaveDirectory, data.lastOpenFileDirectory
         )

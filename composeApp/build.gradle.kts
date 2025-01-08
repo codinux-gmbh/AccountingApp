@@ -69,6 +69,8 @@ kotlin {
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
 
+            implementation(libs.kmpBase)
+
             implementation(libs.klf)
 
             // UI

@@ -9,6 +9,8 @@ jackson = "2.18.2"
 
 kI18n = "0.7.0"
 
+kmpBase = "1.1.0"
+
 klf = "1.8.0"
 
 
@@ -40,6 +42,8 @@ jackson-kotlin = { group = "com.fasterxml.jackson.module", name = "jackson-modul
 jackson-datetime = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310", version.ref = "jackson" }
 
 kI18n = { module = "net.codinux.i18n:k-i18n", version.ref = "kI18n"}
+
+kmpBase = { module = "net.codinux.kotlin:kmp-base", version.ref = "kmpBase"}
 
 klf = { group = "net.codinux.log", name = "klf", version.ref = "klf" }
 

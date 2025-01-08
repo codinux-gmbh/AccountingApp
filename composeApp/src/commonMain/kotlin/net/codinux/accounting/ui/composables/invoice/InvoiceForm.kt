@@ -13,6 +13,8 @@ import net.codinux.accounting.ui.composables.invoice.model.*
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
+import net.codinux.kotlin.Platform
+import net.codinux.kotlin.PlatformType
 
 @Composable
 fun InvoiceForm() {
@@ -35,7 +37,7 @@ fun InvoiceForm() {
 
     ComposableOfMaxWidth {
         Column(Modifier.fillMaxWidth()) {
-            if (Platform.isIOS == false) {
+            if (Platform.type != PlatformType.iOS) {
                 TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.CodinuxSecondaryColor)
             }
 

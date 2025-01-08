@@ -11,7 +11,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import net.codinux.accounting.platform.*
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.CloseButton
 import net.codinux.accounting.ui.composables.HeaderText
@@ -21,6 +20,8 @@ import net.codinux.accounting.ui.extensions.applyPlatformSpecificPaddingIf
 import net.codinux.accounting.ui.extensions.copy
 import net.codinux.accounting.ui.composables.forms.*
 import net.codinux.accounting.ui.config.DI
+import net.codinux.kotlin.Platform
+import net.codinux.kotlin.PlatformType
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

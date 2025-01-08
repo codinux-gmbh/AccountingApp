@@ -8,13 +8,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.codinux.accounting.platform.Platform
-import net.codinux.accounting.platform.isIOS
 import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.screens.MainScreen
+import net.codinux.kotlin.Platform
+import net.codinux.kotlin.PlatformType
 import net.codinux.log.LoggerFactory
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -53,7 +53,7 @@ fun App() {
                 DI.init()
             }
 
-            if (Platform.isIOS) {
+            if (Platform.type == PlatformType.iOS) {
                 PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
                     DI.uiState.isKeyboardVisible.value = visible
                 }

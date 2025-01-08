@@ -62,8 +62,6 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":AccountingPersistence"))
-
             implementation(libs.kI18n)
 
             implementation(libs.jackson.kotlin)
@@ -88,12 +86,28 @@ kotlin {
             implementation(libs.kotlin.test)
         }
 
-        val javaCommonMain by creating {
+
+
+        val nonWebMain by creating {
             dependsOn(commonMain.get())
+
+            dependencies {
+                implementation(project(":AccountingPersistence"))
+            }
+        }
+        val nonWebTest by creating {
+            dependsOn(commonTest.get())
+        }
+
+        val javaCommonMain by creating {
+            dependsOn(nonWebMain)
 
             dependencies {
                 implementation(libs.epcQrCode)
             }
+        }
+        val javaCommonTest by creating {
+            dependsOn(nonWebTest)
         }
 
         val desktopMain by getting {
@@ -105,9 +119,12 @@ kotlin {
             }
         }
 
-        val desktopTest by getting
-        desktopTest.dependencies {
-            implementation(libs.kotlin.test.junit)
+        val desktopTest by getting {
+            dependsOn(javaCommonTest)
+
+            dependencies {
+                implementation(libs.kotlin.test.junit)
+            }
         }
         
         androidMain {
@@ -118,10 +135,22 @@ kotlin {
                 implementation(libs.androidx.activity.compose)
             }
         }
-
-        iosMain.dependencies {
-            implementation(libs.epcQrCode)
+        val androidUnitTest by getting {
+            dependsOn(javaCommonTest)
         }
+
+
+        iosMain {
+            dependsOn(nonWebMain)
+
+            dependencies {
+                implementation(libs.epcQrCode)
+            }
+        }
+        iosTest {
+            dependsOn(nonWebTest)
+        }
+
     }
 }
 

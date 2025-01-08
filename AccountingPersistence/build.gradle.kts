@@ -30,18 +30,6 @@ kotlin {
 //        }
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser {
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    useFirefoxHeadless()
-                }
-            }
-        }
-    }
-
 
     listOf(
         iosX64(),

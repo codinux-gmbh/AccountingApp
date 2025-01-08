@@ -8,10 +8,10 @@ import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.JvmMailService
 import net.codinux.accounting.domain.mail.service.MailService
-import net.codinux.accounting.ui.AndroidContext
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.EmailsFetcher
 import net.codinux.invoicing.reader.EInvoiceReader
+import net.codinux.kotlin.android.AndroidContext
 import java.io.File
 import kotlin.coroutines.CoroutineContext
 

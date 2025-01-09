@@ -15,24 +15,13 @@ import net.codinux.accounting.domain.testdata.DataGenerator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import kotlin.test.Test
 
-class InvoiceRepositoryTest {
+class JsonInvoiceRepositoryTest {
 
-    private val sqlInvoiceRepository = AccountingPersistence.invoiceRepository
+    private val underTest = JsonInvoiceRepository(AccountingPersistence.serializer, InMemoryDataStorage())
 
-    private val jsonInvoiceRepository = JsonInvoiceRepository(AccountingPersistence.serializer, InMemoryDataStorage())
-
-
-    @Test
-    fun sql_SaveAndRetrieveCreateInvoiceSettings() = runTest {
-        saveAndRetrieveCreateInvoiceSettings(sqlInvoiceRepository)
-    }
 
     @Test
     fun json_SaveAndRetrieveCreateInvoiceSettings() = runTest {
-        saveAndRetrieveCreateInvoiceSettings(jsonInvoiceRepository)
-    }
-
-    private suspend fun saveAndRetrieveCreateInvoiceSettings(repository: InvoiceRepository) {
         val settings = HistoricalInvoiceData(
             DataGenerator.createInvoice(),
             ServiceDateOptions.ServicePeriodMonth, EInvoiceXmlFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
@@ -40,9 +29,9 @@ class InvoiceRepositoryTest {
         )
 
 
-        repository.saveHistoricalData(settings)
+        underTest.saveHistoricalData(settings)
 
-        val result = repository.loadHistoricalData()
+        val result = underTest.loadHistoricalData()
 
 
         assertThat(result).isNotNull()

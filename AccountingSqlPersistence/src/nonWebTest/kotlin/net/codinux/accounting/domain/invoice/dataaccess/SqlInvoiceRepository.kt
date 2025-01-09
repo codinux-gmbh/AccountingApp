@@ -5,27 +5,22 @@ import assertk.assertions.isEqualByComparingTo
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import kotlinx.coroutines.test.runTest
-import net.codinux.accounting.domain.persistence.AccountingPersistence
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
-import net.codinux.accounting.domain.serialization.InMemoryDataStorage
+import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
 import net.codinux.accounting.domain.test.InvoiceAsserter
 import net.codinux.accounting.domain.testdata.DataGenerator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import kotlin.test.Test
 
-class InvoiceRepositoryTest {
+class SqlInvoiceRepository {
 
-    private val jsonInvoiceRepository = JsonInvoiceRepository(AccountingPersistence.serializer, InMemoryDataStorage())
+    private val underTest = AccountingSqlPersistence.sqlInvoiceRepository
 
 
     @Test
-    fun json_SaveAndRetrieveCreateInvoiceSettings() = runTest {
-        saveAndRetrieveCreateInvoiceSettings(jsonInvoiceRepository)
-    }
-
-    private suspend fun saveAndRetrieveCreateInvoiceSettings(repository: InvoiceRepository) {
+    fun sql_SaveAndRetrieveCreateInvoiceSettings() = runTest {
         val settings = HistoricalInvoiceData(
             DataGenerator.createInvoice(),
             ServiceDateOptions.ServicePeriodMonth, EInvoiceXmlFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
@@ -33,9 +28,9 @@ class InvoiceRepositoryTest {
         )
 
 
-        repository.saveHistoricalData(settings)
+        underTest.saveHistoricalData(settings)
 
-        val result = repository.loadHistoricalData()
+        val result = underTest.loadHistoricalData()
 
 
         assertThat(result).isNotNull()

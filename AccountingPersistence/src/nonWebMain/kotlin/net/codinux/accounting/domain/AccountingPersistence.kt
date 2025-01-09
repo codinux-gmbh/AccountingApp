@@ -13,7 +13,7 @@ object AccountingPersistence {
 
     private val database = AccountingDb(sqlDriver)
 
-    private val serializer = JsonSerializer()
+    val serializer = JsonSerializer()
 
 
     val invoiceRepository: InvoiceRepository2 = SqlInvoiceRepository(database, serializer)

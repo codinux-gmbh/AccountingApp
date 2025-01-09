@@ -1,8 +1,10 @@
 package net.codinux.accounting.domain.invoice.model
 
+import kotlinx.serialization.Serializable
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
 
+@Serializable
 class HistoricalInvoiceData(
     val lastCreatedInvoice: Invoice? = null,
 

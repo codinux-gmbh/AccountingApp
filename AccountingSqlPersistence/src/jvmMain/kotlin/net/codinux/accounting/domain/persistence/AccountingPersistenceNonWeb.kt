@@ -10,7 +10,7 @@ import java.io.File
 internal actual object AccountingPersistenceNonWeb {
 
     actual fun createSqlDriver(dbName: String, schema: SqlSchema<QueryResult.AsyncValue<Unit>>, version: Long): SqlDriver {
-        val dbDir = File(determineDataDirectory(), "db").also { it.mkdirs() }
+        val dbDir = JvmPersistence.databaseDirectory
         val databaseFile = File(dbDir, dbName)
 
         return JdbcSqliteDriver("jdbc:sqlite:${databaseFile.path}").also { driver ->
@@ -22,10 +22,6 @@ internal actual object AccountingPersistenceNonWeb {
                 schema.migrate(driver, schema.version, version)
             }
         }
-    }
-
-    private fun determineDataDirectory(): File {
-        return File("./data") // TODO
     }
 
 }

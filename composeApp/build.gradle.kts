@@ -36,7 +36,14 @@ kotlin {
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "AccountingFramework"
-            isStatic = true
+            isStatic = false
+        }
+
+        // don't know why but this has to be added here, adding it in BankingPersistence.build.gradle.kt does not work
+        iosTarget.binaries.forEach { binary ->
+            if (binary is org.jetbrains.kotlin.gradle.plugin.mpp.Framework) {
+                binary.linkerOpts.add("-lsqlite3") // without this we get a lot of "Undefined symbol _co_touchlab_sqliter..." errors in Xcode
+            }
         }
     }
 

@@ -17,8 +17,15 @@ import kotlin.test.Test
 
 class InvoiceRepositoryTest {
 
+    private val sqlInvoiceRepository = AccountingPersistence.invoiceRepository
+
     private val jsonInvoiceRepository = JsonInvoiceRepository(AccountingPersistence.serializer, InMemoryDataStorage())
 
+
+    @Test
+    fun sql_SaveAndRetrieveCreateInvoiceSettings() = runTest {
+        saveAndRetrieveCreateInvoiceSettings(sqlInvoiceRepository)
+    }
 
     @Test
     fun json_SaveAndRetrieveCreateInvoiceSettings() = runTest {

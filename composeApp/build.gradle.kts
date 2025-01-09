@@ -62,10 +62,20 @@ kotlin {
     
     sourceSets {
         commonMain.dependencies {
+            implementation(project(":AccountingPersistence"))
+
+            implementation(libs.invoicing)
+
             implementation(libs.kI18n)
+
+            implementation(libs.kmpBase)
+
+            implementation(libs.kotlinxSerializationJson)
 
             implementation(libs.jackson.kotlin)
             implementation(libs.jackson.datetime)
+
+            implementation(libs.klf)
 
             // UI
             implementation(libs.filekit)
@@ -92,7 +102,7 @@ kotlin {
             dependsOn(commonMain.get())
 
             dependencies {
-                implementation(project(":AccountingPersistence"))
+                implementation(project(":AccountingSqlPersistence"))
             }
         }
         val nonWebTest by creating {

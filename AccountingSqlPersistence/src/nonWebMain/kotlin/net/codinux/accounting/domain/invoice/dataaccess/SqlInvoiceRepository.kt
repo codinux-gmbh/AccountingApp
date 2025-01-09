@@ -1,9 +1,5 @@
 package net.codinux.accounting.domain.invoice.dataaccess
 
-import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
-import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
-import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.log.logger

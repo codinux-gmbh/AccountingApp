@@ -1,4 +1,4 @@
-package net.codinux.accounting.ui
+package net.codinux.accounting.platform
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -25,7 +25,7 @@ actual object PlatformUiFunctions {
 
     @OptIn(ExperimentalForeignApi::class)
     @Composable
-    actual fun rememberScreenSizeInfo(): ScreenSizeInfo {
+    actual fun rememberScreenSize(): ScreenSizeInfo {
         val density = LocalDensity.current
         val screenBounds: CGRect = UIScreen.mainScreen.bounds.useContents { this }
         val screenWidth = screenBounds.size.width

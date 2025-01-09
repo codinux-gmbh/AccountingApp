@@ -92,6 +92,8 @@ kotlin {
             dependsOn(nonWebMain)
 
             dependencies {
+                implementation(libs.appDirs)
+
                 implementation(libs.sqldelight.sqlite.driver)
             }
         }

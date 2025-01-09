@@ -7,15 +7,15 @@ import net.codinux.accounting.domain.serialization.JsonSerializer
 class JsonInvoiceRepository(private val serializer: JsonSerializer, private val dateStorage: DataStorage) : InvoiceRepository {
 
     companion object {
-        private val Key = "CreateInvoiceSettings"
+        private const val StorageKey = "CreateInvoiceSettings"
     }
 
 
     override suspend fun loadHistoricalData(): HistoricalInvoiceData? =
-        dateStorage.get(Key)?.let { serializer.decode(it) }
+        dateStorage.get(StorageKey)?.let { serializer.decode(it) }
 
     override suspend fun saveHistoricalData(data: HistoricalInvoiceData) {
-        dateStorage.store(Key, serializer.encode(data))
+        dateStorage.store(StorageKey, serializer.encode(data))
     }
 
 }

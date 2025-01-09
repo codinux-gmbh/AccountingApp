@@ -1,4 +1,4 @@
-package net.codinux.accounting.domain
+package net.codinux.accounting.domain.persistence
 
 import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.QueryResult

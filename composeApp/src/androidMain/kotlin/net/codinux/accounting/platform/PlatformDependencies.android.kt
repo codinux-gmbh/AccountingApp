@@ -8,6 +8,7 @@ import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.JvmMailService
 import net.codinux.accounting.domain.mail.service.MailService
+import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.EmailsFetcher
 import net.codinux.invoicing.reader.EInvoiceReader
@@ -40,7 +41,7 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
 
     actual val fileHandler = PlatformFileHandler(applicationContext, invoicesDirectory)
 
-    actual val invoiceRepository = InvoiceRepository(jsonMapper, databaseDirectory)
+    actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 
     actual val epcQrCodeGenerator: EpcQrCodeGenerator? = EpcQrCodeGenerator()
 

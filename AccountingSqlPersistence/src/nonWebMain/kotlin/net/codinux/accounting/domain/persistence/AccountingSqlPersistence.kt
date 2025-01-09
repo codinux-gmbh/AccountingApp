@@ -1,11 +1,10 @@
-package net.codinux.accounting.domain
+package net.codinux.accounting.domain.persistence
 
-import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository2
+import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.dataaccess.SqlInvoiceRepository
-import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
 
-object AccountingPersistence {
+object AccountingSqlPersistence {
 
     private val schema = AccountingDb.Schema
 
@@ -13,9 +12,9 @@ object AccountingPersistence {
 
     private val database = AccountingDb(sqlDriver)
 
-    val serializer = JsonSerializer()
+    private val serializer = AccountingPersistence.serializer
 
 
-    val invoiceRepository: InvoiceRepository2 = SqlInvoiceRepository(database, serializer)
+    val sqlInvoiceRepository: InvoiceRepository = SqlInvoiceRepository(database, serializer)
 
 }

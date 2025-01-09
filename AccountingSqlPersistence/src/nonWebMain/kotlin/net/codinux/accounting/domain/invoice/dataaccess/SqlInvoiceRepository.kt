@@ -1,13 +1,16 @@
 package net.codinux.accounting.domain.invoice.dataaccess
 
+import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
+import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
+import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.log.logger
 import kotlin.enums.EnumEntries
-import kotlin.js.JsName
 import kotlin.jvm.JvmName
 
-class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonSerializer) : InvoiceRepository2 {
+class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonSerializer) : InvoiceRepository {
 
     private val queries = database.invoiceQueries
 
@@ -69,14 +72,12 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
 
 
     @JvmName("mapIntNullable")
-    @JsName("mapIntNullable")
     private fun mapInt(int: Int?): Long? =
         int?.let { mapInt(it) }
 
     private fun mapInt(int: Int): Long = int.toLong()
 
     @JvmName("mapToIntNullable")
-    @JsName("mapToIntNullable")
     private fun mapToInt(int: Long?): Int? =
         int?.let { mapToInt(it) }
 

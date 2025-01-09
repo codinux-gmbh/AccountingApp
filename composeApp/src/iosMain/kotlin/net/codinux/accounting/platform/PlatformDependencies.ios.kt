@@ -1,10 +1,11 @@
-package net.codinux.accounting.ui
+package net.codinux.accounting.platform
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.service.MailService
+import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.reader.EInvoiceReader
@@ -16,7 +17,7 @@ actual class PlatformDependencies actual constructor(
 ) {
     actual val fileHandler: PlatformFileHandler = PlatformFileHandler()
 
-    actual val invoiceRepository: InvoiceRepository = InvoiceRepository()
+    actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 
     actual val epcQrCodeGenerator: EpcQrCodeGenerator? = EpcQrCodeGenerator()
 

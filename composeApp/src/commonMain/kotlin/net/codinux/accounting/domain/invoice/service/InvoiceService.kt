@@ -2,7 +2,6 @@ package net.codinux.accounting.domain.invoice.service
 
 import io.github.vinceglb.filekit.core.PlatformFile
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
-import net.codinux.accounting.domain.common.model.localization.DisplayName
 import net.codinux.accounting.domain.common.model.localization.PrioritizedDisplayNames
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository

@@ -49,7 +49,7 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
+fun CreateInvoiceForm(historicalData: HistoricalInvoiceData?, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
 
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
@@ -69,15 +69,15 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData, details: InvoiceDet
     }
 
 
-    var selectedEInvoiceXmlFormat by remember(historicalData) { mutableStateOf(historicalData.selectedEInvoiceXmlFormat) }
+    var selectedEInvoiceXmlFormat by remember(historicalData) { mutableStateOf(historicalData?.selectedEInvoiceXmlFormat ?: EInvoiceXmlFormat.FacturX) }
 
-    var selectedCreateEInvoiceOption by remember(historicalData) { mutableStateOf(historicalData.selectedCreateEInvoiceOption) }
+    var selectedCreateEInvoiceOption by remember(historicalData) { mutableStateOf(historicalData?.selectedCreateEInvoiceOption ?: CreateEInvoiceOptions.XmlOnly) }
 
     var isCreatingEInvoice by remember { mutableStateOf(false) }
 
     var generatedEInvoiceXml by remember { mutableStateOf<String?>(null) }
 
-    var showGeneratedEInvoiceXml by remember(historicalData) { mutableStateOf(historicalData.showGeneratedEInvoiceXml) }
+    var showGeneratedEInvoiceXml by remember(historicalData) { mutableStateOf(historicalData?.showGeneratedEInvoiceXml ?: true) }
 
 
     val clipboardManager = LocalClipboardManager.current

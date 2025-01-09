@@ -3,7 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import net.codinux.accounting.platform.*
+import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.ComposableOfMaxWidth
@@ -21,16 +21,18 @@ fun InvoiceForm() {
 
     val historicalData = DI.uiState.historicalInvoiceData.collectAsState().value
 
+    val lastCreatedInvoice = historicalData?.lastCreatedInvoice
 
-    val details by remember(historicalData) { mutableStateOf(InvoiceDetailsViewModel(historicalData.lastCreatedInvoice?.details)) }
 
-    val supplier by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.supplier)) }
+    val details by remember(historicalData) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
 
-    val customer by remember(historicalData) { mutableStateOf(PartyViewModel(historicalData.lastCreatedInvoice?.customer)) }
+    val supplier by remember(historicalData) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.supplier)) }
 
-    val descriptionOfServices by remember(historicalData) { mutableStateOf(DescriptionOfServicesViewModel(historicalData.selectedServiceDateOption, historicalData.lastCreatedInvoice)) }
+    val customer by remember(historicalData) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.customer)) }
 
-    val bankDetails by remember(historicalData) { mutableStateOf(BankDetailsViewModel(historicalData.lastCreatedInvoice?.supplier?.bankDetails)) }
+    val descriptionOfServices by remember(historicalData) { mutableStateOf(DescriptionOfServicesViewModel(historicalData?.selectedServiceDateOption ?: ServiceDateOptions.ServiceDate, lastCreatedInvoice)) }
+
+    val bankDetails by remember(historicalData) { mutableStateOf(BankDetailsViewModel(lastCreatedInvoice?.supplier?.bankDetails)) }
 
     val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 

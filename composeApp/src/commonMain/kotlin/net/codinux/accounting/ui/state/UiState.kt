@@ -29,7 +29,7 @@ class UiState : ViewModel() {
     val selectedMainScreenTab = MutableStateFlow(MainScreenTab.ViewInvoice)
 
 
-    val historicalInvoiceData = MutableStateFlow(HistoricalInvoiceData())
+    val historicalInvoiceData = MutableStateFlow<HistoricalInvoiceData?>(null)
 
 
     val emails = EmailsUiState()

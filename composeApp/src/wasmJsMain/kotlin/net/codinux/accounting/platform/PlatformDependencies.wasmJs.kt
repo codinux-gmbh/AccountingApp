@@ -5,6 +5,7 @@ import net.codinux.accounting.domain.invoice.dataaccess.*
 import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.domain.persistence.AccountingPersistence
+import net.codinux.accounting.domain.serialization.LocalStorageDataStorage
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.reader.EInvoiceReader
 import kotlin.coroutines.CoroutineContext
@@ -13,7 +14,7 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
 
     actual val fileHandler = PlatformFileHandler()
 
-    actual val invoiceRepository: InvoiceRepository = AccountingPersistence.jsonInvoiceRepository
+    actual val invoiceRepository: InvoiceRepository = JsonInvoiceRepository(AccountingPersistence.serializer, LocalStorageDataStorage())
 
     actual val epcQrCodeGenerator: EpcQrCodeGenerator? = null
 

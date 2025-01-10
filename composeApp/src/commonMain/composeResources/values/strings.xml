@@ -159,7 +159,7 @@
     <string name="error_message_no_application_found_to_show_file_of_type">No app found to show file of type %1$s</string>
     <string name="error_message_created_invoice_cannot_be_displayed">Created invoice cannot be displayed</string>
     <string name="error_message_could_not_load_invoices">Could not load invoice data from database</string>
-    <string name="error_message_could_not_persist_historical_invoice_data">Could not persist historical invoice data</string>
+    <string name="error_message_could_not_persist_create_invoice_settings">Could not persist create invoice settings</string>
 
 
     <!-- PDF invoice data -->

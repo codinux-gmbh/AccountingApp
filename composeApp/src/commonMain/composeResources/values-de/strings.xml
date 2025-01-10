@@ -159,7 +159,7 @@
     <string name="error_message_no_application_found_to_show_file_of_type">Keine App gefunden um Datei von Typ %1$s anzuzeigen.</string>
     <string name="error_message_created_invoice_cannot_be_displayed">Erstellte E-Rechnung kann nicht angezeigt werden</string>
     <string name="error_message_could_not_load_invoices">Rechnungsdaten konnten nicht aus der Datenbank geladen werden</string>
-    <string name="error_message_could_not_persist_historical_invoice_data">Rechnungs-Autovervollständigungsdaten konnten nicht gespeichert werden</string>
+    <string name="error_message_could_not_persist_create_invoice_settings">Rechnungs-Autovervollständigungsdaten konnten nicht gespeichert werden</string>
 
 
     <!-- PDF invoice data -->

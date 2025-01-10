@@ -5,7 +5,7 @@ import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
 
 @Serializable
-class HistoricalInvoiceData(
+class CreateInvoiceSettings(
     val lastCreatedInvoice: Invoice? = null,
 
     val selectedServiceDateOption: ServiceDateOptions = ServiceDateOptions.ServiceDate,

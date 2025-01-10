@@ -74,7 +74,7 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
 
 
     init {
-        validate() // on initialize check if entered historical data are enough so that data is valid
+        validate() // on initialize check if entered CreateInvoiceSettings are enough so that data is valid
     }
 
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import net.codinux.accounting.domain.common.model.error.ApplicationError
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.ui.tabs.MainScreenTab
 import org.jetbrains.compose.resources.StringResource
 
@@ -26,10 +26,10 @@ class UiState : ViewModel() {
     val isKeyboardVisible = MutableStateFlow(false)
 
 
-    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.ViewInvoice)
+    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.CreateInvoice)
 
 
-    val historicalInvoiceData = MutableStateFlow<HistoricalInvoiceData?>(null)
+    val createInvoiceSettings = MutableStateFlow<CreateInvoiceSettings?>(null)
 
 
     val emails = EmailsUiState()

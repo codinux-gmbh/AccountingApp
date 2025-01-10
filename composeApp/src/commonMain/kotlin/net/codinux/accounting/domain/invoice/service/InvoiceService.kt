@@ -5,7 +5,7 @@ import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.common.model.localization.PrioritizedDisplayNames
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.extensions.parent
@@ -92,9 +92,9 @@ class InvoiceService(
 
     suspend fun init() {
         try {
-            uiState.historicalInvoiceData.value = getHistoricalInvoiceData()
+            uiState.createInvoiceSettings.value = getCreateInvoiceSettings()
         } catch (e: Throwable) {
-            log.error(e) { "Could not initialize persisted invoice data" }
+            log.error(e) { "Could not initialize persisted CreateInvoiceSettings" }
 
             uiState.errorOccurred(ErroneousAction.LoadFromDatabase, Res.string.error_message_could_not_load_invoices, e)
         }
@@ -109,21 +109,21 @@ class InvoiceService(
 
 
     // errors handled by init()
-    private suspend fun getHistoricalInvoiceData(): HistoricalInvoiceData {
-        return repository.loadHistoricalData()
-            ?: HistoricalInvoiceData()
+    private suspend fun getCreateInvoiceSettings(): CreateInvoiceSettings {
+        return repository.loadCreateInvoiceSettings()
+            ?: CreateInvoiceSettings()
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun saveHistoricalInvoiceData(data: HistoricalInvoiceData) {
+    suspend fun saveCreateInvoiceSettings(settings: CreateInvoiceSettings) {
         try {
-            repository.saveHistoricalData(data)
+            repository.saveCreateInvoiceSettings(settings)
 
-            uiState.historicalInvoiceData.value = data
+            uiState.createInvoiceSettings.value = settings
         } catch (e: Throwable) {
-            log.error(e) { "Could not persist historical invoice data" }
+            log.error(e) { "Could not persist CreateInvoiceSettings" }
 
-            uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_historical_invoice_data, e)
+            uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_create_invoice_settings, e)
         }
     }
 

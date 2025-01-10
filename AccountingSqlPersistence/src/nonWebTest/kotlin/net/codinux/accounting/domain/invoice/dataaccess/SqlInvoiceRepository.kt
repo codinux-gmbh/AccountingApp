@@ -6,7 +6,7 @@ import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import kotlinx.coroutines.test.runTest
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
 import net.codinux.accounting.domain.test.InvoiceAsserter
@@ -21,16 +21,16 @@ class SqlInvoiceRepository {
 
     @Test
     fun sql_SaveAndRetrieveCreateInvoiceSettings() = runTest {
-        val settings = HistoricalInvoiceData(
+        val settings = CreateInvoiceSettings(
             DataGenerator.createInvoice(),
             ServiceDateOptions.ServicePeriodMonth, EInvoiceXmlFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
             "/path1", "/path2", "/path3"
         )
 
 
-        underTest.saveHistoricalData(settings)
+        underTest.saveCreateInvoiceSettings(settings)
 
-        val result = underTest.loadHistoricalData()
+        val result = underTest.loadCreateInvoiceSettings()
 
 
         assertThat(result).isNotNull()

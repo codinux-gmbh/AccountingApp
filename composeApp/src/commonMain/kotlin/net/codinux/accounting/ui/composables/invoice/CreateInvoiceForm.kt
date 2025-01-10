@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.copy
 import net.codinux.accounting.platform.IoOrDefault
@@ -49,7 +49,7 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun CreateInvoiceForm(historicalData: HistoricalInvoiceData?, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
+fun CreateInvoiceForm(settings: CreateInvoiceSettings?, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
 
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
@@ -69,15 +69,15 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData?, details: InvoiceDe
     }
 
 
-    var selectedEInvoiceXmlFormat by remember(historicalData) { mutableStateOf(historicalData?.selectedEInvoiceXmlFormat ?: EInvoiceXmlFormat.FacturX) }
+    var selectedEInvoiceXmlFormat by remember(settings) { mutableStateOf(settings?.selectedEInvoiceXmlFormat ?: EInvoiceXmlFormat.FacturX) }
 
-    var selectedCreateEInvoiceOption by remember(historicalData) { mutableStateOf(historicalData?.selectedCreateEInvoiceOption ?: CreateEInvoiceOptions.XmlOnly) }
+    var selectedCreateEInvoiceOption by remember(settings) { mutableStateOf(settings?.selectedCreateEInvoiceOption ?: CreateEInvoiceOptions.XmlOnly) }
 
     var isCreatingEInvoice by remember { mutableStateOf(false) }
 
     var generatedEInvoiceXml by remember { mutableStateOf<String?>(null) }
 
-    var showGeneratedEInvoiceXml by remember(historicalData) { mutableStateOf(historicalData?.showGeneratedEInvoiceXml ?: true) }
+    var showGeneratedEInvoiceXml by remember(settings) { mutableStateOf(settings?.showGeneratedEInvoiceXml ?: true) }
 
 
     val clipboardManager = LocalClipboardManager.current
@@ -152,7 +152,7 @@ fun CreateInvoiceForm(historicalData: HistoricalInvoiceData?, details: InvoiceDe
 
                 isCreatingEInvoice = false
 
-                invoiceService.saveHistoricalInvoiceData(HistoricalInvoiceData(invoice, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
+                invoiceService.saveCreateInvoiceSettings(CreateInvoiceSettings(invoice, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create or save eInvoice" }
 

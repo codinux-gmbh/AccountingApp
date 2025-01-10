@@ -93,7 +93,7 @@ class PartyViewModel(party: Party?) : ViewModel() {
 
 
     init {
-        validate() // on initialize check if entered historical data are enough so that data is valid
+        validate() // on initialize check if last entered create invoice settings are enough so that data is valid
     }
 
 }

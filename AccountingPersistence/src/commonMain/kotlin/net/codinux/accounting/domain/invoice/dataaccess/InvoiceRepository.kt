@@ -1,11 +1,11 @@
 package net.codinux.accounting.domain.invoice.dataaccess
 
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 
 interface InvoiceRepository {
 
-    suspend fun loadHistoricalData(): HistoricalInvoiceData?
+    suspend fun loadCreateInvoiceSettings(): CreateInvoiceSettings?
 
-    suspend fun saveHistoricalData(data: HistoricalInvoiceData)
+    suspend fun saveCreateInvoiceSettings(settings: CreateInvoiceSettings)
 
 }

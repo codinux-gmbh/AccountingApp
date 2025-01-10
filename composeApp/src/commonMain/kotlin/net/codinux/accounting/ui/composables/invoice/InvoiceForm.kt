@@ -19,20 +19,20 @@ import net.codinux.kotlin.PlatformType
 @Composable
 fun InvoiceForm() {
 
-    val historicalData = DI.uiState.historicalInvoiceData.collectAsState().value
+    val settings = DI.uiState.createInvoiceSettings.collectAsState().value
 
-    val lastCreatedInvoice = historicalData?.lastCreatedInvoice
+    val lastCreatedInvoice = settings?.lastCreatedInvoice
 
 
-    val details by remember(historicalData) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
+    val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
 
-    val supplier by remember(historicalData) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.supplier)) }
+    val supplier by remember(settings) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.supplier)) }
 
-    val customer by remember(historicalData) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.customer)) }
+    val customer by remember(settings) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.customer)) }
 
-    val descriptionOfServices by remember(historicalData) { mutableStateOf(DescriptionOfServicesViewModel(historicalData?.selectedServiceDateOption ?: ServiceDateOptions.ServiceDate, lastCreatedInvoice)) }
+    val descriptionOfServices by remember(settings) { mutableStateOf(DescriptionOfServicesViewModel(settings?.selectedServiceDateOption ?: ServiceDateOptions.ServiceDate, lastCreatedInvoice)) }
 
-    val bankDetails by remember(historicalData) { mutableStateOf(BankDetailsViewModel(lastCreatedInvoice?.supplier?.bankDetails)) }
+    val bankDetails by remember(settings) { mutableStateOf(BankDetailsViewModel(lastCreatedInvoice?.supplier?.bankDetails)) }
 
     val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
@@ -64,7 +64,7 @@ fun InvoiceForm() {
             }
 
             Section(Res.string.create) {
-                CreateInvoiceForm(historicalData, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
+                CreateInvoiceForm(settings, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
             }
 
             AvoidCutOffAtEndOfScreen()

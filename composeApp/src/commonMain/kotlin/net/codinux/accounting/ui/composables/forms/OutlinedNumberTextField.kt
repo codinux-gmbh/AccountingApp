@@ -49,7 +49,7 @@ fun <T : Any> OutlinedNumberTextField(
     onEnterPressed: (() -> Unit)? = null
 ) {
 
-    // remember(value) is required so that on changes to value, e.g. after restoring historical data, the init method gets called again
+    // remember(value) is required so that on changes to value, e.g. after restoring CreateInvoiceSettings, the init method gets called again
     var enteredValue by remember(value) { mutableStateOf(if (value is BigDecimal) value.toPlainString() else (value?.toString() ?: "")) }
 
     // optionally starts with a minus, followed by any number of numbers. Optionally ends with a decimal separator and any number of numbers.

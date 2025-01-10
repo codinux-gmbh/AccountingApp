@@ -1,7 +1,7 @@
 package net.codinux.accounting.domain.invoice.dataaccess
 
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
-import net.codinux.accounting.domain.invoice.model.HistoricalInvoiceData
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
@@ -17,11 +17,11 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
     private val log by logger()
 
 
-    override suspend fun loadHistoricalData(): HistoricalInvoiceData? =
+    override suspend fun loadCreateInvoiceSettings(): CreateInvoiceSettings? =
         queries.getCreateInvoiceSettings { _, lastCreatedInvoice,
                                            selectedServiceDateOption, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
                                            lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenFileDirectory ->
-            HistoricalInvoiceData(
+            CreateInvoiceSettings(
                 lastCreatedInvoice?.let { serializer.decode(it) },
 
                 mapToEnum(selectedServiceDateOption, ServiceDateOptions.entries),
@@ -34,14 +34,14 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
         }.executeAsOneOrNull()
 
 
-    override suspend fun saveHistoricalData(data: HistoricalInvoiceData) {
+    override suspend fun saveCreateInvoiceSettings(settings: CreateInvoiceSettings) {
         queries.upsertCreateInvoiceSettings(
-            serializer.encodeNullable(data.lastCreatedInvoice),
+            serializer.encodeNullable(settings.lastCreatedInvoice),
 
-            mapEnum(data.selectedServiceDateOption), mapEnum(data.selectedEInvoiceXmlFormat),
-            mapEnum(data.selectedCreateEInvoiceOption), data.showGeneratedEInvoiceXml,
+            mapEnum(settings.selectedServiceDateOption), mapEnum(settings.selectedEInvoiceXmlFormat),
+            mapEnum(settings.selectedCreateEInvoiceOption), settings.showGeneratedEInvoiceXml,
 
-            data.lastXmlSaveDirectory, data.lastPdfSaveDirectory, data.lastOpenFileDirectory
+            settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory
         )
     }
 

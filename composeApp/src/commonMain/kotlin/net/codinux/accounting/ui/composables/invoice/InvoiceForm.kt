@@ -3,7 +3,6 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.ComposableOfMaxWidth
@@ -21,7 +20,7 @@ fun InvoiceForm() {
 
     val settings = DI.uiState.createInvoiceSettings.collectAsState().value
 
-    val lastCreatedInvoice = settings?.lastCreatedInvoice
+    val lastCreatedInvoice = settings.lastCreatedInvoice
 
 
     val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
@@ -30,7 +29,7 @@ fun InvoiceForm() {
 
     val customer by remember(settings) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.customer)) }
 
-    val descriptionOfServices by remember(settings) { mutableStateOf(DescriptionOfServicesViewModel(settings?.selectedServiceDateOption ?: ServiceDateOptions.ServiceDate, lastCreatedInvoice)) }
+    val descriptionOfServices by remember(settings) { mutableStateOf(DescriptionOfServicesViewModel(settings.selectedServiceDateOption, lastCreatedInvoice)) }
 
     val bankDetails by remember(settings) { mutableStateOf(BankDetailsViewModel(lastCreatedInvoice?.supplier?.bankDetails)) }
 

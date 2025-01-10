@@ -32,7 +32,7 @@ class UiState : ViewModel() {
 
     val viewInvoiceSettings = MutableStateFlow(ViewInvoiceSettings())
 
-    val createInvoiceSettings = MutableStateFlow<CreateInvoiceSettings?>(null)
+    val createInvoiceSettings = MutableStateFlow(CreateInvoiceSettings())
 
 
     val emails = EmailsUiState()

@@ -49,7 +49,7 @@ private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun CreateInvoiceForm(settings: CreateInvoiceSettings?, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
+fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
 
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
@@ -69,15 +69,15 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings?, details: InvoiceDetailsV
     }
 
 
-    var selectedEInvoiceXmlFormat by remember(settings) { mutableStateOf(settings?.selectedEInvoiceXmlFormat ?: EInvoiceXmlFormat.FacturX) }
+    var selectedEInvoiceXmlFormat by remember(settings) { mutableStateOf(settings.selectedEInvoiceXmlFormat) }
 
-    var selectedCreateEInvoiceOption by remember(settings) { mutableStateOf(settings?.selectedCreateEInvoiceOption ?: CreateEInvoiceOptions.XmlOnly) }
+    var selectedCreateEInvoiceOption by remember(settings) { mutableStateOf(settings.selectedCreateEInvoiceOption) }
 
     var isCreatingEInvoice by remember { mutableStateOf(false) }
 
     var generatedEInvoiceXml by remember { mutableStateOf<String?>(null) }
 
-    var showGeneratedEInvoiceXml by remember(settings) { mutableStateOf(settings?.showGeneratedEInvoiceXml ?: true) }
+    var showGeneratedEInvoiceXml by remember(settings) { mutableStateOf(settings.showGeneratedEInvoiceXml) }
 
 
     val clipboardManager = LocalClipboardManager.current
@@ -152,7 +152,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings?, details: InvoiceDetailsV
 
                 isCreatingEInvoice = false
 
-                invoiceService.saveCreateInvoiceSettings(CreateInvoiceSettings(invoice, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
+                invoiceService.saveCreateInvoiceSettings(CreateInvoiceSettings(invoice, settings.showAllSupplierFields, settings.showAllCustomerFields, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create or save eInvoice" }
 

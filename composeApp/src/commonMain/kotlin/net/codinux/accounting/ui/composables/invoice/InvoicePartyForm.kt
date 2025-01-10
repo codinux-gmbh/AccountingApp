@@ -1,10 +1,13 @@
 package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,7 +49,16 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
     val countryDisplayNames = service.getCountryDisplayNamesSorted()
 
 
-    InvoiceTextField(Res.string.name, name, true) { viewModel.nameChanged(it) }
+    var showAllFields by remember { mutableStateOf(false) }
+
+
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        InvoiceTextField(Res.string.name, name, true, Modifier.weight(1f).padding(end = 6.dp)) { viewModel.nameChanged(it) }
+
+        IconButton({ showAllFields = !showAllFields }, Modifier.width(48.dp).height(Style.TextFieldsHeight)) {
+            Icon(if (showAllFields) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, "Toggle show all or only most common Invoice Party fields")
+        }
+    }
 
     InvoiceTextField(Res.string.address, address, true) { viewModel.addressChanged(it) }
 
@@ -64,11 +76,19 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         }
     }
 
-    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-        InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
+    if (showAllFields == false) {
+        Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+            InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
 
-        InvoiceTextField(Res.string.phone, phone, modifier = Modifier.weight(0.5f).padding(start = 4.dp), keyboardType = KeyboardType.Phone) { viewModel.phoneChanged(it) }
+            InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(start = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
+        }
+    } else {
+        Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+            InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
+
+            InvoiceTextField(Res.string.phone, phone, modifier = Modifier.weight(0.5f).padding(start = 4.dp), keyboardType = KeyboardType.Phone) { viewModel.phoneChanged(it) }
+        }
+
+        InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
     }
-
-    InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
 }

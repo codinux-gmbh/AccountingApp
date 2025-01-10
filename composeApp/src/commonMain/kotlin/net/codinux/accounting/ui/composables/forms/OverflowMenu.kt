@@ -25,11 +25,7 @@ fun OverflowMenu(items: Collection<MenuItem>, buttonWidth: Dp = 48.dp, buttonHei
             onClick = { showMenu = true },
             modifier = Modifier.width(buttonWidth).height(buttonHeight).align(Alignment.Center)
         ) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "Show menu with more options",
-                tint = iconColor
-            )
+            Icon(Icons.Default.MoreVert, "Show menu with more options", tint = iconColor)
         }
 
         DropdownMenu(

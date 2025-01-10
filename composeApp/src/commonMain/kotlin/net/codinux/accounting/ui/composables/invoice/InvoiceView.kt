@@ -20,6 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
+import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
@@ -37,6 +39,8 @@ import net.codinux.invoicing.reader.ReadEInvoicePdfResult
 import org.jetbrains.compose.resources.stringResource
 
 
+private val invoiceService = DI.invoiceService
+
 private val formatUtil = DI.formatUtil
 
 @Composable
@@ -45,6 +49,8 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
     val invoice = mapInvoiceResult.invoice
 
     val xml = invoiceXml ?: readPdfResult?.attachmentExtractionResult?.invoiceXml
+
+    val settings = DI.uiState.viewInvoiceSettings.collectAsState().value
 
 
     SelectionContainer(Modifier.fillMaxSize()) {
@@ -87,11 +93,11 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
                 invoice.totals?.let { TotalAmountsView(invoice.details.currency, it, true) }
             }
 
-            invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice) }
+            invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice, settings) }
 
             if (xml != null) {
                 Section(Res.string.invoice_file_details) {
-                    InvoiceFileDetails(xml, readPdfResult)
+                    InvoiceFileDetails(xml, readPdfResult, settings)
                 }
             }
 
@@ -135,12 +141,21 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem, currency
 }
 
 @Composable
-private fun BankDetailsView(details: BankDetails, invoice: Invoice) {
+private fun BankDetailsView(details: BankDetails, invoice: Invoice, settings: ViewInvoiceSettings) {
     val accountHolderName = details.accountHolderName ?: invoice.supplier.name
 
-    val eqcQrCode by remember { mutableStateOf(DI.invoiceService.generateEpcQrCode(details, invoice, accountHolderName)) }
+    val eqcQrCode by remember { mutableStateOf(invoiceService.generateEpcQrCode(details, invoice, accountHolderName)) }
 
-    var showEpcQrCode by remember { mutableStateOf(false) } // TODO: save selection
+    var showEpcQrCode by remember { mutableStateOf(settings.showEpcQrCode) }
+
+    val coroutineScope = rememberCoroutineScope()
+
+
+    fun saveViewInvoiceSettings() {
+        coroutineScope.launch {
+            invoiceService.saveViewInvoiceSettings(settings)
+        }
+    }
 
 
     Section(Res.string.bank_details) {
@@ -154,7 +169,11 @@ private fun BankDetailsView(details: BankDetails, invoice: Invoice) {
 
         eqcQrCode?.let { eqcQrCode ->
             Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding)) {
-                BooleanOption(Res.string.show_epc_qr_code, showEpcQrCode) { showEpcQrCode = it }
+                BooleanOption(Res.string.show_epc_qr_code, showEpcQrCode) {
+                    showEpcQrCode = it
+                    settings.showEpcQrCode = it
+                    saveViewInvoiceSettings()
+                }
             }
 
             if (showEpcQrCode) {
@@ -167,20 +186,33 @@ private fun BankDetailsView(details: BankDetails, invoice: Invoice) {
 }
 
 @Composable
-private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult?) {
+private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult?, settings: ViewInvoiceSettings) {
 
-    var showInvoiceXml by remember { mutableStateOf(false) }
+    var showInvoiceXml by remember { mutableStateOf(settings.showInvoiceXml) }
 
-    var showPdfDetails by remember { mutableStateOf(false) }
+    var showPdfDetails by remember { mutableStateOf(settings.showPdfDetails) }
 
     val clipboardManager = LocalClipboardManager.current
+
+    val coroutineScope = rememberCoroutineScope()
+
+
+    fun saveViewInvoiceSettings() {
+        coroutineScope.launch {
+            invoiceService.saveViewInvoiceSettings(settings)
+        }
+    }
 
 
     if (readPdfResult != null) {
         Row(Modifier.padding(top = Style.FormVerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
             Spacer(Modifier.weight(1f))
 
-            BooleanOption(Res.string.show_pdf_details, showPdfDetails) { showPdfDetails = it }
+            BooleanOption(Res.string.show_pdf_details, showPdfDetails) {
+                showPdfDetails = it
+                settings.showPdfDetails = it
+                saveViewInvoiceSettings()
+            }
         }
 
         if (showPdfDetails) {
@@ -208,7 +240,11 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
 
         Spacer(Modifier.weight(1f))
 
-        BooleanOption(Res.string.show_xml, showInvoiceXml) { showInvoiceXml = it }
+        BooleanOption(Res.string.show_xml, showInvoiceXml) {
+            showInvoiceXml = it
+            settings.showInvoiceXml = it
+            saveViewInvoiceSettings()
+        }
     }
 
     if (showInvoiceXml) {

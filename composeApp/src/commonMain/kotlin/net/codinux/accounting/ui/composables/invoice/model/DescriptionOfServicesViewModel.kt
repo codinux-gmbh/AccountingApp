@@ -32,4 +32,14 @@ class DescriptionOfServicesViewModel(selectedServiceDateOption: ServiceDateOptio
         _items.value = (items.value + newItem).toMutableList() // create a new list, otherwise .collectAsState() will not fire
     }
 
+    fun removeItem(item: InvoiceItemViewModel) {
+        _items.value = items.value.toMutableList()
+            .apply {
+                remove(item)
+                if (this.isEmpty()) {
+                    add(InvoiceItemViewModel())
+                }
+            }
+    }
+
 }

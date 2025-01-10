@@ -74,6 +74,8 @@ object Colors {
 
     val MainBackgroundColor = Zinc100
 
+    val BodyTextColor = Zinc700
+
     val PlaceholderTextColor = Colors.Zinc500
 
     val ZebraStripesColor = Zinc100_50

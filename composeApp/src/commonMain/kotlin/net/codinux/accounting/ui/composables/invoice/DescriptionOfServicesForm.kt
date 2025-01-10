@@ -78,7 +78,7 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
         }
 
         invoiceItems.forEach { item ->
-            InvoiceItemForm(item)
+            InvoiceItemForm(item) { viewModel.removeItem(item) }
         }
 
         TotalAmountsView(currency, totalAmounts, false)

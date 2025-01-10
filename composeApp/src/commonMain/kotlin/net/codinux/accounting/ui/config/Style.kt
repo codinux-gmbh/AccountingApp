@@ -1,5 +1,6 @@
 package net.codinux.accounting.ui.config
 
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -10,9 +11,9 @@ object Style {
     val ToolbarButtonFontSize = 12.sp
 
 
-    // had to apply it per tab, not commonly in MainScreen, as otherwise tab's scroll container
-    // would always show some border with background color on top and bottom
     val ScreenVerticalPadding = 10.dp
+
+    val MainScreenTabHorizontalPadding = 10.dp
 
 
     val DialogTitleTextColor: Color = Colors.Zinc500
@@ -32,6 +33,9 @@ object Style {
     val SectionTopPadding = 12.dp
 
     val LabelledValueFontSize = 15.sp
+
+
+    val TextFieldsHeight = TextFieldDefaults.MinHeight
 
 
     val DividerThickness = 1.dp

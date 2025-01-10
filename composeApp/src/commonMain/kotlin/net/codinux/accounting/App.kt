@@ -19,7 +19,7 @@ import net.codinux.log.LoggerFactory
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 private val typography = Typography(
-    body1 = TextStyle(fontSize = 14.sp, color = Colors.Zinc700)
+    body1 = TextStyle(fontSize = 14.sp, color = Colors.BodyTextColor)
 )
 
 @Composable

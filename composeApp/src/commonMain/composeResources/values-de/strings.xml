@@ -20,6 +20,7 @@
     <string name="copy">Kopieren</string>
     <string name="copy_xml">XML kopieren</string>
     <string name="create">Erstellen</string>
+    <string name="remove">Entfernen</string>
 
     <string name="e_invoice">E-Rechnung</string>
 

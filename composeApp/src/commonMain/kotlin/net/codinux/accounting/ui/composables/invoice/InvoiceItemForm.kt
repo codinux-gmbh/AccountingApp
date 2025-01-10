@@ -2,8 +2,11 @@ package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,16 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.resources.*
-import net.codinux.accounting.ui.composables.forms.OutlinedNumberTextField
-import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
-import net.codinux.accounting.ui.composables.forms.Select
+import net.codinux.accounting.ui.composables.forms.*
+import net.codinux.accounting.ui.composables.forms.model.MenuItem
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.ImeNext
 import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.codes.UnitOfMeasure
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 
 
 private val unitsOfMeasure by lazy { DI.invoiceService.getUnitOfMeasureDisplayNamesSorted() }
@@ -29,9 +33,11 @@ private val SmallerFieldsWidth = 92.dp
 
 private val FieldsSpace = 4.dp
 
+private val ItemPadding = 4.dp
+
 
 @Composable
-fun InvoiceItemForm(item: InvoiceItemViewModel) {
+fun InvoiceItemForm(item: InvoiceItemViewModel, removeItemClicked: () -> Unit) {
 
     val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
@@ -49,10 +55,12 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
     Spacer(Modifier.height(6.dp))
 
     RoundedCornersCard(Modifier.fillMaxWidth(), cornerSize = 8.dp, backgroundColor = Colors.Zinc100) {
-        Column(Modifier.fillMaxWidth().padding(all = 4.dp)) {
+        Column(Modifier.fillMaxWidth().padding(all = ItemPadding)) {
             if (isCompactScreen) { // on small screens we use two lines
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    InvoiceTextField(Res.string.name, name, true) { item.nameChanged(it) }
+                    InvoiceTextField(Res.string.name, name, true, Modifier.weight(1f)) { item.nameChanged(it) }
+
+                    InvoiceItemMenu(removeItemClicked)
                 }
 
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -93,6 +101,8 @@ fun InvoiceItemForm(item: InvoiceItemViewModel) {
                     Column(Modifier.padding(start = FieldsSpace).width(SmallerFieldsWidth)) {
                         InvoiceItemNumberTextField(Res.string.vat_rate, vatRate, true) { item.vatRateChanged(it) }
                     }
+
+                    InvoiceItemMenu(removeItemClicked)
                 }
             }
         }
@@ -122,4 +132,20 @@ private fun SelectUnit(value: UnitOfMeasure?, onValueChanged: (UnitOfMeasure?) -
         Text(unit?.let { "${unit.displayName} (${unit.value.symbol ?: unit.value.code})" } ?: "")
     }
 
+}
+
+@Composable
+private fun InvoiceItemMenu(removeItemClicked: () -> Unit) {
+    OverflowMenu(additionalMenuPadding = ItemPadding + Style.MainScreenTabHorizontalPadding + ItemPadding, items = listOf(
+        MenuItem({ DeleteMenuItem() }, removeItemClicked )
+    ))
+}
+
+@Composable
+private fun DeleteMenuItem() {
+    Row(Modifier) {
+        Icon(Icons.Outlined.Delete, "Remove Invoice Item", modifier = Modifier)
+
+        Text(stringResource(Res.string.remove), Modifier.padding(start = 4.dp))
+    }
 }

@@ -10,6 +10,7 @@ import net.codinux.accounting.ui.appskeleton.MainScreenFloatingActionButton
 import net.codinux.accounting.ui.composables.StateHandler
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
+import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.tabs.*
 
 private val uiState = DI.uiState
@@ -28,7 +29,7 @@ fun MainScreen() {
         floatingActionButton = { MainScreenFloatingActionButton(uiState, selectedTab) },
     ) { scaffoldPadding -> // scaffoldPadding contains e.g. the size of the bottom toolbar
 
-        Column(Modifier.fillMaxSize().paddingForKeyboardState(isKeyboardVisible, scaffoldPadding).padding(horizontal = 10.dp)) {
+        Column(Modifier.fillMaxSize().paddingForKeyboardState(isKeyboardVisible, scaffoldPadding).padding(horizontal = Style.MainScreenTabHorizontalPadding)) {
             // when removing tabs from composition tree, then tab's state, e.g. entered data, gets
             // deleted when switching tabs. To retain data don't remove tab from composition tree but
             // make it invisible by e.g. shrinking tab height to 0 dp

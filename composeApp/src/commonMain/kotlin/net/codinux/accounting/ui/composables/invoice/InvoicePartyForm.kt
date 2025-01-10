@@ -5,8 +5,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ExpandLess
-import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,7 +52,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         InvoiceTextField(Res.string.name, name, true, Modifier.weight(1f).padding(end = 6.dp)) { viewModel.nameChanged(it) }
 
         IconButton({ showAllFieldsChanged(!showAllFields) }, Modifier.width(48.dp).height(Style.TextFieldsHeight)) {
-            Icon(if (showAllFields) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, "Toggle show all or only most common Invoice Party fields")
+            Icon(if (showAllFields) Icons.Outlined.Remove else Icons.Outlined.Add, "Toggle show all or only most common Invoice Party fields")
         }
     }
 

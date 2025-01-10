@@ -146,12 +146,12 @@ private fun BankDetailsView(details: BankDetails, invoice: Invoice, settings: Vi
 
     val eqcQrCode by remember { mutableStateOf(invoiceService.generateEpcQrCode(details, invoice, accountHolderName)) }
 
-    var showEpcQrCode by remember { mutableStateOf(settings.showEpcQrCode) }
+    val showEpcQrCode = settings.showEpcQrCode
 
     val coroutineScope = rememberCoroutineScope()
 
 
-    fun saveViewInvoiceSettings() {
+    fun saveViewInvoiceSettings(settings: ViewInvoiceSettings) {
         coroutineScope.launch {
             invoiceService.saveViewInvoiceSettings(settings)
         }
@@ -170,9 +170,7 @@ private fun BankDetailsView(details: BankDetails, invoice: Invoice, settings: Vi
         eqcQrCode?.let { eqcQrCode ->
             Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding)) {
                 BooleanOption(Res.string.show_epc_qr_code, showEpcQrCode) {
-                    showEpcQrCode = it
-                    settings.showEpcQrCode = it
-                    saveViewInvoiceSettings()
+                    saveViewInvoiceSettings(settings.copy(showEpcQrCode = it))
                 }
             }
 
@@ -188,16 +186,16 @@ private fun BankDetailsView(details: BankDetails, invoice: Invoice, settings: Vi
 @Composable
 private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult?, settings: ViewInvoiceSettings) {
 
-    var showInvoiceXml by remember { mutableStateOf(settings.showInvoiceXml) }
+    val showInvoiceXml = settings.showInvoiceXml
 
-    var showPdfDetails by remember { mutableStateOf(settings.showPdfDetails) }
+    val showPdfDetails = settings.showPdfDetails
 
     val clipboardManager = LocalClipboardManager.current
 
     val coroutineScope = rememberCoroutineScope()
 
 
-    fun saveViewInvoiceSettings() {
+    fun saveViewInvoiceSettings(settings: ViewInvoiceSettings) {
         coroutineScope.launch {
             invoiceService.saveViewInvoiceSettings(settings)
         }
@@ -209,9 +207,7 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
             Spacer(Modifier.weight(1f))
 
             BooleanOption(Res.string.show_pdf_details, showPdfDetails) {
-                showPdfDetails = it
-                settings.showPdfDetails = it
-                saveViewInvoiceSettings()
+                saveViewInvoiceSettings(settings.copy(showPdfDetails = it))
             }
         }
 
@@ -241,9 +237,7 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
         Spacer(Modifier.weight(1f))
 
         BooleanOption(Res.string.show_xml, showInvoiceXml) {
-            showInvoiceXml = it
-            settings.showInvoiceXml = it
-            saveViewInvoiceSettings()
+            saveViewInvoiceSettings(settings.copy(showInvoiceXml = it))
         }
     }
 

@@ -49,3 +49,39 @@ VALUES(
     ?,
     ?
 );
+
+
+
+CREATE TABLE IF NOT EXISTS ViewInvoiceSettings (
+    id INTEGER PRIMARY KEY,
+
+    lastSelectedInvoiceFile TEXT,
+
+    showInvoiceXml INTEGER AS Boolean NOT NULL,
+    showPdfDetails INTEGER AS Boolean NOT NULL,
+    showEpcQrCode INTEGER AS Boolean NOT NULL
+);
+
+
+getViewInvoiceSettings:
+SELECT * FROM ViewInvoiceSettings WHERE id = 1;
+
+upsertViewInvoiceSettings:
+INSERT OR REPLACE INTO ViewInvoiceSettings(
+    id,
+
+    lastSelectedInvoiceFile,
+
+    showInvoiceXml,
+    showPdfDetails,
+    showEpcQrCode
+)
+VALUES(
+    1,
+
+    ?,
+
+    ?,
+    ?,
+    ?
+);

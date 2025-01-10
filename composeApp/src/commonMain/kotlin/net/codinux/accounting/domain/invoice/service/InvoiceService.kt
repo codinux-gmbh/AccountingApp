@@ -6,6 +6,7 @@ import net.codinux.accounting.domain.common.model.localization.PrioritizedDispla
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.extensions.parent
@@ -92,9 +93,11 @@ class InvoiceService(
 
     suspend fun init() {
         try {
+            uiState.viewInvoiceSettings.value = getViewInvoiceSettings()
+
             uiState.createInvoiceSettings.value = getCreateInvoiceSettings()
         } catch (e: Throwable) {
-            log.error(e) { "Could not initialize persisted CreateInvoiceSettings" }
+            log.error(e) { "Could not initialize persisted InvoiceSettings" }
 
             uiState.errorOccurred(ErroneousAction.LoadFromDatabase, Res.string.error_message_could_not_load_invoices, e)
         }
@@ -109,12 +112,31 @@ class InvoiceService(
 
 
     // errors handled by init()
+    private suspend fun getViewInvoiceSettings(): ViewInvoiceSettings {
+        return repository.loadViewInvoiceSettings()
+            ?: ViewInvoiceSettings()
+    }
+
+    suspend fun saveViewInvoiceSettings(settings: ViewInvoiceSettings) {
+        try {
+            repository.saveViewInvoiceSettings(settings)
+
+            uiState.viewInvoiceSettings.value = settings
+        } catch (e: Throwable) {
+            log.error(e) { "Could not persist ViewInvoiceSettings" }
+
+            // don't show an error message in this case to user, it's not important enough
+//            uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_create_invoice_settings, e)
+        }
+    }
+
+
+    // errors handled by init()
     private suspend fun getCreateInvoiceSettings(): CreateInvoiceSettings {
         return repository.loadCreateInvoiceSettings()
             ?: CreateInvoiceSettings()
     }
 
-    // errors handled by InvoiceForm.createEInvoice()
     suspend fun saveCreateInvoiceSettings(settings: CreateInvoiceSettings) {
         try {
             repository.saveCreateInvoiceSettings(settings)

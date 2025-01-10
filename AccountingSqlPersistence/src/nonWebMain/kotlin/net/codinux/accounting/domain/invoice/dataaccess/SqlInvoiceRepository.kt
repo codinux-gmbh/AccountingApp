@@ -1,8 +1,6 @@
 package net.codinux.accounting.domain.invoice.dataaccess
 
-import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
-import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
-import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
+import net.codinux.accounting.domain.invoice.model.*
 import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
 import net.codinux.invoicing.model.EInvoiceXmlFormat
@@ -15,6 +13,22 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
     private val queries = database.invoiceQueries
 
     private val log by logger()
+
+
+    override suspend fun loadViewInvoiceSettings(): ViewInvoiceSettings? =
+        queries.getViewInvoiceSettings { _, lastSelectedInvoiceFile, showInvoiceXml, showPdfDetails, showEpcQrCode ->
+            ViewInvoiceSettings(lastSelectedInvoiceFile, showInvoiceXml, showPdfDetails, showEpcQrCode)
+        }.executeAsOneOrNull()
+
+    override suspend fun saveViewInvoiceSettings(settings: ViewInvoiceSettings) {
+        queries.upsertViewInvoiceSettings(
+            settings.lastSelectedInvoiceFile,
+
+            settings.showInvoiceXml,
+            settings.showPdfDetails,
+            settings.showEpcQrCode
+        )
+    }
 
 
     override suspend fun loadCreateInvoiceSettings(): CreateInvoiceSettings? =

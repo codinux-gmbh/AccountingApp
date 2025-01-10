@@ -27,6 +27,8 @@ import net.codinux.accounting.ui.extensions.parent
 import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
 
+private val invoiceService = DI.invoiceService
+
 @Composable
 fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?, String?) -> Unit) {
 
@@ -34,23 +36,30 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
 
     var lastExtractedEInvoice by remember { mutableStateOf<ReadEInvoiceFileResult?>(null) }
 
+    val settings = DI.uiState.viewInvoiceSettings.collectAsState().value
+
+    val initialDirectory = lastSelectedInvoiceFile?.parent ?: settings.lastSelectedInvoiceFile?.let { DI.fileHandler.fromPath(it).parent }
+
     val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
     val coroutineScope = rememberCoroutineScope()
 
 
     val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf", "xml")),
-        stringResource(Res.string.select_e_invoice_file), lastSelectedInvoiceFile?.parent) { selectedFile ->
+        stringResource(Res.string.select_e_invoice_file), initialDirectory) { selectedFile ->
         selectedFile?.let {
             lastSelectedInvoiceFile = it
+            settings.lastSelectedInvoiceFile = it.path
 
             coroutineScope.launch(Dispatchers.IoOrDefault) {
-                lastExtractedEInvoice = DI.invoiceService.readEInvoice(it)
+                lastExtractedEInvoice = invoiceService.readEInvoice(it)
 
                 lastExtractedEInvoice?.let { selectedInvoice ->
                     val xml = if (selectedFile.extension.lowercase() == "xml") selectedFile.readBytes().decodeToString() else null
                     selectedInvoiceChanged(selectedInvoice, xml)
                 }
+
+                invoiceService.saveViewInvoiceSettings(settings)
             }
         }
     }

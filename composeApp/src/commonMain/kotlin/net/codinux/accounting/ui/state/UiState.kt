@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import net.codinux.accounting.domain.common.model.error.ApplicationError
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.ui.tabs.MainScreenTab
 import org.jetbrains.compose.resources.StringResource
 
@@ -28,6 +29,8 @@ class UiState : ViewModel() {
 
     val selectedMainScreenTab = MutableStateFlow(MainScreenTab.CreateInvoice)
 
+
+    val viewInvoiceSettings = MutableStateFlow(ViewInvoiceSettings())
 
     val createInvoiceSettings = MutableStateFlow<CreateInvoiceSettings?>(null)
 

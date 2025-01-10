@@ -5,8 +5,11 @@ import net.codinux.invoicing.model.EInvoiceXmlFormat
 import net.codinux.invoicing.model.Invoice
 
 @Serializable
-class CreateInvoiceSettings(
+data class CreateInvoiceSettings(
     val lastCreatedInvoice: Invoice? = null,
+
+    var showAllSupplierFields: Boolean = false,
+    var showAllCustomerFields: Boolean = false,
 
     val selectedServiceDateOption: ServiceDateOptions = ServiceDateOptions.ServiceDate,
     val selectedEInvoiceXmlFormat: EInvoiceXmlFormat = EInvoiceXmlFormat.FacturX,

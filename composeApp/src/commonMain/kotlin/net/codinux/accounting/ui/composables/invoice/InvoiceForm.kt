@@ -3,6 +3,8 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.launch
+import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
 import net.codinux.accounting.ui.composables.ComposableOfMaxWidth
@@ -21,6 +23,15 @@ fun InvoiceForm() {
     val settings = DI.uiState.createInvoiceSettings.collectAsState().value
 
     val lastCreatedInvoice = settings.lastCreatedInvoice
+
+    val coroutineScope = rememberCoroutineScope()
+
+
+    fun invoiceDataChanged(settings: CreateInvoiceSettings) {
+        coroutineScope.launch {
+            DI.invoiceService.saveCreateInvoiceSettings(settings)
+        }
+    }
 
 
     val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
@@ -47,11 +58,15 @@ fun InvoiceForm() {
             }
 
             Section(Res.string.supplier) {
-                InvoicePartyForm(supplier, true, isCompactScreen)
+                InvoicePartyForm(supplier, true, isCompactScreen, settings.showAllSupplierFields) {
+                    invoiceDataChanged(settings.copy(showAllSupplierFields = it))
+                }
             }
 
             Section(Res.string.customer) {
-                InvoicePartyForm(customer, false, isCompactScreen)
+                InvoicePartyForm(customer, false, isCompactScreen, settings.showAllCustomerFields) {
+                    invoiceDataChanged(settings.copy(showAllCustomerFields = it))
+                }
             }
 
             Section(Res.string.description_of_services) {

@@ -25,7 +25,7 @@ private val service = DI.invoiceService
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
-fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactScreen: Boolean) {
+fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactScreen: Boolean, showAllFields: Boolean, showAllFieldsChanged: (Boolean) -> Unit) {
 
     val name by viewModel.name.collectAsState()
 
@@ -49,13 +49,10 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
     val countryDisplayNames = service.getCountryDisplayNamesSorted()
 
 
-    var showAllFields by remember { mutableStateOf(false) }
-
-
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         InvoiceTextField(Res.string.name, name, true, Modifier.weight(1f).padding(end = 6.dp)) { viewModel.nameChanged(it) }
 
-        IconButton({ showAllFields = !showAllFields }, Modifier.width(48.dp).height(Style.TextFieldsHeight)) {
+        IconButton({ showAllFieldsChanged(!showAllFields) }, Modifier.width(48.dp).height(Style.TextFieldsHeight)) {
             Icon(if (showAllFields) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore, "Toggle show all or only most common Invoice Party fields")
         }
     }

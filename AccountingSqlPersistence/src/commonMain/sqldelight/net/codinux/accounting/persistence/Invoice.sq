@@ -6,6 +6,9 @@ CREATE TABLE IF NOT EXISTS CreateInvoiceSettings (
 
     lastCreatedInvoice TEXT,
 
+    showAllSupplierFields INTEGER AS Boolean NOT NULL,
+    showAllCustomerFields INTEGER AS Boolean NOT NULL,
+
     selectedServiceDateOption TEXT NOT NULL,
     selectedEInvoiceXmlFormat TEXT NOT NULL,
     selectedCreateEInvoiceOption TEXT NOT NULL,
@@ -26,6 +29,9 @@ INSERT OR REPLACE INTO CreateInvoiceSettings(
 
     lastCreatedInvoice,
 
+    showAllSupplierFields,
+    showAllCustomerFields,
+
     selectedServiceDateOption,
     selectedEInvoiceXmlFormat,
     selectedCreateEInvoiceOption,
@@ -38,6 +44,9 @@ INSERT OR REPLACE INTO CreateInvoiceSettings(
 VALUES(
     1,
 
+    ?,
+
+    ?,
     ?,
 
     ?,

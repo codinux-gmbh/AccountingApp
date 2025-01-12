@@ -19,7 +19,6 @@ import net.codinux.accounting.ui.composables.invoice.model.InvoiceItemViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
-import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.TotalAmounts
 import org.jetbrains.compose.resources.stringResource
 
@@ -72,8 +71,10 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
 
             Spacer(Modifier.weight(1f))
 
-            TextButton({ viewModel.itemAdded(InvoiceItemViewModel()) }, contentPadding = PaddingValues(0.dp)) {
-                Icon(Icons.Outlined.Add, "Add invoice item", Modifier.width(48.dp).fillMaxHeight(), Colors.HighlightedControlColor)
+            TextButton({ viewModel.itemAdded(InvoiceItemViewModel()) }, Modifier.width(48.dp), contentPadding = PaddingValues(0.dp)) {
+                Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.End) {
+                    Icon(Icons.Outlined.Add, "Add invoice item", Modifier.fillMaxHeight(), Colors.HighlightedControlColor)
+                }
             }
         }
 

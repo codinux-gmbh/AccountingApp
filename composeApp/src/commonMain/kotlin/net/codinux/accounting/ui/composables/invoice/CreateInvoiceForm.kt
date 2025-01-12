@@ -163,7 +163,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
 
     if (isValid == false) {
-        Row(Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 6.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().padding(top = 12.dp, bottom = 6.dp).padding(horizontal = 12.dp), Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(Res.string.validation_message_create_invoice_not_all_required_fields_have_been_filled_out), color = MaterialTheme.colors.error, textAlign = TextAlign.Center)
         }
     }

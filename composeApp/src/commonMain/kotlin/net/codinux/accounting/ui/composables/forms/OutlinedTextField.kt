@@ -44,8 +44,8 @@ fun OutlinedTextField(
 //    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors() // TODO: merge
 ) {
     val textFieldColors = TextFieldDefaults.outlinedTextFieldColors(
-        focusedBorderColor = Colors.CodinuxSecondaryColor,
-        focusedLabelColor = Colors.CodinuxSecondaryColor,
+        focusedBorderColor = Colors.HighlightedControlColor,
+        focusedLabelColor = Colors.HighlightedControlColor,
         backgroundColor = backgroundColor
     )
 

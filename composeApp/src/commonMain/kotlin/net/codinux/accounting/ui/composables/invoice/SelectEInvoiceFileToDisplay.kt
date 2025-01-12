@@ -68,7 +68,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
     Section(Res.string.show_e_invoice_file) {
         Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { openExistingInvoiceFileLauncher.launch() }, Modifier.fillMaxWidth().height(70.dp)) {
-                Text(stringResource(Res.string.select_e_invoice_file), Modifier.fillMaxWidth(), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+                Text(stringResource(Res.string.select_e_invoice_file), Modifier.fillMaxWidth(), Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
             }
         }
 

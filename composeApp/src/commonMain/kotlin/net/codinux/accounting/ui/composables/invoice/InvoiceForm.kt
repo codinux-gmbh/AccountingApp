@@ -50,7 +50,7 @@ fun InvoiceForm() {
     ComposableOfMaxWidth {
         Column(Modifier.fillMaxWidth()) {
             if (Platform.type != PlatformType.iOS) {
-                TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.CodinuxSecondaryColor)
+                TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.HighlightedTextColor)
             }
 
             Section(Res.string.invoice_details) {

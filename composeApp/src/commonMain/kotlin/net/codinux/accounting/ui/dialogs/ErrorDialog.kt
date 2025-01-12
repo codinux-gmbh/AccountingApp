@@ -41,7 +41,7 @@ fun ErrorDialog(
         confirmButton = {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 TextButton({ onDismiss?.invoke() }, Modifier.fillMaxWidth()) {
-                    Text(confirmButtonText, color = Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    Text(confirmButtonText, color = Colors.HighlightedTextColor, textAlign = TextAlign.Center)
                 }
             }
         }

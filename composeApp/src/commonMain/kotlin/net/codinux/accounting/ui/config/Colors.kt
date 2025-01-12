@@ -32,7 +32,7 @@ object Colors {
     val DrawerDivider = PrimaryTextColorDark
 
 
-    val CodinuxPrimaryColor = Color(30, 54, 78)
+    val CodinuxPrimaryColor = Color(30, 54, 78) // #FBBB21
 
     val CodinuxSecondaryColor = Color(251, 187, 33)
 
@@ -75,6 +75,12 @@ object Colors {
     val MainBackgroundColor = Zinc100
 
     val BodyTextColor = Zinc700
+
+    val HighlightedControlColor = CodinuxSecondaryColor
+
+    val HighlightedTextColor = CodinuxSecondaryColor
+
+    val HighlightedTextColorDisabled = CodinuxSecondaryColorDisabled
 
     val PlaceholderTextColor = Colors.Zinc500
 

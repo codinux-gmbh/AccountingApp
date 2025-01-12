@@ -175,7 +175,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     if (selectedCreateEInvoiceOption == CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf) {
         Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { openExistingPdfFileLauncher.launch() }, Modifier.fillMaxWidth()) {
-                Text(stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), Modifier, Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, maxLines = 1)
+                Text(stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), Modifier, Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
             }
         }
 
@@ -192,12 +192,12 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         Spacer(Modifier.width(1.dp).weight(1f))
 
         if (isCreatingEInvoice) {
-            CircularProgressIndicator(Modifier.padding(end = 12.dp).size(36.dp), color = Colors.CodinuxSecondaryColor)
+            CircularProgressIndicator(Modifier.padding(end = 12.dp).size(36.dp), color = Colors.HighlightedTextColor)
         }
 
         TextButton({ createEInvoice() }, contentPadding = PaddingValues(0.dp), enabled = isValid) {
             Text(stringResource(Res.string.create), Modifier.applyIf(isCreatingEInvoice == false) { it.width(150.dp) },
-                color = if (isValid) Colors.CodinuxSecondaryColor else Colors.CodinuxSecondaryColorDisabled,
+                color = if (isValid) Colors.HighlightedTextColor else Colors.HighlightedTextColorDisabled,
                 fontWeight = if (isValid) FontWeight.SemiBold else FontWeight.Normal, textAlign = TextAlign.End)
         }
     }
@@ -210,7 +210,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
             Row(Modifier.padding(top = VerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
                 TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml)) }) {
-                    Text(stringResource(Res.string.copy), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
+                    Text(stringResource(Res.string.copy), Modifier.width(130.dp), Colors.HighlightedTextColor)
                 }
 
                 Spacer(Modifier.weight(1f))
@@ -220,7 +220,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         } else { // one line on Desktops
             Row(Modifier.padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
                 TextButton({ clipboardManager.setText(AnnotatedString(generatedEInvoiceXml)) }, contentPadding = PaddingValues(0.dp)) {
-                    Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+                    Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
                 }
 
                 SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdPdfFile, createdPdfBytes, details, 120.dp)
@@ -254,12 +254,12 @@ private fun SaveButtons(
     val invoiceFilename = createdPdfFile?.baseName.takeUnless { it.isNullOrBlank() } ?: "invoice-${details.invoiceNumber.value}"
 
     TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml") }, contentPadding = PaddingValues(0.dp)) {
-        Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+        Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
     }
 
     createdPdfFile?.let {
         TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", createdPdfFile.parent) }) {
-            Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center)
+            Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
         }
     }
 }

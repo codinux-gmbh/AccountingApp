@@ -113,7 +113,7 @@ private fun Day(day: CalendarDay, isSelected: Boolean, onClick: (CalendarDay) ->
             .aspectRatio(1f) // This is important for square-sizing!
             .padding(6.dp)
             .clip(CircleShape)
-            .background(color = if (isSelected) Colors.CodinuxSecondaryColor else Color.Transparent)
+            .background(color = if (isSelected) Colors.HighlightedControlColor else Color.Transparent)
             // Disable clicks on inDates/outDates
             .clickableWithRipple(
                 enabled = day.position == DayPosition.MonthDate,

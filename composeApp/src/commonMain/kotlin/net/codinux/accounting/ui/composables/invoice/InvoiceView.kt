@@ -231,7 +231,7 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
 
     Row(Modifier.padding(top = Style.FormVerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
         TextButton({ clipboardManager.setText(AnnotatedString(xml)) }) {
-            Text(stringResource(Res.string.copy_xml), Modifier.width(130.dp), Colors.CodinuxSecondaryColor)
+            Text(stringResource(Res.string.copy_xml), Modifier.width(130.dp), Colors.HighlightedTextColor)
         }
 
         Spacer(Modifier.weight(1f))

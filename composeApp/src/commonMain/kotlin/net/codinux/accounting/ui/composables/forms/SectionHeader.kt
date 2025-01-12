@@ -29,7 +29,7 @@ fun SectionHeader(title: String, fontSize: TextUnit = 16.sp, topPadding: Boolean
                 it
             }
         },
-        color = Colors.CodinuxSecondaryColor,
+        color = Colors.HighlightedTextColor,
         fontSize = fontSize
     )
 

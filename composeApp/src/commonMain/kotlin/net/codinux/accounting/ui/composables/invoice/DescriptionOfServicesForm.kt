@@ -73,7 +73,7 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
             Spacer(Modifier.weight(1f))
 
             TextButton({ viewModel.itemAdded(InvoiceItemViewModel()) }, contentPadding = PaddingValues(0.dp)) {
-                Icon(Icons.Outlined.Add, "Add invoice item", Modifier.width(48.dp).fillMaxHeight(), Colors.CodinuxSecondaryColor)
+                Icon(Icons.Outlined.Add, "Add invoice item", Modifier.width(48.dp).fillMaxHeight(), Colors.HighlightedControlColor)
             }
         }
 

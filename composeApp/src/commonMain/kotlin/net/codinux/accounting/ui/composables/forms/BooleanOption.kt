@@ -32,7 +32,7 @@ fun BooleanOption(label: @Composable () -> Unit, isChecked: Boolean, switchBefor
             label()
         }
 
-        Switch(isChecked, checkChanged, enabled = enabled, colors = SwitchDefaults.colors(checkedThumbColor = Colors.CodinuxSecondaryColor))
+        Switch(isChecked, checkChanged, enabled = enabled, colors = SwitchDefaults.colors(checkedThumbColor = Colors.HighlightedControlColor))
 
         if (switchBeforeLabel) {
             label()

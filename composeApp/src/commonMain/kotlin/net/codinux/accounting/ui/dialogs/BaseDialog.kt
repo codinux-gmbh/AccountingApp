@@ -72,7 +72,7 @@ fun BaseDialog(
 
                 Row(Modifier.fillMaxWidth().padding(top = 8.dp).height(if (showProgressIndicatorOnConfirmButton) 44.dp else 32.dp)) {
                     TextButton(onClick = onDismiss, Modifier.weight(0.5f)) {
-                        Text(dismissButtonTitle, color = Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                        Text(dismissButtonTitle, color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                     }
 
                     if (confirmButtonVisible) {
@@ -88,10 +88,10 @@ fun BaseDialog(
                         ) {
                             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                                 if (showProgressIndicatorOnConfirmButton) {
-                                    CircularProgressIndicator(Modifier.padding(end = 6.dp).size(36.dp), color = Colors.CodinuxSecondaryColor)
+                                    CircularProgressIndicator(Modifier.padding(end = 6.dp).size(36.dp), color = Colors.HighlightedTextColor)
                                 }
 
-                                Text(confirmButtonTitle, color = Colors.CodinuxSecondaryColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                                Text(confirmButtonTitle, color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }

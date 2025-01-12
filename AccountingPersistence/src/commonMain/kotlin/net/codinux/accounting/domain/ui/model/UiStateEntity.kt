@@ -10,5 +10,7 @@ data class UiStateEntity(
     val windowPositionY: Int? = null,
     val windowWidth: Int? = null,
     val windowHeight: Int? = null,
+
+    val isMinimized: Boolean = false,
     val windowState: String? = null
 )

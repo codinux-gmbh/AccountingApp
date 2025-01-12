@@ -1,3 +1,5 @@
+import kotlin.Boolean;
+
 
 CREATE TABLE IF NOT EXISTS UiState (
     id INTEGER PRIMARY KEY,
@@ -10,6 +12,7 @@ CREATE TABLE IF NOT EXISTS UiState (
     windowWidth INTEGER,
     windowHeight INTEGER,
 
+    isMinimized INTEGER AS Boolean NOT NULL,
     windowState TEXT
 );
 
@@ -23,8 +26,10 @@ INSERT OR REPLACE INTO UiState(
 
     selectedTab,
 
-    windowPositionX, windowPositionY, windowWidth, windowHeight,
+    windowPositionX, windowPositionY,
+    windowWidth, windowHeight,
 
+    isMinimized,
     windowState
 )
 VALUES (
@@ -35,5 +40,6 @@ VALUES (
     ?, ?,
     ?, ?,
 
+    ?,
     ?
 );

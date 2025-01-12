@@ -11,13 +11,14 @@ class SqlUiStateRepository(database: AccountingDb, private val mapper: Sqldeligh
 
 
     override suspend fun loadUiState(): UiStateEntity? =
-        queries.getUiState { _, selectedTab, windowPositionX, windowPositionY, windowWidth, windowHeight, windowState ->
+        queries.getUiState { _, selectedTab, windowPositionX, windowPositionY, windowWidth, windowHeight, isMinimized, windowState ->
             UiStateEntity(
                 mapper.mapToEnum(selectedTab, MainScreenTab.entries),
 
                 mapper.mapToInt(windowPositionX), mapper.mapToInt(windowPositionY),
                 mapper.mapToInt(windowWidth), mapper.mapToInt(windowHeight),
-                windowState
+
+                isMinimized, windowState
             )
         }.executeAsOneOrNull()
 
@@ -27,7 +28,8 @@ class SqlUiStateRepository(database: AccountingDb, private val mapper: Sqldeligh
 
             mapper.mapInt(state.windowPositionX), mapper.mapInt(state.windowPositionY),
             mapper.mapInt(state.windowWidth), mapper.mapInt(state.windowHeight),
-            state.windowState
+
+            state.isMinimized, state.windowState
         )
     }
 

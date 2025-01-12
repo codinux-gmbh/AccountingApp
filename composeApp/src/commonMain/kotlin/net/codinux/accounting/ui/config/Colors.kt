@@ -32,9 +32,11 @@ object Colors {
     val DrawerDivider = PrimaryTextColorDark
 
 
-    val CodinuxPrimaryColor = Color(30, 54, 78) // #FBBB21
+    val CodinuxPrimaryColor = Color(30, 54, 78) // #1D354D
 
-    val CodinuxSecondaryColor = Color(251, 187, 33)
+    val CodinuxSecondaryColor = Color(251, 187, 33) // #FBBB21, Contrast Ratio on white background: 1.71:1
+
+    val CodinuxSecondaryColorHigherContrast = Color("#F29D00") // Contrast Ratio on white background at least 2.18:1; alternatives: #FBB100, #F29D00
 
     val CodinuxSecondaryColorDisabled = CodinuxSecondaryColor.copy(alpha = 0.74f) // 0.38f = ContentAlpha.disabled, 0.74f == ContentAlpha.medium
 
@@ -78,7 +80,7 @@ object Colors {
 
     val HighlightedControlColor = CodinuxSecondaryColor
 
-    val HighlightedTextColor = CodinuxSecondaryColor
+    val HighlightedTextColor = CodinuxSecondaryColorHigherContrast
 
     val HighlightedTextColorDisabled = CodinuxSecondaryColorDisabled
 

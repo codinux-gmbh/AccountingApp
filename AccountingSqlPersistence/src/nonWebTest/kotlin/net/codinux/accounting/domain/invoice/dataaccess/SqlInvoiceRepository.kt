@@ -20,9 +20,10 @@ class SqlInvoiceRepository {
 
 
     @Test
-    fun sql_SaveAndRetrieveCreateInvoiceSettings() = runTest {
+    fun saveAndRetrieveCreateInvoiceSettings() = runTest {
         val settings = CreateInvoiceSettings(
             DataGenerator.createInvoice(),
+            true, true,
             ServiceDateOptions.ServicePeriodMonth, EInvoiceXmlFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
             "/path1", "/path2", "/path3"
         )
@@ -35,7 +36,10 @@ class SqlInvoiceRepository {
 
         assertThat(result).isNotNull()
 
-        assertThat(result!!.selectedServiceDateOption).isEqualByComparingTo(settings.selectedServiceDateOption)
+        assertThat(result!!.showAllSupplierFields).isEqualTo(settings.showAllSupplierFields)
+        assertThat(result.showAllCustomerFields).isEqualTo(settings.showAllCustomerFields)
+
+        assertThat(result.selectedServiceDateOption).isEqualByComparingTo(settings.selectedServiceDateOption)
         assertThat(result.selectedEInvoiceXmlFormat).isEqualByComparingTo(settings.selectedEInvoiceXmlFormat)
         assertThat(result.selectedCreateEInvoiceOption).isEqualByComparingTo(settings.selectedCreateEInvoiceOption)
         assertThat(result.showGeneratedEInvoiceXml).isEqualTo(settings.showGeneratedEInvoiceXml)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,7 +31,8 @@ fun SectionHeader(title: String, fontSize: TextUnit = 16.sp, topPadding: Boolean
             }
         },
         color = Colors.HighlightedTextColor,
-        fontSize = fontSize
+        fontSize = fontSize,
+        fontWeight = FontWeight.Medium
     )
 
 }

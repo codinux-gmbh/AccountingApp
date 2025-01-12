@@ -33,8 +33,6 @@ fun App() {
 
     val screenSize = PlatformUiFunctions.rememberScreenSize()
 
-    var isInitialized by remember { mutableStateOf(false) }
-
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -43,21 +41,19 @@ fun App() {
     }
 
 
-    LaunchedEffect(screenSize) {
-        DI.uiState.screenSizeChanged(screenSize)
+    LaunchedEffect(Unit) {
+        coroutineScope.launch(Dispatchers.IoOrDefault) {
+            DI.init()
+        }
 
-        if (isInitialized == false) {
-            isInitialized = true
-
-            coroutineScope.launch(Dispatchers.IoOrDefault) {
-                DI.init()
-            }
-
-            if (Platform.type == PlatformType.iOS) {
-                PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
-                    DI.uiState.isKeyboardVisible.value = visible
-                }
+        if (Platform.type == PlatformType.iOS) {
+            PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
+                DI.uiState.isKeyboardVisible.value = visible
             }
         }
+    }
+
+    LaunchedEffect(screenSize) {
+        DI.uiState.screenSizeChanged(screenSize)
     }
 }

@@ -47,6 +47,10 @@
     <string name="error_save_to_database">Failed writing data to database</string>
 
 
+    <!-- UiState -->
+    <string name="error_message_could_not_load_ui_state">Could not load UI state from database</string>
+
+
     <!-- mails -->
     <string name="reason_for_adding_email_account">Add an e-mail account to view all received e-invoices and to be continuously notified of new e-invoices.</string>
 

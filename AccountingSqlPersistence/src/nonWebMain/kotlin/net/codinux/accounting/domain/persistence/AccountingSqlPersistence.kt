@@ -2,6 +2,8 @@ package net.codinux.accounting.domain.persistence
 
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.dataaccess.SqlInvoiceRepository
+import net.codinux.accounting.domain.ui.dataaccess.SqlUiStateRepository
+import net.codinux.accounting.domain.ui.dataaccess.UiStateRepository
 import net.codinux.accounting.persistence.AccountingDb
 
 object AccountingSqlPersistence {
@@ -14,7 +16,11 @@ object AccountingSqlPersistence {
 
     private val serializer = AccountingPersistence.serializer
 
+    private val mapper = SqldelightMapper()
 
-    val sqlInvoiceRepository: InvoiceRepository = SqlInvoiceRepository(database, serializer)
+
+    val sqlUiStateRepository: UiStateRepository = SqlUiStateRepository(database, mapper)
+
+    val sqlInvoiceRepository: InvoiceRepository = SqlInvoiceRepository(database, serializer, mapper)
 
 }

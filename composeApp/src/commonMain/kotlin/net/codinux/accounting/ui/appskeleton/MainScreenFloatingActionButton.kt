@@ -13,7 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import net.codinux.accounting.ui.state.UiState
-import net.codinux.accounting.ui.tabs.MainScreenTab
+import net.codinux.accounting.domain.ui.model.MainScreenTab
 
 @Composable
 fun MainScreenFloatingActionButton(uiState: UiState, selectedTab: MainScreenTab) {

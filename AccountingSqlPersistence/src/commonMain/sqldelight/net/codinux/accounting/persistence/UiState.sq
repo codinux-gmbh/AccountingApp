@@ -1,0 +1,39 @@
+
+CREATE TABLE IF NOT EXISTS UiState (
+    id INTEGER PRIMARY KEY,
+
+    selectedTab TEXT NOT NULL,
+
+    windowPositionX INTEGER,
+    windowPositionY INTEGER,
+
+    windowWidth INTEGER,
+    windowHeight INTEGER,
+
+    windowState TEXT
+);
+
+
+getUiState:
+SELECT * FROM UiState WHERE id = 1;
+
+upsertUiState:
+INSERT OR REPLACE INTO UiState(
+    id,
+
+    selectedTab,
+
+    windowPositionX, windowPositionY, windowWidth, windowHeight,
+
+    windowState
+)
+VALUES (
+    1,
+
+    ?,
+
+    ?, ?,
+    ?, ?,
+
+    ?
+);

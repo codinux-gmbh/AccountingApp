@@ -9,6 +9,7 @@ import net.codinux.accounting.domain.mail.dataaccess.MailRepository
 import net.codinux.accounting.domain.mail.service.JvmMailService
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
+import net.codinux.accounting.domain.ui.dataaccess.UiStateRepository
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.EmailsFetcher
 import net.codinux.invoicing.reader.EInvoiceReader
@@ -39,7 +40,10 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
 
     private val databaseDirectory = ensureDirectory(applicationDataDirectory, "db")
 
+
     actual val fileHandler = PlatformFileHandler(applicationContext, invoicesDirectory)
+
+    actual val uiStateRepository: UiStateRepository = AccountingSqlPersistence.sqlUiStateRepository
 
     actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 

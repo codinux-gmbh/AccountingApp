@@ -10,14 +10,11 @@ import net.codinux.accounting.domain.mail.service.JvmMailService
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
 import net.codinux.accounting.domain.persistence.JvmPersistence
+import net.codinux.accounting.domain.ui.dataaccess.UiStateRepository
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.EmailsFetcher
 import net.codinux.invoicing.reader.EInvoiceReader
-import java.io.File
-import java.nio.file.Files
 import kotlin.coroutines.CoroutineContext
-import kotlin.io.path.Path
-import kotlin.io.path.absolutePathString
 
 
 actual val Dispatchers.IoOrDefault: CoroutineContext
@@ -34,6 +31,8 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
 
 
     actual val fileHandler = PlatformFileHandler(JvmPersistence.invoicesDirectory)
+
+    actual val uiStateRepository: UiStateRepository = AccountingSqlPersistence.sqlUiStateRepository
 
     actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 

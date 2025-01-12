@@ -6,7 +6,7 @@ import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.service.MailService
 import net.codinux.accounting.domain.persistence.AccountingSqlPersistence
-import net.codinux.accounting.platform.PlatformFileHandler
+import net.codinux.accounting.domain.ui.dataaccess.UiStateRepository
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.reader.EInvoiceReader
 import kotlin.coroutines.CoroutineContext
@@ -16,6 +16,8 @@ actual class PlatformDependencies actual constructor(
     invoiceReader: EInvoiceReader
 ) {
     actual val fileHandler: PlatformFileHandler = PlatformFileHandler()
+
+    actual val uiStateRepository: UiStateRepository = AccountingSqlPersistence.sqlUiStateRepository
 
     actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 

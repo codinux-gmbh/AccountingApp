@@ -24,7 +24,7 @@ getCreateInvoiceSettings:
 SELECT * FROM CreateInvoiceSettings WHERE id = 1;
 
 upsertCreateInvoiceSettings:
-INSERT OR REPLACE INTO CreateInvoiceSettings(
+INSERT OR REPLACE INTO CreateInvoiceSettings (
     id,
 
     lastCreatedInvoice,
@@ -41,7 +41,7 @@ INSERT OR REPLACE INTO CreateInvoiceSettings(
     lastPdfSaveDirectory,
     lastOpenFileDirectory
 )
-VALUES(
+VALUES (
     1,
 
     ?,
@@ -76,7 +76,7 @@ getViewInvoiceSettings:
 SELECT * FROM ViewInvoiceSettings WHERE id = 1;
 
 upsertViewInvoiceSettings:
-INSERT OR REPLACE INTO ViewInvoiceSettings(
+INSERT OR REPLACE INTO ViewInvoiceSettings (
     id,
 
     lastSelectedInvoiceFile,
@@ -85,7 +85,7 @@ INSERT OR REPLACE INTO ViewInvoiceSettings(
     showPdfDetails,
     showEpcQrCode
 )
-VALUES(
+VALUES (
     1,
 
     ?,

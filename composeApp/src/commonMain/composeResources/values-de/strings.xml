@@ -47,6 +47,10 @@
     <string name="error_save_to_database">Daten konnten nicht in die Datenbank gespeichert werden</string>
 
 
+    <!-- UiState -->
+    <string name="error_message_could_not_load_ui_state">UI-Status konnte nicht aus der Datenbank geladen werden</string>
+
+
     <!-- mails -->
     <string name="reason_for_adding_email_account">Fügen Sie ein E-Mail Konto hinzu um alle empfangen E-Rechnungen anzuzeigen und fortlaufend über neue E-Rechnungen informiert zu werden.</string>
 

@@ -1,4 +1,4 @@
-package net.codinux.accounting.ui.tabs
+package net.codinux.accounting.domain.ui.model
 
 enum class MainScreenTab {
     Postings,

@@ -7,7 +7,7 @@ import net.codinux.accounting.domain.common.model.error.ApplicationError
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
-import net.codinux.accounting.ui.tabs.MainScreenTab
+import net.codinux.accounting.domain.ui.model.MainScreenTab
 import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
@@ -27,7 +27,7 @@ class UiState : ViewModel() {
     val isKeyboardVisible = MutableStateFlow(false)
 
 
-    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.CreateInvoice)
+    val selectedMainScreenTab = MutableStateFlow(MainScreenTab.ViewInvoice)
 
 
     val viewInvoiceSettings = MutableStateFlow(ViewInvoiceSettings())

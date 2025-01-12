@@ -8,11 +8,11 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import net.codinux.accounting.domain.ui.model.MainScreenTab
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.Res
 import net.codinux.accounting.ui.composables.ToolbarButton
 import net.codinux.accounting.ui.config.DI
-import net.codinux.accounting.ui.tabs.MainScreenTab
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable

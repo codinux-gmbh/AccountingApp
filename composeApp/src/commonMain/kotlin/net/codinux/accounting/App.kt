@@ -33,8 +33,6 @@ fun App() {
 
     val screenSize = PlatformUiFunctions.rememberScreenSize()
 
-    DI.uiState.screenSizeChanged(screenSize)
-
     var isInitialized by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
@@ -45,7 +43,9 @@ fun App() {
     }
 
 
-    LaunchedEffect(isInitialized) {
+    LaunchedEffect(screenSize) {
+        DI.uiState.screenSizeChanged(screenSize)
+
         if (isInitialized == false) {
             isInitialized = true
 

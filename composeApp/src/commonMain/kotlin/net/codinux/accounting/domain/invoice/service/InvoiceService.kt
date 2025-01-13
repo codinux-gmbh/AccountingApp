@@ -49,7 +49,9 @@ class InvoiceService(
         )
 
         private val PrioritizedUnitOfMeasure = listOf(
-            UnitOfMeasure.NAR, UnitOfMeasure.C62, UnitOfMeasure.PR, UnitOfMeasure.SET,
+            UnitOfMeasure.H87, UnitOfMeasure.NAR, UnitOfMeasure.C62, // piece, number of articles, unit
+            UnitOfMeasure.PR, UnitOfMeasure.SET, // pair, set
+
             UnitOfMeasure.DAY, UnitOfMeasure.HUR, UnitOfMeasure.MIN, UnitOfMeasure.SEC,
             UnitOfMeasure.LTR, UnitOfMeasure.MLT, UnitOfMeasure.MTQ,
             UnitOfMeasure.MTR, UnitOfMeasure.CMT, UnitOfMeasure.MMT, UnitOfMeasure.MTK,
@@ -58,7 +60,8 @@ class InvoiceService(
             UnitOfMeasure.KWT, UnitOfMeasure.MAW, UnitOfMeasure.A90,
             UnitOfMeasure.WHR, UnitOfMeasure.KWH, UnitOfMeasure.MWH, UnitOfMeasure.GWH,
             UnitOfMeasure.JOU, UnitOfMeasure.KJO, UnitOfMeasure._3B, UnitOfMeasure.GV,
-            UnitOfMeasure.ZZ
+
+            UnitOfMeasure.ZZ // mutually defined
         )
     }
 

@@ -17,7 +17,6 @@ fun PdfInvoiceDataDialog(pdfInvoiceData: PdfInvoiceData, onDismiss: () -> Unit) 
         dismissButtonTitle = stringResource(Res.string.close),
         useMoreThanPlatformDefaultWidthOnSmallScreens = true,
         restrictMaxHeightForFullHeightDialogs = true,
-        backgroundColor = Colors.MainBackgroundColor,
         onDismiss = onDismiss
     ) {
         PdfInvoiceDataView(pdfInvoiceData)

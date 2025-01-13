@@ -36,7 +36,7 @@ fun BaseDialog(
     showProgressIndicatorOnConfirmButton: Boolean = false,
     useMoreThanPlatformDefaultWidthOnSmallScreens: Boolean = false,
     restrictMaxHeightForFullHeightDialogs: Boolean = false,
-    backgroundColor: Color = MaterialTheme.colors.surface,
+    backgroundColor: Color = Colors.MainBackgroundColor,
     callOnDismissAfterOnConfirm: Boolean = true,
     onDismiss: () -> Unit,
     onConfirm: (() -> Unit)? = null,

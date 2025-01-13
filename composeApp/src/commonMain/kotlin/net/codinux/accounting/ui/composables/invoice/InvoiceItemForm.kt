@@ -7,9 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,8 +24,6 @@ import net.codinux.invoicing.model.codes.UnitOfMeasure
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
-
-private val unitsOfMeasure by lazy { DI.invoiceService.getUnitOfMeasureDisplayNamesSorted() }
 
 private val SmallerFieldsWidth = 92.dp
 
@@ -125,6 +121,8 @@ private fun InvoiceItemNumberTextField(labelResource: StringResource, value: Big
 
 @Composable
 private fun SelectUnit(value: UnitOfMeasure?, onValueChanged: (UnitOfMeasure?) -> Unit) {
+
+    val unitsOfMeasure = DI.invoiceService.getUnitOfMeasureDisplayNamesSorted()
 
     Select(Res.string.unit, unitsOfMeasure.preferredValues /*+ unitsOfMeasure.minorValues */, unitsOfMeasure.all.firstOrNull { it.value == value}, { onValueChanged(it?.value) }, { it?.value?.symbol ?: it?.value?.code ?: "" },
         Modifier.width(150.dp), dropDownWidth = 300.dp, /* addSeparatorAfterItem = unitsOfMeasure.preferredValues.size, */

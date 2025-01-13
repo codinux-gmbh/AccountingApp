@@ -140,6 +140,14 @@
     <string name="vat_amount">VAT</string>
     <string name="total_amount">Total</string>
 
+    <!-- missing unit translations -->
+    <string name="unit_piece">Piece</string>
+    <string name="unit_number_of_articles">Item</string>
+    <string name="unit_unit">Unit</string>
+    <string name="unit_pair">Pair</string>
+    <string name="unit_set">Set</string>
+    <string name="unit_mutually_defined">Mutually Agreed</string>
+
     <string name="bank_details">Bank details</string>
     <string name="account_holder">Account holder</string>
     <string name="account_holder_if_different">Account holder (if different)</string>

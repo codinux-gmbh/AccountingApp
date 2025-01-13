@@ -1,7 +1,9 @@
 package net.codinux.accounting.domain.invoice.service
 
+import androidx.compose.runtime.Composable
 import io.github.vinceglb.filekit.core.PlatformFile
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.domain.common.model.localization.DisplayName
 import net.codinux.accounting.domain.common.model.localization.PrioritizedDisplayNames
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
@@ -21,6 +23,7 @@ import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
 import net.codinux.log.logger
+import org.jetbrains.compose.resources.stringResource
 
 class InvoiceService(
     private val uiState: UiState,
@@ -90,14 +93,7 @@ class InvoiceService(
         PrioritizedDisplayNames(all, preferredValues, minorValues)
     }
 
-    private val sortedUnitOfMeasure: PrioritizedDisplayNames<UnitOfMeasure> by lazy {
-        val all = localizationService.getAllUnitDisplayNames().sortedBy { it.displayName }
-        val allByCode = all.associateBy { it.value.code }
-        val preferredValues = PrioritizedUnitOfMeasure.map { allByCode[it.code]!! }
-        val minorValues = all.toMutableList().apply { removeAll(preferredValues) }
-
-        PrioritizedDisplayNames(all, preferredValues, minorValues)
-    }
+    private lateinit var sortedUnitOfMeasure: PrioritizedDisplayNames<UnitOfMeasure>
 
     private val log by logger()
 
@@ -119,7 +115,27 @@ class InvoiceService(
 
     fun getCurrencyDisplayNamesSorted() = sortedCurrencyDisplayNames
 
-    fun getUnitOfMeasureDisplayNamesSorted() = sortedUnitOfMeasure
+    @Composable
+    fun getUnitOfMeasureDisplayNamesSorted(): PrioritizedDisplayNames<UnitOfMeasure> {
+        if (this::sortedUnitOfMeasure.isInitialized) {
+            return sortedUnitOfMeasure
+        }
+
+        val all = localizationService.getAllUnitDisplayNames()
+            .map {
+                if (it.stringResourceForUntranslatedDisplayName != null) DisplayName(it.value, stringResource(it.stringResourceForUntranslatedDisplayName))
+                else DisplayName(it.value, it.displayName)
+            }
+            .sortedBy { it.displayName }
+        val allByCode = all.associateBy { it.value.code }
+        val preferredValues = PrioritizedUnitOfMeasure.map { allByCode[it.code]!! }
+        val minorValues = all.toMutableList().apply { removeAll(preferredValues) }
+
+        val displayNames = PrioritizedDisplayNames(preferredValues, preferredValues, minorValues)
+        this.sortedUnitOfMeasure = displayNames
+
+        return displayNames
+    }
 
 
     // errors handled by init()

@@ -140,6 +140,14 @@
     <string name="vat_amount">Mwst.</string>
     <string name="total_amount">Gesamt</string>
 
+    <!-- missing unit translations -->
+    <string name="unit_piece">Stück</string>
+    <string name="unit_number_of_articles">Artikel</string>
+    <string name="unit_unit">Einheit</string>
+    <string name="unit_pair">Paar</string>
+    <string name="unit_set">Satz</string>
+    <string name="unit_mutually_defined">Wechselseitig Vereinbart</string>
+
     <string name="bank_details">Bankverbindung</string>
     <string name="account_holder">Kontoinhaber*in</string>
     <string name="account_holder_if_different">Kontoinhaber (falls abweichend)</string>

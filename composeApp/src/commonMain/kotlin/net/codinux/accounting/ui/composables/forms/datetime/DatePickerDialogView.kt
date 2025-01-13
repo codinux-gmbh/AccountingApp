@@ -18,6 +18,7 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
+import net.codinux.accounting.ui.composables.forms.RoundedCornersCard
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 
@@ -39,52 +40,50 @@ fun DatePickerDialogView(selectedDate: LocalDate? = null, adjacentMonths: Int = 
     val daysOfWeek = remember { daysOfWeek() }
 
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White),
-    ) {
-        val state = rememberCalendarState(
-            startMonth = startMonth,
-            endMonth = endMonth,
-            firstVisibleMonth = currentMonth,
-            firstDayOfWeek = daysOfWeek.first(),
-        )
-        val coroutineScope = rememberCoroutineScope()
-        val visibleMonth = rememberFirstMostVisibleMonth(state, viewportPercent = 90f)
+    RoundedCornersCard(Modifier.fillMaxWidth()) {
+        Column(Modifier.fillMaxWidth().background(Color.White)) {
+            val state = rememberCalendarState(
+                startMonth = startMonth,
+                endMonth = endMonth,
+                firstVisibleMonth = currentMonth,
+                firstDayOfWeek = daysOfWeek.first(),
+            )
+            val coroutineScope = rememberCoroutineScope()
+            val visibleMonth = rememberFirstMostVisibleMonth(state, viewportPercent = 90f)
 
-        CalendarTitle(
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 8.dp),
-            currentMonth = visibleMonth.yearMonth,
-            goToPrevious = {
-                coroutineScope.launch {
-                    state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.previous)
-                }
-            },
-            goToNext = {
-                coroutineScope.launch {
-                    state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.next)
-                }
-            },
-        )
-
-        HorizontalCalendar(
-            state = state,
-            dayContent = { day ->
-                Day(day, isSelected = selections.contains(day)) { clickedDate ->
-                    if (selections.contains(clickedDate)) {
-                        selections.remove(clickedDate)
-                    } else {
-                        selections.add(clickedDate)
+            CalendarTitle(
+                modifier = Modifier.padding(vertical = 10.dp, horizontal = 8.dp),
+                currentMonth = visibleMonth.yearMonth,
+                goToPrevious = {
+                    coroutineScope.launch {
+                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.previous)
                     }
+                },
+                goToNext = {
+                    coroutineScope.launch {
+                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.next)
+                    }
+                },
+            )
 
-                    dateSelected(clickedDate.date)
-                }
-            },
-            monthHeader = {
-                MonthHeader(daysOfWeek = daysOfWeek)
-            },
-        )
+            HorizontalCalendar(
+                state = state,
+                dayContent = { day ->
+                    Day(day, isSelected = selections.contains(day)) { clickedDate ->
+                        if (selections.contains(clickedDate)) {
+                            selections.remove(clickedDate)
+                        } else {
+                            selections.add(clickedDate)
+                        }
+
+                        dateSelected(clickedDate.date)
+                    }
+                },
+                monthHeader = {
+                    MonthHeader(daysOfWeek = daysOfWeek)
+                },
+            )
+        }
     }
 
 }

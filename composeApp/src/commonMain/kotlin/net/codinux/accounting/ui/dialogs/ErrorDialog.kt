@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.window.DialogProperties
 import net.codinux.accounting.resources.*
@@ -41,7 +42,7 @@ fun ErrorDialog(
         confirmButton = {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 TextButton({ onDismiss?.invoke() }, Modifier.fillMaxWidth()) {
-                    Text(confirmButtonText, color = Colors.HighlightedTextColor, textAlign = TextAlign.Center)
+                    Text(confirmButtonText, color = Colors.HighlightedTextColor, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center)
                 }
             }
         }

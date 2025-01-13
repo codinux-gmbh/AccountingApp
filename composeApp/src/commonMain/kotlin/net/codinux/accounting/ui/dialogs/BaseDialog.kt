@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -72,7 +73,7 @@ fun BaseDialog(
 
                 Row(Modifier.fillMaxWidth().padding(top = 8.dp).height(if (showProgressIndicatorOnConfirmButton) 44.dp else 32.dp)) {
                     TextButton(onClick = onDismiss, Modifier.weight(0.5f)) {
-                        Text(dismissButtonTitle, color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                        Text(dismissButtonTitle, color = Colors.HighlightedTextColor, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                     }
 
                     if (confirmButtonVisible) {
@@ -91,7 +92,7 @@ fun BaseDialog(
                                     CircularProgressIndicator(Modifier.padding(end = 6.dp).size(36.dp), color = Colors.HighlightedTextColor)
                                 }
 
-                                Text(confirmButtonTitle, color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                                Text(confirmButtonTitle, color = Colors.HighlightedTextColor, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                             }
                         }
                     }

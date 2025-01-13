@@ -35,8 +35,16 @@ class InvoiceService(
 ) {
 
     companion object {
+        private val SmallerEuropeanCountries = setOf(
+            Country.AlandIslands, Country.Andorra, Country.FaroeIslands, Country.Gibraltar,
+            Country.Guernsey, Country.IsleOfMan, Country.Jersey, Country.Monaco,
+            Country.SanMarino, Country.SvalbardAndJanMayen, Country.VaticanCity
+        )
+
         private val EuropeanCountries = (Region.WesternEurope.contains + Region.NorthernEurope.contains
-                + Region.EasternEurope.contains + Region.SouthernEurope.contains).toSet()
+                + Region.EasternEurope.contains + Region.SouthernEurope.contains).toMutableSet().apply {
+                    removeAll(SmallerEuropeanCountries.map { it.alpha2Code }.toSet())
+        }
 
         private val PrioritizedCountries = listOf(
             *Country.entries.filter { it.alpha2Code in EuropeanCountries }.toTypedArray(),

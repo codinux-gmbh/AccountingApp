@@ -41,7 +41,7 @@ fun App() {
     }
 
 
-    LaunchedEffect(Unit) {
+    DisposableEffect(Unit) {
         coroutineScope.launch(Dispatchers.IoOrDefault) {
             DI.init()
         }
@@ -50,6 +50,10 @@ fun App() {
             PlatformUiFunctions.addKeyboardVisibilityListener { visible ->
                 DI.uiState.isKeyboardVisible.value = visible
             }
+        }
+
+        onDispose {
+            DI.close()
         }
     }
 

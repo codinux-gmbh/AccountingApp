@@ -43,4 +43,8 @@ object DI {
         mailService?.init()
     }
 
+    fun close() {
+        mailService?.close()
+    }
+
 }

@@ -12,6 +12,7 @@ import net.codinux.accounting.ui.state.UiState
 import net.codinux.invoicing.email.*
 import net.codinux.invoicing.email.model.*
 import net.codinux.log.logger
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 
 class JvmMailService(
@@ -20,6 +21,8 @@ class JvmMailService(
     private val repository: MailRepository,
     private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : MailService {
+
+    private val stopListeningToNewEmailsTokens = CopyOnWriteArrayList<AtomicBoolean>()
 
     private val log by logger()
 
@@ -42,6 +45,12 @@ class JvmMailService(
                 fetchAndListenToNewMails(account, lastRetrievedMessageId)
             }
         }
+    }
+
+    override fun close() {
+        stopListeningToNewEmailsTokens.onEach { it.set(true) }
+
+        stopListeningToNewEmailsTokens.clear()
     }
 
 
@@ -71,7 +80,10 @@ class JvmMailService(
             }
 
             try {
-                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(onError = { handleFetchEmailError(account, it) }) { newEmail ->
+                val stopListening = AtomicBoolean(false)
+                stopListeningToNewEmailsTokens.add(stopListening)
+
+                emailsFetcher.listenForNewEmails(account, ListenForNewMailsOptions(stopListening, onError = { handleFetchEmailError(account, it) }) { newEmail ->
                     coroutineScope.launch(Dispatchers.IO) {
                         persistEmails(configuration, listOf(newEmail))
                     }

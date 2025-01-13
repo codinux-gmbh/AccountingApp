@@ -7,6 +7,8 @@ interface MailService {
 
     suspend fun init()
 
+    fun close()
+
     suspend fun addMailAccount(account: MailAccountConfiguration, scope: CoroutineScope): Boolean
 
 }

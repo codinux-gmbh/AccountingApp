@@ -63,14 +63,15 @@ class InvoiceService(
             UnitOfMeasure.H87, UnitOfMeasure.NAR, UnitOfMeasure.C62, // piece, number of articles, unit
             UnitOfMeasure.PR, UnitOfMeasure.SET, // pair, set
 
-            UnitOfMeasure.DAY, UnitOfMeasure.HUR, UnitOfMeasure.MIN, UnitOfMeasure.SEC,
-            UnitOfMeasure.LTR, UnitOfMeasure.MLT, UnitOfMeasure.MTQ,
-            UnitOfMeasure.MTR, UnitOfMeasure.CMT, UnitOfMeasure.MMT, UnitOfMeasure.MTK,
-            UnitOfMeasure.GRM, UnitOfMeasure.KGM, UnitOfMeasure.TNE,
-            UnitOfMeasure.AMP,
-            UnitOfMeasure.KWT, UnitOfMeasure.MAW, UnitOfMeasure.A90,
-            UnitOfMeasure.WHR, UnitOfMeasure.KWH, UnitOfMeasure.MWH, UnitOfMeasure.GWH,
-            UnitOfMeasure.JOU, UnitOfMeasure.KJO, UnitOfMeasure._3B, UnitOfMeasure.GV,
+            UnitOfMeasure.DAY, UnitOfMeasure.HUR, UnitOfMeasure.MIN, // day, hour, minute
+            UnitOfMeasure.LTR, UnitOfMeasure.MLT, // liter, milliliter
+            UnitOfMeasure.MTR, UnitOfMeasure.CMT, UnitOfMeasure.MMT,  // meter, centimeter, millimeter
+            UnitOfMeasure.MTK, UnitOfMeasure.MTQ, // square meter, cubic meter
+            UnitOfMeasure.GRM, UnitOfMeasure.KGM, UnitOfMeasure.TNE, // gram, kilogram, metric tons
+            UnitOfMeasure.AMP, // ampere
+            UnitOfMeasure.WTT, UnitOfMeasure.KWT, // watt, kilowatt,
+            UnitOfMeasure.WHR, UnitOfMeasure.KWH, // watt hour, kilowatt hour,
+            UnitOfMeasure.JOU, UnitOfMeasure.KJO, // joule, kilojoule
 
             UnitOfMeasure.ZZ // mutually defined
         )

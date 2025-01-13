@@ -41,9 +41,28 @@ class UiService(
     fun selectedMainScreenTabChanged(selectedTab: MainScreenTab) {
         uiState.selectedMainScreenTab.value = selectedTab
 
-        currentUiState = currentUiState.copy(selectedTab = selectedTab)
-        saveUiState(currentUiState)
+        saveUiState(currentUiState.copy(selectedTab = selectedTab))
     }
+
+
+    fun windowSizeChanged(screenSize: ScreenSizeInfo) {
+        uiState.screenSize.value = screenSize
+        uiState.uiType.value = screenSize.uiType
+
+        if (uiStateInitialized) { // don't save initializing window size state, e.g. on desktop window size is first (0, 0) then (1000, 804)
+            saveUiState(currentUiState.copy(windowWidth = toInt(screenSize.widthDp), windowHeight = toInt(screenSize.heightDp)))
+        }
+    }
+
+    fun windowPositionChanged(x: Dp, y: Dp) {
+        if (uiStateInitialized) { // don't save initializing window size state, e.g. on desktop window first is centered on screen
+            saveUiState(currentUiState.copy(windowPositionX = toInt(x), windowPositionY = toInt(y)))
+        }
+    }
+
+    private fun toInt(dp: Dp): Int? =
+        if (dp.isSpecified) dp.value.toInt()
+        else null
 
 
     // errors handled by init()
@@ -52,10 +71,10 @@ class UiService(
             ?: UiStateEntity(MainScreenTab.ViewInvoice)
     }
 
-    private fun saveUiState(state: UiStateEntity) {
+    private fun saveUiState(newState: UiStateEntity) {
         coroutineScope.launch {
             try {
-                repository.saveUiState(state)
+                repository.saveUiState(newState)
             } catch (e: Throwable) {
                 log.error(e) { "Could not persist UiState" }
 

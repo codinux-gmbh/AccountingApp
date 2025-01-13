@@ -58,6 +58,6 @@ fun App() {
     }
 
     LaunchedEffect(screenSize) {
-        DI.uiState.screenSizeChanged(screenSize)
+        DI.uiService.windowSizeChanged(screenSize)
     }
 }

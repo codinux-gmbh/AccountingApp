@@ -19,11 +19,6 @@ class UiState : ViewModel() {
     val isCompactScreen: Boolean
         get() = uiType.value.isCompactScreen
 
-    fun screenSizeChanged(screenSize: ScreenSizeInfo) {
-        this.screenSize.value = screenSize
-        this.uiType.value = screenSize.uiType
-    }
-
     val isKeyboardVisible = MutableStateFlow(false)
 
 

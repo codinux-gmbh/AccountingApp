@@ -73,7 +73,7 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
 
             TextButton({ viewModel.itemAdded(InvoiceItemViewModel()) }, Modifier.width(48.dp), contentPadding = PaddingValues(0.dp)) {
                 Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.End) {
-                    Icon(Icons.Outlined.Add, "Add invoice item", Modifier.fillMaxHeight(), Colors.HighlightedControlColor)
+                    Icon(Icons.Outlined.Add, "Add invoice item", Modifier.fillMaxHeight(), Colors.HighlightedTextColor)
                 }
             }
         }

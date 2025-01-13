@@ -1,11 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +20,7 @@ private val service = DI.invoiceService
 private val VerticalRowPadding = Style.FormVerticalRowPadding
 
 @Composable
-fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactScreen: Boolean, showAllFields: Boolean, showAllFieldsChanged: (Boolean) -> Unit) {
+fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactScreen: Boolean, showAllFields: Boolean) {
 
     val name by viewModel.name.collectAsState()
 
@@ -48,13 +44,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
     val countryDisplayNames = service.getCountryDisplayNamesSorted()
 
 
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        InvoiceTextField(Res.string.name, name, true, Modifier.weight(1f).padding(end = 6.dp)) { viewModel.nameChanged(it) }
-
-        IconButton({ showAllFieldsChanged(!showAllFields) }, Modifier.width(48.dp).height(Style.TextFieldsHeight)) {
-            Icon(if (showAllFields) Icons.Outlined.Remove else Icons.Outlined.Add, "Toggle show all or only most common Invoice Party fields")
-        }
-    }
+    InvoiceTextField(Res.string.name, name, true) { viewModel.nameChanged(it) }
 
     InvoiceTextField(Res.string.address, address, true) { viewModel.addressChanged(it) }
 

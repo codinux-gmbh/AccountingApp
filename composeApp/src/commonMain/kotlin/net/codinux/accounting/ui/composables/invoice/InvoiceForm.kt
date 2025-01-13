@@ -1,8 +1,14 @@
 package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Remove
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.resources.*
@@ -57,16 +63,16 @@ fun InvoiceForm() {
                 InvoiceDetailsForm(details, isCompactScreen)
             }
 
-            Section(Res.string.supplier, true) {
-                InvoicePartyForm(supplier, true, isCompactScreen, settings.showAllSupplierFields) {
-                    invoiceDataChanged(settings.copy(showAllSupplierFields = it))
-                }
+            Section(Res.string.supplier, true, additionalElementAtEnd = { toggleInvoicePartyFields(settings.showAllSupplierFields) {
+                invoiceDataChanged(settings.copy(showAllSupplierFields = it)) } }
+            ) {
+                InvoicePartyForm(supplier, true, isCompactScreen, settings.showAllSupplierFields)
             }
 
-            Section(Res.string.customer, true) {
-                InvoicePartyForm(customer, false, isCompactScreen, settings.showAllCustomerFields) {
-                    invoiceDataChanged(settings.copy(showAllCustomerFields = it))
-                }
+            Section(Res.string.customer, true, additionalElementAtEnd = { toggleInvoicePartyFields(settings.showAllCustomerFields) {
+                invoiceDataChanged(settings.copy(showAllCustomerFields = it)) } }
+            ) {
+                InvoicePartyForm(customer, false, isCompactScreen, settings.showAllCustomerFields)
             }
 
             Section(Res.string.description_of_services) {
@@ -82,6 +88,17 @@ fun InvoiceForm() {
             }
 
             AvoidCutOffAtEndOfScreen()
+        }
+    }
+}
+
+@Composable
+fun toggleInvoicePartyFields(showAllFields: Boolean, showAllFieldsChanged: (Boolean) -> Unit) {
+
+    TextButton({ showAllFieldsChanged(!showAllFields) }, Modifier.height(28.dp).width(36.dp), contentPadding = PaddingValues(0.dp)) {
+        Column(Modifier.fillMaxSize(), Arrangement.Center, horizontalAlignment = Alignment.End) {
+            Icon(if (showAllFields) Icons.Outlined.Remove else Icons.Outlined.Add, "Toggle show all or only most common Invoice Party fields",
+                Modifier.size(24.dp), tint = Colors.FormValueTextColor)
         }
     }
 }

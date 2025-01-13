@@ -53,7 +53,7 @@ object Colors {
     val Disabled = Color(0xFFBEBEBE)
 
 
-    val Zinc100 = Color(244, 244, 245)
+    val Zinc100 = Color(244, 244, 245) // #F4F4F5
     val Zinc100_50 = Zinc100.copy(alpha = 0.5f)
 
     val Zinc200 = Color(228, 228, 231)

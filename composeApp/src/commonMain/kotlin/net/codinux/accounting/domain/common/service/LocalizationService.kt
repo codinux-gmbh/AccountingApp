@@ -22,7 +22,8 @@ class LocalizationService {
         val names = displayNames.getAllRegionDisplayNamesForLanguage()
 
         return Country.entries.map { country ->
-            DisplayName(country, names?.get(country.alpha2Code) ?: names?.get(country.alpha3Code) ?: country.englishName) // TODO: what else to use as fallback value?
+            DisplayName(country, names?.get(country.alpha2Code) ?: names?.get(country.alpha3Code) ?: country.englishName,  // TODO: what else to use as fallback value?
+                country.alpha2Code)
         }
     }
 
@@ -30,7 +31,8 @@ class LocalizationService {
         val names = displayNames.getAllCurrencyDisplayNamesForLanguage()
 
         return Currency.entries.map { currency ->
-            DisplayName(currency, names?.get(currency.alpha3Code) ?: currency.englishName) // TODO: what else to use as fallback value?
+            DisplayName(currency, names?.get(currency.alpha3Code) ?: currency.englishName, // TODO: what else to use as fallback value?
+                currency.currencySymbol ?: currency.alpha3Code) // TODO: translate currency symbol
         }
     }
 
@@ -40,7 +42,7 @@ class LocalizationService {
 
     fun getUnitDisplayName(unit: UnitOfMeasure): MayUntranslatedDisplayName<UnitOfMeasure> =
         MayUntranslatedDisplayName(unit, unitFormatter.cleanAndGetUnitDisplayName(unit.englishName, UnitFormatStyle.Long) ?: unit.englishName, // TODO: what else to use as fallback value?
-            getDisplayNameForUntranslatedUnit(unit))
+            unit.symbol ?: unit.code, getDisplayNameForUntranslatedUnit(unit))
 
     private fun getDisplayNameForUntranslatedUnit(unit: UnitOfMeasure): StringResource? = when (unit) {
         UnitOfMeasure.H87 -> Res.string.unit_piece

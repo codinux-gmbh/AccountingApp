@@ -56,7 +56,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         val countryDisplayName = countryDisplayNames.all.first { it.value == country }
 
         Select(Res.string.country, countryDisplayNames.preferredValues /*+ countryDisplayNames.minorValues*/, countryDisplayName,
-            { viewModel.countryChanged(it.value) }, { if (isCompactScreen) it.value.alpha2Code else countryDisplayName.displayName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp),
+            { viewModel.countryChanged(it.value) }, { if (isCompactScreen) it.shortName else countryDisplayName.displayName }, Modifier.padding(start = 8.dp).widthForScreen(isCompactScreen, 88.dp, 225.dp),
             dropDownWidth = 300.dp, /*addSeparatorAfterItem = countryDisplayNames.preferredValues.size*/) { country ->
             Text(country.displayName)
         }

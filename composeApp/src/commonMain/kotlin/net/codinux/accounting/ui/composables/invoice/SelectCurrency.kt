@@ -20,10 +20,10 @@ private val currencyDisplayNames = DI.invoiceService.getCurrencyDisplayNamesSort
 fun SelectCurrency(value: Currency, onValueChanged: (Currency) -> Unit) {
 
     Select(Res.string.currency, currencyDisplayNames.preferredValues /* + currencyDisplayNames.minorValues */, currencyDisplayNames.all.first { it.value == value },
-        { onValueChanged(it.value) }, { it.value.currencySymbol ?: it.value.alpha3Code },
+        { onValueChanged(it.value) }, { it.shortName },
         Modifier.width(110.dp), textStyle = TextStyle(textAlign = TextAlign.End), dropDownWidth = 300.dp, required = true,
         /*addSeparatorAfterItem = currencyDisplayNames.preferredValues.size*/) { currency ->
-        Text("${currency.displayName} (${currency.value.currencySymbol ?: currency.value.alpha3Code})")
+        Text("${currency.displayName} (${currency.shortName})")
     }
 
 }

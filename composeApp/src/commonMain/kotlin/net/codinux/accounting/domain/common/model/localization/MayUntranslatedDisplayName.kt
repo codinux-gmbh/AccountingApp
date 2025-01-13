@@ -5,5 +5,6 @@ import org.jetbrains.compose.resources.StringResource
 class MayUntranslatedDisplayName<T>(
     value: T,
     displayName: String,
+    shortName: String,
     val stringResourceForUntranslatedDisplayName: StringResource? = null,
-) : DisplayName<T>(value, displayName)
+) : DisplayName<T>(value, displayName, shortName)

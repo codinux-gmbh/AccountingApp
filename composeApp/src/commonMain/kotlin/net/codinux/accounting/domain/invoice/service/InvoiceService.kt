@@ -123,8 +123,8 @@ class InvoiceService(
 
         val all = localizationService.getAllUnitDisplayNames()
             .map {
-                if (it.stringResourceForUntranslatedDisplayName != null) DisplayName(it.value, stringResource(it.stringResourceForUntranslatedDisplayName))
-                else DisplayName(it.value, it.displayName)
+                if (it.stringResourceForUntranslatedDisplayName != null) DisplayName(it.value, stringResource(it.stringResourceForUntranslatedDisplayName), it.shortName)
+                else DisplayName(it.value, it.displayName, it.shortName)
             }
             .sortedBy { it.displayName }
         val allByCode = all.associateBy { it.value.code }

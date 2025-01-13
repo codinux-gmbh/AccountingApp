@@ -124,10 +124,10 @@ private fun SelectUnit(value: UnitOfMeasure?, onValueChanged: (UnitOfMeasure?) -
 
     val unitsOfMeasure = DI.invoiceService.getUnitOfMeasureDisplayNamesSorted()
 
-    Select(Res.string.unit, unitsOfMeasure.preferredValues /*+ unitsOfMeasure.minorValues */, unitsOfMeasure.all.firstOrNull { it.value == value}, { onValueChanged(it?.value) }, { it?.value?.symbol ?: it?.value?.code ?: "" },
+    Select(Res.string.unit, unitsOfMeasure.preferredValues /*+ unitsOfMeasure.minorValues */, unitsOfMeasure.all.firstOrNull { it.value == value}, { onValueChanged(it?.value) }, { it?.shortName ?: "" },
         Modifier.width(150.dp), dropDownWidth = 300.dp, /* addSeparatorAfterItem = unitsOfMeasure.preferredValues.size, */
         backgroundColor = MaterialTheme.colors.surface, required = true) { unit ->
-        Text(unit?.let { "${unit.displayName} (${unit.value.symbol ?: unit.value.code})" } ?: "")
+        Text(unit?.let { "${unit.displayName} (${unit.shortName})" } ?: "")
     }
 
 }

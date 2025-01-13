@@ -89,7 +89,7 @@
     <string name="invoice_data_error_value_invalid">Invalid value '%1$s'</string>
     <string name="invoice_data_error_calculated_amounts_are_invalid">Invoice amounts are incorrectly calculated.</string>
 
-    <string name="notification_early_preview_version">This is a very early preview version that contains only the most essential features (and not even those are bug-free). So please use it with caution. We're working on it.</string>
+    <string name="notification_early_preview_version">This is an early preview version that is still missing features, so please be lenient in your judgment.</string>
 
     <string name="show_e_invoice_file">Show eInvoice file</string>
     <string name="select_e_invoice_file">Select eInvoice file ...</string>

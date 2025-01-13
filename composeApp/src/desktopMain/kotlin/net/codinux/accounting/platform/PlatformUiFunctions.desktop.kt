@@ -24,10 +24,9 @@ actual object PlatformUiFunctions {
         val config = LocalWindowInfo.current.containerSize
 
         return remember(density, config) {
-            ScreenSizeInfo(
-                heightDp = with(density) { config.height.toDp() },
-                widthDp = with(density) { config.width.toDp() }
-            )
+            with(density) {
+                ScreenSizeInfo(config.height.toDp(), config.width.toDp())
+            }
         }
     }
 

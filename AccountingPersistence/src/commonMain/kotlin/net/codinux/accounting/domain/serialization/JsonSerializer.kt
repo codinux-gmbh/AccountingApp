@@ -1,5 +1,6 @@
 package net.codinux.accounting.domain.serialization
 
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class JsonSerializer {

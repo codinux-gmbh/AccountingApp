@@ -9,10 +9,21 @@ import net.codinux.accounting.ui.config.Style
 import org.jetbrains.compose.resources.StringResource
 
 @Composable
-fun Section(titleResource: StringResource, spaceBefore: Dp = Style.SectionTopPadding, innerVerticalPadding: Dp = 0.dp, content: @Composable () -> Unit) {
+fun Section(
+    titleResource: StringResource,
+    nextElementIsTextField: Boolean = false,
+    spaceBefore: Dp = Style.SectionTopPadding,
+    innerVerticalPadding: Dp = 0.dp,
+    content: @Composable () -> Unit
+) {
+
     RoundedCornersCard(Modifier.fillMaxWidth().padding(top = spaceBefore)) {
         Column(Modifier.fillMaxWidth().padding(all = Style.FormCardPadding).padding(vertical = innerVerticalPadding)) {
             SectionHeader(titleResource)
+
+            if (nextElementIsTextField) {
+                Spacer(Modifier.height(6.dp))
+            }
 
             content()
         }

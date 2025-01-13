@@ -53,17 +53,17 @@ fun InvoiceForm() {
                 TextOfMaxWidth(Res.string.notification_early_preview_version, Modifier.padding(top = Style.SectionTopPadding * 2, bottom = Style.SectionTopPadding), Colors.HighlightedTextColor)
             }
 
-            Section(Res.string.invoice_details) {
+            Section(Res.string.invoice_details, true) {
                 InvoiceDetailsForm(details, isCompactScreen)
             }
 
-            Section(Res.string.supplier) {
+            Section(Res.string.supplier, true) {
                 InvoicePartyForm(supplier, true, isCompactScreen, settings.showAllSupplierFields) {
                     invoiceDataChanged(settings.copy(showAllSupplierFields = it))
                 }
             }
 
-            Section(Res.string.customer) {
+            Section(Res.string.customer, true) {
                 InvoicePartyForm(customer, false, isCompactScreen, settings.showAllCustomerFields) {
                     invoiceDataChanged(settings.copy(showAllCustomerFields = it))
                 }
@@ -73,7 +73,7 @@ fun InvoiceForm() {
                 DescriptionOfServicesForm(descriptionOfServices, isCompactScreen)
             }
 
-            Section(Res.string.bank_details) {
+            Section(Res.string.bank_details, true) {
                 BankDetailsForm(bankDetails)
             }
 

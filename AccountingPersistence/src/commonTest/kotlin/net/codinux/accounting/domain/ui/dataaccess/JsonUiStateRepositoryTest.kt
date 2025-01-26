@@ -17,7 +17,7 @@ class JsonUiStateRepositoryTest {
 
     @Test
     fun saveAndRetrieveUiState() = runTest {
-        val uiState = UiStateEntity(MainScreenTab.CreateInvoice, 7, 8, 850, 600, "Maximized")
+        val uiState = UiStateEntity(MainScreenTab.CreateInvoice, 7, 8, 850, 600, false, "Maximized")
 
 
         underTest.saveUiState(uiState)

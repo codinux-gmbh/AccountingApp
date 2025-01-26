@@ -9,6 +9,7 @@ import net.codinux.accounting.domain.ui.model.MainScreenTab
 import net.codinux.accounting.domain.ui.model.UiStateEntity
 import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.resources.*
+import net.codinux.accounting.ui.state.ScreenSizeInfo
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.log.logger
 
@@ -21,6 +22,8 @@ class UiService(
     private val defaultUiState = UiStateEntity(uiState.selectedMainScreenTab.value)
 
     private var currentUiState = defaultUiState
+
+    private var uiStateInitialized = false
 
     private val log by logger()
 
@@ -35,6 +38,8 @@ class UiService(
 
             uiState.errorOccurred(ErroneousAction.LoadFromDatabase, Res.string.error_message_could_not_load_ui_state, e)
         }
+
+        this.uiStateInitialized = true
     }
 
 
@@ -72,6 +77,8 @@ class UiService(
     }
 
     private fun saveUiState(newState: UiStateEntity) {
+        currentUiState = newState
+
         coroutineScope.launch {
             try {
                 repository.saveUiState(newState)

@@ -57,9 +57,9 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
         }
     } else {
         Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-            ServiceDateForm(viewModel, isCompactScreen)
-
-            Spacer(Modifier.weight(1f))
+            Column(Modifier.weight(1f)) {
+                ServiceDateForm(viewModel, isCompactScreen)
+            }
 
             SelectCurrency(currency) { viewModel.currencyChanged(it) }
         }
@@ -67,9 +67,8 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
 
     Column(Modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding).height(30.dp), verticalAlignment = Alignment.CenterVertically) {
-            Text(stringResource(Res.string.delivered_goods_or_provided_services), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-
-            Spacer(Modifier.weight(1f))
+            Text(stringResource(Res.string.delivered_goods_or_provided_services), Modifier.weight(1f),
+                fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
 
             TextButton({ viewModel.itemAdded(InvoiceItemViewModel()) }, Modifier.width(48.dp), contentPadding = PaddingValues(0.dp)) {
                 Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.End) {

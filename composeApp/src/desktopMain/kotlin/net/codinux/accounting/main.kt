@@ -15,11 +15,13 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
+    val state = rememberWindowState(position = WindowPosition(Alignment.Center), size = DpSize(1000.dp, 800.dp))
+
     Window(
         onCloseRequest = ::exitApplication,
         title = stringResource(Res.string.app_name),
         icon = painterResource(Res.drawable.AppIcon_svg),
-        state = WindowState(position = WindowPosition(Alignment.Center), size = DpSize(1000.dp, 800.dp)),
+        state = state,
     ) {
         App()
 

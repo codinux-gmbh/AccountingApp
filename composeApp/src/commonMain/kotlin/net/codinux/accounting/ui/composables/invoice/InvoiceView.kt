@@ -258,6 +258,7 @@ private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
         InvoiceField.CustomerCountry -> Res.string.invoice_field_customer_country
         InvoiceField.ItemUnit -> Res.string.invoice_field_item_unit
         InvoiceField.TotalAmount -> Res.string.invoice_field_total_amount
+        else -> Res.string.invoice_field_unnamed_field // TODO: add translations for other invoice fields
     }
 
     val errorMessage = when (dataError.errorType) {

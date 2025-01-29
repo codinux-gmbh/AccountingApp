@@ -45,6 +45,7 @@
     <string name="error_listening_for_new_emails">Fehler beim Lauschen auf neue E-Mails</string>
     <string name="error_load_from_database">Daten konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_save_to_database">Daten konnten nicht in die Datenbank gespeichert werden</string>
+    <string name="error_message_technical_error">Ein technischer Fehler ist aufgetreten</string>
 
 
     <!-- UiState -->
@@ -88,6 +89,7 @@
     <string name="invoice_data_error_value_not_uppercase">Wert ist nicht gemäß Spezifikation in Großbuchstaben.</string>
     <string name="invoice_data_error_value_invalid">Ungültiger Wert '%1$s'</string>
     <string name="invoice_data_error_calculated_amounts_are_invalid">Rechnungsbeträge sind falsch berechnet.</string>
+    <string name="invoice_field_unnamed_field"> </string>
 
     <string name="notification_early_preview_version">Dies ist eine frühe Preview Version der noch Funktionen fehlen, deshalb bitte im milden Licht betrachten</string>
 

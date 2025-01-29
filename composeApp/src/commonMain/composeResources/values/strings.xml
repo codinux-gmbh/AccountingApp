@@ -45,6 +45,7 @@
     <string name="error_listening_for_new_emails">Failed listening for new emails</string>
     <string name="error_load_from_database">Failed loading data from database</string>
     <string name="error_save_to_database">Failed writing data to database</string>
+    <string name="error_message_technical_error">Technical error</string>
 
 
     <!-- UiState -->
@@ -88,6 +89,7 @@
     <string name="invoice_data_error_value_not_uppercase">Value is not as according to specification in capital letters.</string>
     <string name="invoice_data_error_value_invalid">Invalid value '%1$s'</string>
     <string name="invoice_data_error_calculated_amounts_are_invalid">Invoice amounts are incorrectly calculated.</string>
+    <string name="invoice_field_unnamed_field"> </string>
 
     <string name="notification_early_preview_version">This is an early preview version that is still missing features, so please be lenient in your judgment.</string>
 

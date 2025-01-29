@@ -97,6 +97,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
         if (invoice == null) {
             if (pdfResult != null) {
                 val stringResource = when (pdfResult.type) {
+                    ReadEInvoicePdfResultType.TechnicalError -> Res.string.error_message_technical_error
                     ReadEInvoicePdfResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
                     ReadEInvoicePdfResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
                     ReadEInvoicePdfResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments

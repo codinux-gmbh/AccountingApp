@@ -1,5 +1,6 @@
 [versions]
-kotlin = "2.0.21"
+# don't use Kotlin 2.0.21, it causes "IllegalArgumentException: FAKE_OVERRIDE declarations are not preserved in metadata and should not be marked with annotations" on iOS
+kotlin = "2.0.20"
 kotlinx-coroutines = "1.9.0"
 kotlinx-serialization = "1.7.3"
 

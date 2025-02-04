@@ -162,10 +162,10 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat, { generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdfBytes, pdf) ->
-                        createdPdfFile = pdf
-                        createdPdfBytes = pdfBytes
+                        if (pdf != null && pdfBytes != null && pdfBytes.size > 0) {
+                            createdPdfFile = pdf
+                            createdPdfBytes = pdfBytes
 
-                        if (pdf != null) {
                             coroutineScope.launch(Dispatchers.IoOrDefault) {
                                 DI.fileHandler.openFileInDefaultViewer(pdf, "application/pdf")
                             }
@@ -174,8 +174,10 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                     }
                 }
 
-                generatedEInvoiceXml = xmlToFile?.first
-                createdXmlFile = xmlToFile?.second
+                if (xmlToFile?.first != null) {
+                    generatedEInvoiceXml = xmlToFile.first
+                    createdXmlFile = xmlToFile.second
+                }
 
                 isCreatingEInvoice = false
 

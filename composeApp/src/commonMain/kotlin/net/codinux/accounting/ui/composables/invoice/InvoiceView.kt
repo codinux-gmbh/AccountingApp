@@ -82,7 +82,14 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
             }
 
             Section(Res.string.description_of_services) {
-                // TODO: check if the service period is stated in eInvoice
+                invoice.details.serviceDate?.asDeliveryDate()?.let { deliveryDate ->
+                    HorizontalLabelledValue(Res.string.delivery_date, formatUtil.formatShortDate(deliveryDate.deliveryDate))
+                }
+                invoice.details.serviceDate?.asServicePeriod()?.let { servicePeriod ->
+                    val startDate = formatUtil.formatShortDate(servicePeriod.startDate)
+                    val endDate = formatUtil.formatShortDate(servicePeriod.endDate)
+                    HorizontalLabelledValue(Res.string.service_period, stringResource(Res.string.from_to, startDate, endDate))
+                }
 
                 Text(stringResource(Res.string.delivered_goods_or_provided_services), Modifier.padding(top = 8.dp), fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
 

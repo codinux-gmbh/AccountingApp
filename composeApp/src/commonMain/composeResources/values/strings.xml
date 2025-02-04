@@ -31,6 +31,7 @@
     <string name="port">Port</string>
 
     <string name="month">Month</string>
+    <string name="from_to">%1$s - %2$s</string>
 
     <string name="currency">Currency</string>
 

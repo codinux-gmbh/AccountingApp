@@ -31,7 +31,7 @@ actual class PlatformFileHandler {
     actual fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String?) {
     }
 
-    actual fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String, filename: String): PlatformFile {
+    actual fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, filename: String): PlatformFile {
         return fromPath(filename + ".pdf") // TODO:
     }
 

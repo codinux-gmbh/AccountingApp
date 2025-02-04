@@ -8,6 +8,7 @@ import net.codinux.accounting.domain.common.model.localization.PrioritizedDispla
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.GeneratedInvoices
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
@@ -183,12 +184,22 @@ class InvoiceService(
 
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): String? =
-        xmlCreator.createInvoiceXml(invoice, format).value // TODO: show error
+    suspend fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): Pair<String?, PlatformFile?> {
+        val result = xmlCreator.createInvoiceXml(invoice, format)
+
+        return result.value?.let {
+            val xml = it
+            val xmlFile = saveCreatedInvoiceFile(invoice, xml.encodeToByteArray(), "xml")
+            xml to xmlFile
+        } ?: run {
+            // TODO: show error
+            null to null
+        }
+    }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceXmlFormat, pdfFile: PlatformFile): String? {
-        val xml = createEInvoiceXml(invoice, format)
+    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceXmlFormat, pdfFile: PlatformFile): Pair<String?, PlatformFile?> {
+        val (xml, xmlFile) = createEInvoiceXml(invoice, format)
 
         if (xml != null) {
             val pdfBytes = pdfFile.readBytes() // as it's not possible to read and write from/to the same file at the same time, read PDF first (what PDFBox does anyway) before overwriting it
@@ -203,27 +214,33 @@ class InvoiceService(
             // TODO: show error message
         }
 
-        return xml
+        return xml to xmlFile
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat, invoiceXmlCreated: ((String?) -> Unit)? = null): Triple<String, PlatformFile?, ByteArray?>? {
-        val xml = createEInvoiceXml(invoice, format)
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+        val xmlResult = createEInvoiceXml(invoice, format)
+        val xml = xmlResult.first
         invoiceXmlCreated?.invoke(xml)
         if (xml == null) {
             // TODO: show error message
             return null
         }
 
-        val pdfBytes = pdfCreator.createFacturXPdf(xml, format).value // TODO: show error
+        val pdfResult = pdfCreator.createFacturXPdf(xml, format)
+        val pdfBytes = pdfResult.value // TODO: show error
         if (pdfBytes == null) {
             // TODO: show error message
-            return Triple(xml, null, null)
+            return GeneratedInvoices(xml, xmlResult.second, null, null)
         }
 
-        val filename = invoice.shortDescription
+        return GeneratedInvoices(xml, xmlResult.second, pdfBytes, saveCreatedInvoiceFile(invoice, pdfBytes, "pdf"))
+    }
 
-        return Triple(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml, filename), pdfBytes)
+    private fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, type: String): PlatformFile {
+        val filename = invoice.shortDescription + "." + type
+
+        return fileHandler.saveCreatedInvoiceFile(invoice, fileContent, filename)
     }
 
 

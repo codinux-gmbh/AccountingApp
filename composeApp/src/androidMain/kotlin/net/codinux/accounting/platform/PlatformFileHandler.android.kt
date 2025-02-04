@@ -51,16 +51,14 @@ actual class PlatformFileHandler(
         }
     }
 
-    actual fun saveCreatedInvoiceFile(invoice: Invoice, pdfBytes: ByteArray, xml: String, filename: String): PlatformFile {
+    actual fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, filename: String): PlatformFile {
 
         val directory = File(invoicesDirectory, invoice.details.invoiceDate.year.toString()).also { it.mkdirs() }
-        val pdfFile = File(directory, filename + ".pdf")
+        val invoiceFile = File(directory, filename)
 
-        pdfFile.writeBytes(pdfBytes)
+        invoiceFile.writeBytes(fileContent)
 
-        File(directory, filename + ".xml").writeText(xml)
-
-        return this.fromPath(pdfFile.absolutePath)
+        return this.fromPath(invoiceFile.absolutePath)
     }
 
     actual fun savePdfWithAttachedXml(pdfFile: PlatformFile, pdfBytes: ByteArray) {

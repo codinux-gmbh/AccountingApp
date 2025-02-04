@@ -221,7 +221,7 @@ class InvoiceService(
             return Triple(xml, null, null)
         }
 
-        val filename = "${invoice.details.invoiceDate.toDotSeparatedIsoDate()} ${invoice.details.invoiceNumber} ${invoice.customer.name}"
+        val filename = invoice.shortDescription
 
         return Triple(xml, fileHandler.saveCreatedInvoiceFile(invoice, pdfBytes, xml, filename), pdfBytes)
     }

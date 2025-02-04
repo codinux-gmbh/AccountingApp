@@ -217,8 +217,10 @@ android {
         resources {
             pickFirsts += "META-INF/LICENSE.md"
             pickFirsts += "/META-INF/{AL2.0,LGPL2.1}"
+            pickFirsts += "META-INF/LICENSE-LGPL-{2.1,3}.txt"
             pickFirsts += "META-INF/NOTICE.md"
             pickFirsts += "META-INF/DEPENDENCIES"
+            pickFirsts += "META-INF/LICENSE-W3C-TEST"
             pickFirsts += "META-INF/buildinfo.xml"
             pickFirsts += "META-INF/sun-jaxb.episode"
             pickFirsts += "translation/translatable-texts.xml"

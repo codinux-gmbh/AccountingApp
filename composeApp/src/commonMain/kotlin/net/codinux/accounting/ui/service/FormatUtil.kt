@@ -36,6 +36,9 @@ class FormatUtil(
     fun formatShortDate(date: LocalDate): String =
         dateTimeFormatter.formatDate(date.toI18nDate(), net.codinux.i18n.datetime.FormatStyle.Short)
 
+    fun formatMediumDate(date: LocalDate): String =
+        dateTimeFormatter.formatDate(date.toI18nDate(), net.codinux.i18n.datetime.FormatStyle.Medium)
+
 
     fun getMonthName(month: Month): String =
         formatMonth(month, false)

@@ -68,7 +68,7 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
             }
 
             Section(Res.string.invoice_details) {
-                HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatShortDate(invoice.details.invoiceDate))
+                HorizontalLabelledValue(Res.string.invoice_date, formatUtil.formatMediumDate(invoice.details.invoiceDate))
 
                 HorizontalLabelledValue(Res.string.invoice_number, invoice.details.invoiceNumber)
             }
@@ -83,11 +83,11 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
             Section(Res.string.description_of_services) {
                 invoice.details.serviceDate?.asDeliveryDate()?.let { deliveryDate ->
-                    HorizontalLabelledValue(Res.string.delivery_date, formatUtil.formatShortDate(deliveryDate.deliveryDate))
+                    HorizontalLabelledValue(Res.string.delivery_date, formatUtil.formatMediumDate(deliveryDate.deliveryDate))
                 }
                 invoice.details.serviceDate?.asServicePeriod()?.let { servicePeriod ->
-                    val startDate = formatUtil.formatShortDate(servicePeriod.startDate)
-                    val endDate = formatUtil.formatShortDate(servicePeriod.endDate)
+                    val startDate = formatUtil.formatMediumDate(servicePeriod.startDate)
+                    val endDate = formatUtil.formatMediumDate(servicePeriod.endDate)
                     HorizontalLabelledValue(Res.string.service_period, stringResource(Res.string.from_to, startDate, endDate))
                 }
 

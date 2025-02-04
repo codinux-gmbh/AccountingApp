@@ -27,6 +27,8 @@ fun LocalDate.withDayOfMonth(dayOfMonth: Int) =
         LocalDate(this.year, this.monthNumber, dayOfMonth)
     }
 
+fun LocalDate.atEndOfMonth() = LocalDate(this.year, this.monthNumber, this.lengthOfMonth())
+
 fun LocalDate.lengthOfMonth(): Int = when (this.month) {
     Month.FEBRUARY -> {
         if (this.year % 4 == 0) 29 // not perfectly fine, e.g. 2100 will not be a leap year, but i think till then this software will not exist anymore

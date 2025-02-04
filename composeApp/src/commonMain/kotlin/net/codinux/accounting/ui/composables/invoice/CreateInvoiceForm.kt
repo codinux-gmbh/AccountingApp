@@ -120,7 +120,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         else null
 
         return Invoice(
-            InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value, descriptionOfServices.currency.value),
+            InvoiceDetails(details.invoiceNumber.value, details.invoiceDate.value, descriptionOfServices.currency.value, descriptionOfServices.serviceDate.value),
             Party(supplier.name.value, supplier.address.value, supplier.additionalAddressLine.value, supplier.postalCode.value, supplier.city.value, supplier.country.value, nullable(supplier.vatId), nullable(supplier.email), nullable(supplier.phone), bankDetails = mappedBankDetails),
             Party(customer.name.value, customer.address.value, customer.additionalAddressLine.value, customer.postalCode.value, customer.city.value, customer.country.value, nullable(customer.vatId), nullable(customer.email), nullable(customer.phone)),
             descriptionOfServices.items.value.map { it.toInvoiceItem() }

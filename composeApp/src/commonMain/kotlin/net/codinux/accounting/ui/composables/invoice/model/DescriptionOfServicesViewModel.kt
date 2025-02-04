@@ -1,11 +1,11 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.invoicing.model.Invoice
+import net.codinux.invoicing.model.LocalDate
+import net.codinux.invoicing.model.ServiceDate
 import net.codinux.invoicing.model.codes.Currency
 
 class DescriptionOfServicesViewModel(selectedServiceDateOption: ServiceDateOptions, invoice: Invoice?) : ViewModel() {
@@ -15,6 +15,13 @@ class DescriptionOfServicesViewModel(selectedServiceDateOption: ServiceDateOptio
 
     fun serviceDateOptionChanged(newValue: ServiceDateOptions) {
         _serviceDateOption.value = newValue
+    }
+
+    private val _serviceDate = MutableStateFlow(invoice?.details?.serviceDate ?: ServiceDate.DeliveryDate(LocalDate.now()))
+    val serviceDate: StateFlow<ServiceDate> = _serviceDate.asStateFlow()
+
+    fun serviceDateChanged(newValue: ServiceDate) {
+        _serviceDate.value = newValue
     }
 
     private val _currency = MutableStateFlow(invoice?.details?.currency ?: Currency.Euro) // TODO: get user's default currency

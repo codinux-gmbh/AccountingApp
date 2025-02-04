@@ -51,9 +51,10 @@ object DataGenerator {
             CustomerVatId, CustomerEmail, CustomerPhone, CustomerFax, bankDetails = CustomerBankDetails),
         items: List<InvoiceItem> = listOf(createItem()),
         currency: Currency = Currency.Euro,
+        serviceDate: ServiceDate = ServiceDate.ServicePeriod(LocalDate(2015, 10, 1), LocalDate(2015, 10, 31)),
         dueDate: LocalDate? = DueDate,
         paymentDescription: String? = dueDate?.let { "Zahlbar ohne Abzug bis ${dueDate.dayOfMonth}.${dueDate.month}.${dueDate.year}}" },
-    ) = Invoice(InvoiceDetails(invoiceNumber, invoiceDate, currency, dueDate, paymentDescription), supplier, customer, items)
+    ) = Invoice(InvoiceDetails(invoiceNumber, invoiceDate, currency, serviceDate, dueDate, paymentDescription), supplier, customer, items)
 
     fun createParty(
         name: String,

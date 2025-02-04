@@ -17,9 +17,7 @@ import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.compose.SaverResultLauncher
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
-import io.github.vinceglb.filekit.core.PickerType
-import io.github.vinceglb.filekit.core.PlatformFile
-import io.github.vinceglb.filekit.core.baseName
+import io.github.vinceglb.filekit.core.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -37,6 +35,7 @@ import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.*
+import net.codinux.accounting.ui.extensions.extension
 import net.codinux.invoicing.model.*
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.stringResource
@@ -84,19 +83,34 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
     val clipboardManager = LocalClipboardManager.current
 
+    val coroutineScope = rememberCoroutineScope()
+
     var pdfToAttachXmlTo by remember { mutableStateOf<PlatformFile?>(null) }
 
     var createdPdfFile by remember { mutableStateOf<PlatformFile?>(null) }
     // PlatformFile.readBytes() is a suspend function, so we cannot call it on behalf in non-suspend function when 'Save PDF' is clicked
     var createdPdfBytes by remember { mutableStateOf<ByteArray?>(null) } // -> do it right after creating PDF and store PDF bytes in createdPdfBytes
 
-    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent) { selectedFile ->
-        pdfToAttachXmlTo = selectedFile
+    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent ?: settings.lastOpenFileDirectory) { selectedFile ->
+        if (selectedFile != null) {
+            pdfToAttachXmlTo = selectedFile
+            coroutineScope.launch {
+                invoiceService.saveCreateInvoiceSettings(settings.copy(lastOpenFileDirectory = selectedFile.parent))
+            }
+        }
     }
 
-    val saveFileLauncher = rememberFileSaverLauncher { }
-
-    val coroutineScope = rememberCoroutineScope()
+    val saveFileLauncher = rememberFileSaverLauncher { file ->
+        if (file != null) {
+            coroutineScope.launch {
+                if (file.extension.lowercase() == "xml") {
+                    invoiceService.saveCreateInvoiceSettings(settings.copy(lastXmlSaveDirectory = file.parent))
+                } else if (file.extension.lowercase() == "pdf") {
+                    invoiceService.saveCreateInvoiceSettings(settings.copy(lastPdfSaveDirectory = file.parent))
+                }
+            }
+        }
+    }
 
 
     @Composable
@@ -129,6 +143,14 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         )
     }
 
+    suspend fun saveCreateInvoiceSettings(createInvoice: Invoice) {
+        val newSettings = CreateInvoiceSettings(createInvoice, settings.showAllSupplierFields, settings.showAllCustomerFields,
+            descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
+            settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory)
+
+        invoiceService.saveCreateInvoiceSettings(newSettings)
+    }
+
     fun createEInvoice() {
         isCreatingEInvoice = true
 
@@ -157,7 +179,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
                 isCreatingEInvoice = false
 
-                invoiceService.saveCreateInvoiceSettings(CreateInvoiceSettings(invoice, settings.showAllSupplierFields, settings.showAllCustomerFields, descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml))
+                saveCreateInvoiceSettings(invoice)
             } catch (e: Throwable) {
                 Log.error(e) { "Could not create or save eInvoice" }
 
@@ -210,7 +232,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     generatedEInvoiceXml?.let { generatedEInvoiceXml ->
         if (isCompactScreen && createdPdfFile != null) { // two lines on mobile
             Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
-                SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdXmlFile, createdPdfFile, createdPdfBytes, details, 130.dp)
+                SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdXmlFile, createdPdfFile, createdPdfBytes, details, settings, 130.dp)
             }
 
             Row(Modifier.padding(top = VerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -228,7 +250,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                     Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
                 }
 
-                SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdXmlFile, createdPdfFile, createdPdfBytes, details, 120.dp)
+                SaveButtons(saveFileLauncher, generatedEInvoiceXml, createdXmlFile, createdPdfFile, createdPdfBytes, details, settings, 120.dp)
 
                 Spacer(Modifier.weight(1f))
 
@@ -255,17 +277,18 @@ private fun SaveButtons(
     createdPdfFile: PlatformFile?,
     createdPdfBytes: ByteArray?,
     details: InvoiceDetailsViewModel,
+    settings: CreateInvoiceSettings,
     buttonWidth: Dp
 ) {
     val invoiceFilename = createdPdfFile?.baseName.takeUnless { it.isNullOrBlank() } ?: createdXmlFile?.baseName.takeUnless { it.isNullOrBlank() }
                             ?: "invoice-${details.invoiceNumber.value}" // TODO: use same format as Invoice.shortDescription
 
-    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", createdXmlFile?.parent) }, contentPadding = PaddingValues(0.dp)) {
+    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) }, contentPadding = PaddingValues(0.dp)) {
         Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
     }
 
     createdPdfFile?.let {
-        TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", createdPdfFile.parent) }) {
+        TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) }) {
             Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
         }
     }

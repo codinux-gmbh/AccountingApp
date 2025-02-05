@@ -14,7 +14,7 @@ import net.codinux.accounting.domain.testdata.DataGenerator
 import net.codinux.invoicing.model.EInvoiceXmlFormat
 import kotlin.test.Test
 
-class SqlInvoiceRepository {
+class SqlInvoiceRepositoryTest {
 
     private val underTest = AccountingSqlPersistence.sqlInvoiceRepository
 

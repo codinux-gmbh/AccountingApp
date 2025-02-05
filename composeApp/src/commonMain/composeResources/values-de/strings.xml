@@ -84,11 +84,23 @@
 
     <string name="invoice_contains_errors">Rechnungsdaten fehlerhaft</string>
     <string name="error_message_invoice_contains_errors">⚠️ Die Rechnungsdaten konnten gelesen werden, aber sie enthalten folgende Fehler:</string>
+    <string name="invoice_field_invoice_date">Rechnungsdatum</string>
+    <string name="invoice_field_invoice_number">Rechnungsnummer</string>
     <string name="invoice_field_currency">Währung</string>
+    <string name="invoice_field_supplier">Leistungserbringer</string>
     <string name="invoice_field_supplier_country">Land des Leistungserbringer</string>
+    <string name="invoice_field_customer">Leistungsempfänger</string>
     <string name="invoice_field_customer_country">Land des Leistungsempfänger</string>
+    <string name="invoice_field_items">Rechnungsposten</string>
+    <string name="invoice_field_item_name">Name des Rechnungspostens</string>
+    <string name="invoice_field_item_quantity">Menge des Rechnungspostens</string>
     <string name="invoice_field_item_unit">Einheit des Rechnungspostens</string>
-    <string name="invoice_field_total_amount">Rechnungsbetrag</string>
+    <string name="invoice_field_item_unit_price">Einzelpreis des Rechnungspostens</string>
+    <string name="invoice_field_total_amounts">Rechnungsbetrag</string>
+    <string name="invoice_field_line_total_amount">Nettobetrag der Rechnungsposten</string>
+    <string name="invoice_field_tax_basis_total_amount">Zu versteuernder Betrag</string>
+    <string name="invoice_field_grand_total_amount">Gesamtbetrag</string>
+    <string name="invoice_field_due_payable_amount">Zu zahlender Betrag</string>
     <string name="invoice_data_error_value_not_set">Wert ist nicht gesetzt.</string>
     <string name="invoice_data_error_value_not_uppercase">Wert ist nicht gemäß Spezifikation in Großbuchstaben.</string>
     <string name="invoice_data_error_value_invalid">Ungültiger Wert '%1$s'</string>

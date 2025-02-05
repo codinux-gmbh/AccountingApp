@@ -84,11 +84,23 @@
 
     <string name="invoice_contains_errors">Incorrect invoice data</string>
     <string name="error_message_invoice_contains_errors">⚠️ The invoice data could be read, but they contain the following errors:</string>
+    <string name="invoice_field_invoice_date">Invoice date</string>
+    <string name="invoice_field_invoice_number">Invoice number</string>
     <string name="invoice_field_currency">Currency</string>
+    <string name="invoice_field_supplier">Supplier</string>
     <string name="invoice_field_supplier_country">Supplier country</string>
+    <string name="invoice_field_customer">Customer</string>
     <string name="invoice_field_customer_country">Customer country</string>
+    <string name="invoice_field_items">Items</string>
+    <string name="invoice_field_item_name">Item name</string>
+    <string name="invoice_field_item_quantity">Item quantity</string>
     <string name="invoice_field_item_unit">Item unit</string>
-    <string name="invoice_field_total_amount">Total amounts</string>
+    <string name="invoice_field_item_unit_price">Item unit price</string>
+    <string name="invoice_field_total_amounts">Total amounts</string>
+    <string name="invoice_field_line_total_amount">Line total amount</string>
+    <string name="invoice_field_tax_basis_total_amount">Tax basis total amount</string>
+    <string name="invoice_field_grand_total_amount">Grand total amount</string>
+    <string name="invoice_field_due_payable_amount">Due payable amount</string>
     <string name="invoice_data_error_value_not_set">Value is not set.</string>
     <string name="invoice_data_error_value_not_uppercase">Value is not as according to specification in capital letters.</string>
     <string name="invoice_data_error_value_invalid">Invalid value '%1$s'</string>

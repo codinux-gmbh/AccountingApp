@@ -260,12 +260,27 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
 @Composable
 private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
     val fieldName = when (dataError.field) {
+        InvoiceField.InvoiceDate -> Res.string.invoice_field_invoice_date
+        InvoiceField.InvoiceNumber -> Res.string.invoice_field_invoice_number
+
         InvoiceField.Currency -> Res.string.invoice_field_currency
+
+        InvoiceField.Supplier -> Res.string.invoice_field_supplier
         InvoiceField.SupplierCountry -> Res.string.invoice_field_supplier_country
+        InvoiceField.Customer -> Res.string.invoice_field_customer
         InvoiceField.CustomerCountry -> Res.string.invoice_field_customer_country
+
+        InvoiceField.Items -> Res.string.invoice_field_items
+        InvoiceField.ItemName -> Res.string.invoice_field_item_name
+        InvoiceField.ItemQuantity -> Res.string.invoice_field_item_quantity
         InvoiceField.ItemUnit -> Res.string.invoice_field_item_unit
-        InvoiceField.TotalAmount -> Res.string.invoice_field_total_amount
-        else -> Res.string.invoice_field_unnamed_field // TODO: add translations for other invoice fields
+        InvoiceField.ItemUnitPrice -> Res.string.invoice_field_item_unit_price
+
+        InvoiceField.TotalAmount -> Res.string.invoice_field_total_amounts
+        InvoiceField.LineTotalAmount -> Res.string.invoice_field_line_total_amount
+        InvoiceField.TaxBasisTotalAmount -> Res.string.invoice_field_tax_basis_total_amount
+        InvoiceField.GrandTotalAmount -> Res.string.invoice_field_grand_total_amount
+        InvoiceField.DuePayableAmount -> Res.string.invoice_field_due_payable_amount
     }
 
     val errorMessage = when (dataError.errorType) {

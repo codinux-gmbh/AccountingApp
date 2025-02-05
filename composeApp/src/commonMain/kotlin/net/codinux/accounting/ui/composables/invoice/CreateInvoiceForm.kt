@@ -185,9 +185,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
                 saveCreateInvoiceSettings(invoice)
             } catch (e: Throwable) {
-                Log.error(e) { "Could not create or save eInvoice" }
-
-                DI.uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, e)
+                invoiceService.showCouldNotCreateInvoiceError(e)
             }
         }
     }

@@ -174,6 +174,10 @@
     <string name="save_pdf">Save PDF</string>
 
     <string name="error_message_could_not_create_invoice">Could not create invoice</string>
+    <string name="error_message_could_not_create_invoice_xml">Could not create invoice XML</string>
+    <string name="error_message_could_not_create_invoice_pdf">Could not create invoice PDF</string>
+    <string name="error_message_could_not_attach_invoice_xml_to_pdf">Could not attach invoice XML to PDF</string>
+    <string name="error_message_could_not_save_invoice_file">Could not save invoice file</string>
     <string name="error_message_no_application_found_to_show_file_of_type">No app found to show file of type %1$s</string>
     <string name="error_message_created_invoice_cannot_be_displayed">Created invoice cannot be displayed</string>
     <string name="error_message_could_not_load_invoices">Could not load invoice data from database</string>

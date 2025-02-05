@@ -24,6 +24,7 @@ import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
 import net.codinux.log.logger
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
 class InvoiceService(
@@ -192,7 +193,7 @@ class InvoiceService(
             val xmlFile = saveCreatedInvoiceFile(invoice, xml.encodeToByteArray(), "xml")
             xml to xmlFile
         } ?: run {
-            showCouldNotCreateInvoiceError(result.error)
+            showCouldNotCreateInvoiceError(result.error, Res.string.error_message_could_not_create_invoice_pdf)
             null to null
         }
     }
@@ -209,7 +210,7 @@ class InvoiceService(
             if (resultPdfBytes != null) {
                 fileHandler.savePdfWithAttachedXml(pdfFile, resultPdfBytes)
             } else {
-                showCouldNotCreateInvoiceError(attachResult.error)
+                showCouldNotCreateInvoiceError(attachResult.error, Res.string.error_message_could_not_attach_invoice_xml_to_pdf)
             }
 
             // TODO: detach XML from created PDF and return that one
@@ -230,23 +231,28 @@ class InvoiceService(
         val pdfResult = pdfCreator.createFacturXPdf(xml, format)
         val pdfBytes = pdfResult.value
         if (pdfBytes == null) {
-            showCouldNotCreateInvoiceError(pdfResult.error)
+            showCouldNotCreateInvoiceError(pdfResult.error, Res.string.error_message_could_not_create_invoice_pdf)
             return GeneratedInvoices(xml, xmlResult.second, null, null)
         }
 
         return GeneratedInvoices(xml, xmlResult.second, pdfBytes, saveCreatedInvoiceFile(invoice, pdfBytes, "pdf"))
     }
 
-    private fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, type: String): PlatformFile {
-        val filename = invoice.shortDescription + "." + type
+    private fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, type: String): PlatformFile? =
+        try {
+            val filename = invoice.shortDescription + "." + type
 
-        return fileHandler.saveCreatedInvoiceFile(invoice, fileContent, filename)
-    }
+            fileHandler.saveCreatedInvoiceFile(invoice, fileContent, filename)
+        } catch (e: Throwable) {
+            log.error(e) { "Could not save invoice '$invoice' $type file" }
+            showCouldNotCreateInvoiceError(e, Res.string.error_message_could_not_save_invoice_file)
+            null
+        }
 
-    fun showCouldNotCreateInvoiceError(error: Throwable?) {
+    fun showCouldNotCreateInvoiceError(error: Throwable?, message: StringResource? = null) {
         log.error(error) { "Could not create or save eInvoice" }
 
-        uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, error)
+        uiState.errorOccurred(ErroneousAction.CreateInvoice, message ?: Res.string.error_message_could_not_create_invoice, error)
     }
 
 

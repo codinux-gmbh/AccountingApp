@@ -63,13 +63,13 @@ fun InvoiceForm() {
                 InvoiceDetailsForm(details, isCompactScreen)
             }
 
-            Section(Res.string.supplier, true, additionalElementAtEnd = { toggleInvoicePartyFields(settings.showAllSupplierFields) {
+            Section(Res.string.supplier, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllSupplierFields) {
                 invoiceDataChanged(settings.copy(showAllSupplierFields = it)) } }
             ) {
                 InvoicePartyForm(supplier, true, isCompactScreen, settings.showAllSupplierFields)
             }
 
-            Section(Res.string.customer, true, additionalElementAtEnd = { toggleInvoicePartyFields(settings.showAllCustomerFields) {
+            Section(Res.string.customer, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllCustomerFields) {
                 invoiceDataChanged(settings.copy(showAllCustomerFields = it)) } }
             ) {
                 InvoicePartyForm(customer, false, isCompactScreen, settings.showAllCustomerFields)
@@ -79,8 +79,10 @@ fun InvoiceForm() {
                 DescriptionOfServicesForm(descriptionOfServices, isCompactScreen)
             }
 
-            Section(Res.string.bank_details, true) {
-                BankDetailsForm(bankDetails)
+            Section(Res.string.bank_details, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllBankDetailsFields) {
+                invoiceDataChanged(settings.copy(showAllBankDetailsFields = it)) } }
+            ) {
+                BankDetailsForm(bankDetails, settings.showAllBankDetailsFields)
             }
 
             Section(Res.string.create) {
@@ -93,11 +95,11 @@ fun InvoiceForm() {
 }
 
 @Composable
-fun toggleInvoicePartyFields(showAllFields: Boolean, showAllFieldsChanged: (Boolean) -> Unit) {
+fun toggleShowAllFields(showAllFields: Boolean, showAllFieldsChanged: (Boolean) -> Unit) {
 
     TextButton({ showAllFieldsChanged(!showAllFields) }, Modifier.height(28.dp).width(36.dp), contentPadding = PaddingValues(0.dp)) {
         Column(Modifier.fillMaxSize(), Arrangement.Center, horizontalAlignment = Alignment.End) {
-            Icon(if (showAllFields) Icons.Outlined.Remove else Icons.Outlined.Add, "Toggle show all or only most common Invoice Party fields",
+            Icon(if (showAllFields) Icons.Outlined.Remove else Icons.Outlined.Add, "Toggle show all or only most common fields",
                 Modifier.size(24.dp), tint = Colors.FormValueTextColor)
         }
     }

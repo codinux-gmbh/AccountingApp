@@ -145,7 +145,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     }
 
     suspend fun saveCreateInvoiceSettings(createInvoice: Invoice) {
-        val newSettings = CreateInvoiceSettings(createInvoice, settings.showAllSupplierFields, settings.showAllCustomerFields,
+        val newSettings = CreateInvoiceSettings(createInvoice, settings.showAllSupplierFields, settings.showAllCustomerFields, settings.showAllBankDetailsFields,
             descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
             settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory)
 

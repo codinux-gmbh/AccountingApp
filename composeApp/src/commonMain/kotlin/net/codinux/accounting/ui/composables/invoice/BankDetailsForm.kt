@@ -11,7 +11,7 @@ import net.codinux.accounting.ui.composables.invoice.model.BankDetailsViewModel
 import net.codinux.accounting.ui.config.Style
 
 @Composable
-fun BankDetailsForm(viewModel: BankDetailsViewModel) {
+fun BankDetailsForm(viewModel: BankDetailsViewModel, showAllBankDetailsFields: Boolean) {
 
     val accountHolderName by viewModel.accountHolderName.collectAsState()
 
@@ -22,9 +22,11 @@ fun BankDetailsForm(viewModel: BankDetailsViewModel) {
     val bankCode by viewModel.bankCode.collectAsState()
 
 
-    InvoiceTextField(Res.string.account_holder_if_different, accountHolderName) { viewModel.accountHolderNameChanged(it) }
+    if (showAllBankDetailsFields) {
+        InvoiceTextField(Res.string.account_holder_if_different, accountHolderName) { viewModel.accountHolderNameChanged(it) }
 
-    InvoiceTextField(Res.string.name_of_financial_institution, bankName) { viewModel.bankNameChanged(it) }
+        InvoiceTextField(Res.string.name_of_financial_institution, bankName) { viewModel.bankNameChanged(it) }
+    }
 
     Row(Modifier.fillMaxWidth().padding(top = Style.FormVerticalRowPadding)) {
         InvoiceTextField(Res.string.iban, accountNumber, modifier = Modifier.weight(1f)) { viewModel.accountNumberChanged(it) }

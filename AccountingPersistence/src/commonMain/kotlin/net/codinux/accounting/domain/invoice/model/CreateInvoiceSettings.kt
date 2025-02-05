@@ -10,6 +10,7 @@ data class CreateInvoiceSettings(
 
     var showAllSupplierFields: Boolean = false,
     var showAllCustomerFields: Boolean = false,
+    var showAllBankDetailsFields: Boolean = false,
 
     val selectedServiceDateOption: ServiceDateOptions = ServiceDateOptions.ServiceDate,
     val selectedEInvoiceXmlFormat: EInvoiceXmlFormat = EInvoiceXmlFormat.FacturX,

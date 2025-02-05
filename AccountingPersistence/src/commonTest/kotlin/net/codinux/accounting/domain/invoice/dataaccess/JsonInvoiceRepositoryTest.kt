@@ -24,7 +24,7 @@ class JsonInvoiceRepositoryTest {
     fun saveAndRetrieveCreateInvoiceSettings() = runTest {
         val settings = CreateInvoiceSettings(
             DataGenerator.createInvoice(),
-            true, true,
+            true, true, true,
             ServiceDateOptions.ServicePeriodMonth, EInvoiceXmlFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
             "/path1", "/path2", "/path3"
         )
@@ -39,6 +39,7 @@ class JsonInvoiceRepositoryTest {
 
         assertThat(result!!.showAllSupplierFields).isEqualTo(settings.showAllSupplierFields)
         assertThat(result.showAllCustomerFields).isEqualTo(settings.showAllCustomerFields)
+        assertThat(result.showAllBankDetailsFields).isEqualTo(settings.showAllBankDetailsFields)
 
         assertThat(result.selectedServiceDateOption).isEqualByComparingTo(settings.selectedServiceDateOption)
         assertThat(result.selectedEInvoiceXmlFormat).isEqualByComparingTo(settings.selectedEInvoiceXmlFormat)

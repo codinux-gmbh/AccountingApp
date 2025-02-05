@@ -35,7 +35,7 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
             CreateInvoiceSettings(
                 lastCreatedInvoice?.let { serializer.decode(it) },
 
-                showAllSupplierFields, showAllCustomerFields,
+                showAllSupplierFields, showAllCustomerFields, false, // TODO: save and restore showAllBankDetailsFields
 
                 mapper.mapToEnum(selectedServiceDateOption, ServiceDateOptions.entries),
                 mapper.mapToEnum(selectedEInvoiceXmlFormat, EInvoiceXmlFormat.entries),
@@ -51,7 +51,7 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
         queries.upsertCreateInvoiceSettings(
             serializer.encodeNullable(settings.lastCreatedInvoice),
 
-            settings.showAllSupplierFields, settings.showAllCustomerFields,
+            settings.showAllSupplierFields, settings.showAllCustomerFields, // TODO: save and restore showAllBankDetailsFields
 
             mapper.mapEnum(settings.selectedServiceDateOption), mapper.mapEnum(settings.selectedEInvoiceXmlFormat),
             mapper.mapEnum(settings.selectedCreateEInvoiceOption), settings.showGeneratedEInvoiceXml,

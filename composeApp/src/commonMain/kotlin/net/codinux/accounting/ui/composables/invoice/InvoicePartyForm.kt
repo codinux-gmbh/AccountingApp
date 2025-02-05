@@ -62,13 +62,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         }
     }
 
-    if (showAllFields == false) {
-        Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-            InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
-
-            InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(start = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
-        }
-    } else {
+    if (showAllFields) {
         Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
             InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
 
@@ -76,5 +70,11 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         }
 
         InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
+    } else {
+        Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+            InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
+
+            InvoiceTextField(Res.string.email, email, modifier = Modifier.weight(0.5f).padding(start = 4.dp), keyboardType = KeyboardType.Email) { viewModel.emailChanged(it) }
+        }
     }
 }

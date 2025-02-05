@@ -16,6 +16,7 @@ import net.codinux.accounting.ui.config.Config.NewLine
 import net.codinux.accounting.ui.extensions.applyIf
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.dto.SerializableException
+import net.codinux.invoicing.web.WebClientException
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -29,7 +30,18 @@ fun ErrorDialog(
 ) {
 
     val effectiveText = if (exception == null) text else {
-        "$text${NewLine}${NewLine}${stringResource(Res.string.error_message)}:${NewLine}${exception.cause?.type ?: exception.type} ${exception.message}"
+        val additionalInfo = if (exception.originalException is WebClientException) {
+            val webClientException = exception.originalException as WebClientException
+            when {
+                webClientException.isNetworkError -> Res.string.error_message_network_error
+                webClientException.isClientError -> Res.string.error_message_client_error
+                webClientException.isServerError -> Res.string.error_message_server_error
+                else -> null
+            }
+        } else null
+
+        "$text${additionalInfo?.let { "$NewLine$NewLine${stringResource(it)}" }}${NewLine}${NewLine}${stringResource(Res.string.error_message)}:" +
+                "${NewLine}${exception.cause?.type ?: exception.type} ${exception.message}"
     }
 
     var showStacktrace by remember { mutableStateOf(false) }

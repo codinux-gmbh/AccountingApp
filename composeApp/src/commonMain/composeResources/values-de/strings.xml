@@ -47,6 +47,9 @@
     <string name="error_load_from_database">Daten konnten nicht aus der Datenbank geladen werden</string>
     <string name="error_save_to_database">Daten konnten nicht in die Datenbank gespeichert werden</string>
     <string name="error_message_technical_error">Ein technischer Fehler ist aufgetreten</string>
+    <string name="error_message_network_error">Netzwerkfehler. Besteht eine Internetverbindung? Probieren Sie es zu einem späteren Zeitpunkt erneut.</string>
+    <string name="error_message_client_error">Clientfehler. Puh, da haben wir wohl irgendetwas falsch konfiguriert. Überprüfen Sie bitte, ob es ein Update für die App gibt, ansonsten sind wir erstmal ratlos, was schief gelaufen ist.</string>
+    <string name="error_message_server_error">Serverfehler. Tja, da haben wir wohl was falsch gemacht. Mit etwas Glück haben wir den Fehler bald behoben und bei einem erneuten Versuch später klappt es.</string>
 
 
     <!-- UiState -->

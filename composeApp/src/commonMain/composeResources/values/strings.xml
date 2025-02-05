@@ -47,6 +47,9 @@
     <string name="error_load_from_database">Failed loading data from database</string>
     <string name="error_save_to_database">Failed writing data to database</string>
     <string name="error_message_technical_error">Technical error</string>
+    <string name="error_message_network_error">Network error. Is there an internet connection? Please try again later.</string>
+    <string name="error_message_client_error">Client error. Oops, it looks like we misconfigured something. Please check if there’s an update for the app—otherwise, we're a bit puzzled about what went wrong.</string>
+    <string name="error_message_server_error">Server error. Well, it looks like we messed something up. Hopefully, we’ll fix the issue soon, and things should work if you try again later.</string>
 
 
     <!-- UiState -->

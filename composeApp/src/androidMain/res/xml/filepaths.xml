@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- the path is equal to invoicesDirectory in PlatformDependencies.android -->
+    <files-path path="invoices/" name="createdInvoices" />
+</paths>

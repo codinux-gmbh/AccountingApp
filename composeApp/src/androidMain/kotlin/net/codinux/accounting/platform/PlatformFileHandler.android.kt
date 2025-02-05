@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.core.content.FileProvider
 import io.github.vinceglb.filekit.core.PlatformFile
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.resources.*
@@ -31,7 +32,9 @@ actual class PlatformFileHandler(
 
     actual fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String?) {
         try {
-            val uri = file.uri
+            val uri = if (file.uri.scheme?.lowercase() == "content") file.uri
+            // applicationContext.packageName + ".fileprovider" = the authority defined in AndroidManifest.xml
+            else FileProvider.getUriForFile(applicationContext, applicationContext.packageName + ".fileprovider", File(file.uri.toString()))
 
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, applicationContext.contentResolver.getType(uri) ?: fallbackMimeType)

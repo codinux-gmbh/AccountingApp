@@ -12,8 +12,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.*
 import io.github.vinceglb.filekit.compose.SaverResultLauncher
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
@@ -235,32 +234,16 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     }
 
     generatedEInvoiceXml?.let { invoiceXml ->
-        if (isCompactScreen && createdPdfFile != null) { // two lines on mobile
-            Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
-                SaveButtons(saveFileLauncher, createdInvoice!!, invoiceXml, createdPdfBytes, settings, 130.dp)
+        Row(Modifier.padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+            TextButton({ clipboardManager.setText(AnnotatedString(invoiceXml)) }, contentPadding = PaddingValues(0.dp)) {
+                Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
             }
 
-            Row(Modifier.padding(top = VerticalRowPadding).height(36.dp), verticalAlignment = Alignment.CenterVertically) {
-                TextButton({ clipboardManager.setText(AnnotatedString(invoiceXml)) }) {
-                    Text(stringResource(Res.string.copy), Modifier.width(130.dp), Colors.HighlightedTextColor)
-                }
+            SaveButtons(saveFileLauncher, createdInvoice!!, invoiceXml, createdPdfBytes, settings, if (isCompactScreen) 120.dp else 130.dp)
 
-                Spacer(Modifier.weight(1f))
+            Spacer(Modifier.weight(1f))
 
-                BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
-            }
-        } else { // one line on Desktops
-            Row(Modifier.padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-                TextButton({ clipboardManager.setText(AnnotatedString(invoiceXml)) }, contentPadding = PaddingValues(0.dp)) {
-                    Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
-                }
-
-                SaveButtons(saveFileLauncher, createdInvoice!!, invoiceXml, createdPdfBytes, settings, 120.dp)
-
-                Spacer(Modifier.weight(1f))
-
-                BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
-            }
+            BooleanOption(Res.string.show_xml, showGeneratedEInvoiceXml) { showGeneratedEInvoiceXml = it }
         }
 
         if (showGeneratedEInvoiceXml) {
@@ -285,13 +268,35 @@ private fun SaveButtons(
 ) {
     val invoiceFilename = invoice.shortDescription
 
+    var showMenu by remember { mutableStateOf(false) }
+
+
     if (createdPdfBytes == null) { // only created XML
         TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) }, contentPadding = PaddingValues(0.dp)) {
             Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
         }
     } else {
-        TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) }) {
-            Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
+        Box(modifier = Modifier.width(buttonWidth)) {
+            TextButton(onClick = { showMenu = true }) {
+                Text(stringResource(Res.string.save), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
+            }
+
+            DropdownMenu(
+                expanded = showMenu,
+                onDismissRequest = { showMenu = false },
+                // don't get it why on compact screens (Android) we have to use 0.dp for perfect align whilst on larger screen we have to set a negative offset and it still doesn't perfectly align
+                //offset = DpOffset(x = if (isCompactScreen) 0.dp else -1 * (buttonWidth + additionalMenuPadding), y = 0.dp), // Offset to align to IconButton's end
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                DropdownMenuItem(
+                    onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) },
+                    content = { Text(stringResource(Res.string.save_pdf), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center) }
+                )
+                DropdownMenuItem(
+                    onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) },
+                    content = { Text(stringResource(Res.string.save_xml), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center) }
+                )
+            }
         }
     }
 

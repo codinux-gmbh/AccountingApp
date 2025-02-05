@@ -11,7 +11,7 @@ import net.codinux.invoicing.model.codes.*
 object EmailDataGenerator {
 
     fun createMail(invoice: Invoice, messageId: Long = 1) =
-        Email(messageId, messageId, messageId, invoice.supplier.email?.let { EmailAddress(it) }, "Invoice No. ${invoice.details.invoiceNumber}", invoice.details.invoiceDate.toInstantAtSystemDefaultZone(),
+        Email(messageId, messageId, messageId, invoice.supplier.email?.let { EmailAddress(it) }, "Rechnung ${invoice.details.invoiceNumber}", invoice.details.invoiceDate.toInstantAtSystemDefaultZone(),
             "Sehr geehrter Herr Sowieso,\nanbei unsere völlig überzogene Rechnung für unsere nutzlosen Dienstleistung mit Bitte um Überweisung innerhalb 24 Minuten.\nGezeichnet,\nHerr Geier",
             attachments = listOf(EmailAttachment("invoice.pdf", "pdf", null, ContentDisposition.Attachment, "application/pdf", null, MapInvoiceResult(invoice), null))
         )

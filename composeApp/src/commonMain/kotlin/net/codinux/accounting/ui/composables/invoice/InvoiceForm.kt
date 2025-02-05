@@ -60,7 +60,7 @@ fun InvoiceForm() {
             }
 
             Section(Res.string.invoice_details, true) {
-                InvoiceDetailsForm(details, isCompactScreen)
+                InvoiceDetailsForm(details)
             }
 
             Section(Res.string.supplier, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllSupplierFields) {

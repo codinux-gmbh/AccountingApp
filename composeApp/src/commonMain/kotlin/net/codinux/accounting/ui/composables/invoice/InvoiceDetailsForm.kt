@@ -10,10 +10,9 @@ import net.codinux.accounting.resources.invoice_date
 import net.codinux.accounting.resources.invoice_number
 import net.codinux.accounting.ui.composables.forms.datetime.DatePicker
 import net.codinux.accounting.ui.composables.invoice.model.InvoiceDetailsViewModel
-import net.codinux.accounting.ui.extensions.widthForScreen
 
 @Composable
-fun InvoiceDetailsForm(viewModel: InvoiceDetailsViewModel, isCompactScreen: Boolean = true) {
+fun InvoiceDetailsForm(viewModel: InvoiceDetailsViewModel) {
 
     val invoiceDate by viewModel.invoiceDate.collectAsState()
 
@@ -21,7 +20,7 @@ fun InvoiceDetailsForm(viewModel: InvoiceDetailsViewModel, isCompactScreen: Bool
 
 
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        DatePicker(Res.string.invoice_date, invoiceDate, Modifier.widthForScreen(isCompactScreen, 120.dp, 125.dp).fillMaxHeight(), true, required = true) { viewModel.invoiceDateChanged(it) }
+        DatePicker(Res.string.invoice_date, invoiceDate, Modifier.width(125.dp).fillMaxHeight(), true, required = true) { viewModel.invoiceDateChanged(it) }
 
         Spacer(Modifier.width(6.dp))
 

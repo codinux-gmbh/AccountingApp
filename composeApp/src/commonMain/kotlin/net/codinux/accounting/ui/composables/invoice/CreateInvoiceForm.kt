@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.resources.*
@@ -276,7 +277,10 @@ private fun SaveButtons(
     } else {
         Box(modifier = Modifier.width(buttonWidth)) {
             TextButton(onClick = { showMenu = true }) {
-                Text(stringResource(Res.string.save), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
+                Row(Modifier.width(buttonWidth), verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(Res.string.save), Modifier.weight(1f), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
+                    Icon(Icons.Outlined.ArrowDropDown, "Open menu to save PDF or XML file", Modifier.padding(start = 4.dp))
+                }
             }
 
             DropdownMenu(

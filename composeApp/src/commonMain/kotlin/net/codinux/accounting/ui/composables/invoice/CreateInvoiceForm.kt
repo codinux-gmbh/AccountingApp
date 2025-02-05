@@ -289,11 +289,11 @@ private fun SaveButtons(
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 DropdownMenuItem(
-                    onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) },
+                    onClick = { showMenu = false; saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) },
                     content = { Text(stringResource(Res.string.save_pdf), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center) }
                 )
                 DropdownMenuItem(
-                    onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) },
+                    onClick = { showMenu = false; saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) },
                     content = { Text(stringResource(Res.string.save_xml), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center) }
                 )
             }

@@ -149,9 +149,9 @@ private fun InvoiceItemView(zeroBasedItemIndex: Int, item: InvoiceItem, currency
 
 @Composable
 private fun BankDetailsView(details: BankDetails, invoice: Invoice, settings: ViewInvoiceSettings) {
-    val accountHolderName = details.accountHolderName ?: invoice.supplier.name
+    val accountHolderName = details.accountHolderName
 
-    val eqcQrCode by remember { mutableStateOf(invoiceService.generateEpcQrCode(details, invoice, accountHolderName)) }
+    val eqcQrCode by remember { mutableStateOf(invoiceService.generateEpcQrCode(details, invoice, accountHolderName ?: invoice.supplier.name)) }
 
     val showEpcQrCode = settings.showEpcQrCode
 

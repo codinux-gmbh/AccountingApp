@@ -47,22 +47,8 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
     }
 
 
-    if (isCompactScreen) {
-        Column(Modifier.fillMaxWidth().padding(top = VerticalRowPadding)) {
-            ServiceDateForm(viewModel, isCompactScreen)
-
-            Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), Arrangement.End, Alignment.CenterVertically) {
-                SelectCurrency(currency) { viewModel.currencyChanged(it) }
-            }
-        }
-    } else {
-        Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
-            Column(Modifier.weight(1f)) {
-                ServiceDateForm(viewModel, isCompactScreen)
-            }
-
-            SelectCurrency(currency) { viewModel.currencyChanged(it) }
-        }
+    Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
+        ServiceDateForm(viewModel, isCompactScreen)
     }
 
     Column(Modifier.fillMaxWidth()) {
@@ -81,7 +67,15 @@ fun DescriptionOfServicesForm(viewModel: DescriptionOfServicesViewModel, isCompa
             InvoiceItemForm(item) { viewModel.removeItem(item) }
         }
 
-        TotalAmountsView(currency, totalAmounts, false)
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Column {
+                SelectCurrency(currency) { viewModel.currencyChanged(it) }
+            }
+
+            Column(Modifier.weight(1f)) {
+                TotalAmountsView(currency, totalAmounts, false)
+            }
+        }
     }
 
 }

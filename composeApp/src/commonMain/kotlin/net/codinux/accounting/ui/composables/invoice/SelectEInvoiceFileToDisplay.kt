@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
@@ -22,7 +21,6 @@ import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
-import net.codinux.accounting.ui.extensions.getLastPathSegmentsOfMaxLength
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
@@ -39,8 +37,6 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
     val settings = DI.uiState.viewInvoiceSettings.collectAsState().value
 
     val initialDirectory = lastSelectedInvoiceFile?.parent ?: settings.lastSelectedInvoiceFile?.let { DI.fileHandler.fromPath(it).parent }
-
-    val isCompactScreen = DI.uiState.uiType.collectAsState().value.isCompactScreen
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -71,9 +67,11 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
                 Text(stringResource(Res.string.select_e_invoice_file), Modifier.fillMaxWidth(), Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
             }
         }
+    }
 
-        lastSelectedInvoiceFile?.let { selectedFile ->
-            Text(selectedFile.getLastPathSegmentsOfMaxLength(if (isCompactScreen) 65 else 80), Modifier.padding(top = 12.dp, bottom = 4.dp), fontSize = 13.sp, overflow = TextOverflow.Clip, maxLines = 1)
+    lastSelectedInvoiceFile?.let { selectedFile ->
+        Row(Modifier.fillMaxWidth().padding(top = 36.dp).padding(horizontal = 18.dp), Arrangement.Center, Alignment.CenterVertically) {
+            Text(selectedFile.name, Modifier.fillMaxWidth(), textAlign = TextAlign.Center, overflow = TextOverflow.Clip, maxLines = 1)
         }
     }
 

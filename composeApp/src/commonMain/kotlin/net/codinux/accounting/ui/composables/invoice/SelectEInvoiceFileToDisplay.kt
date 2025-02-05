@@ -86,27 +86,30 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
         DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, lastSelectedInvoiceFile?.path ?: result.filename)
     }
 
-    lastExtractedEInvoice?.let { result ->
-        val invoice = result.invoice
-        val pdfResult = result.readPdfResult
-        val xmlResult = result.readXmlResult
 
-        if (invoice == null) {
-            if (pdfResult != null) {
-                val stringResource = when (pdfResult.type) {
-                    ReadEInvoicePdfResultType.TechnicalError -> Res.string.error_message_technical_error
-                    ReadEInvoicePdfResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
-                    ReadEInvoicePdfResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
-                    ReadEInvoicePdfResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
-                    ReadEInvoicePdfResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
-                    ReadEInvoicePdfResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
-                    ReadEInvoicePdfResultType.Success -> null // should never come to here
+    LaunchedEffect(lastExtractedEInvoice) {
+        lastExtractedEInvoice?.let { result ->
+            val invoice = result.invoice
+            val pdfResult = result.readPdfResult
+            val xmlResult = result.readXmlResult
+
+            if (invoice == null) {
+                if (pdfResult != null) {
+                    val stringResource = when (pdfResult.type) {
+                        ReadEInvoicePdfResultType.TechnicalError -> Res.string.error_message_technical_error
+                        ReadEInvoicePdfResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
+                        ReadEInvoicePdfResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
+                        ReadEInvoicePdfResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
+                        ReadEInvoicePdfResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
+                        ReadEInvoicePdfResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
+                        ReadEInvoicePdfResultType.Success -> null // should never come to here
+                    }
+                    if (stringResource != null) {
+                        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, pdfResult.readError)
+                    }
+                } else if (xmlResult != null) {
+                    showReadXmlError(result, xmlResult)
                 }
-                if (stringResource != null) {
-                    DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, pdfResult.readError)
-                }
-            } else if (xmlResult != null) {
-                showReadXmlError(result, xmlResult)
             }
         }
     }

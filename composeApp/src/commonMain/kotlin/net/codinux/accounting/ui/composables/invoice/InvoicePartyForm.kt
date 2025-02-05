@@ -70,7 +70,7 @@ fun InvoicePartyForm(viewModel: PartyViewModel, isSupplier: Boolean, isCompactSc
         }
 
         InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
-    } else {
+    } else if (isSupplier) { // show only for supplier, for customer VAT ID and email aren't often used fields
         Row(Modifier.fillMaxWidth().padding(top = VerticalRowPadding), verticalAlignment = Alignment.CenterVertically) {
             InvoiceTextField(if (isSupplier) Res.string.vat_id_or_tax_number_may_required else Res.string.vat_id_or_tax_number, vatId, modifier = Modifier.weight(0.5f).padding(end = 4.dp), keyboardType = KeyboardType.Ascii) { viewModel.vatIdChanged(it) }
 

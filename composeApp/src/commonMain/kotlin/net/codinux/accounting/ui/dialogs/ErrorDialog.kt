@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -13,6 +13,7 @@ import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Config.NewLine
+import net.codinux.accounting.ui.extensions.applyIf
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.dto.SerializableException
 import org.jetbrains.compose.resources.StringResource
@@ -28,16 +29,37 @@ fun ErrorDialog(
 ) {
 
     val effectiveText = if (exception == null) text else {
-        "$text${NewLine}${NewLine}${stringResource(Res.string.error_message)}:${NewLine}${exception.stackTraceToString()}"
+        "$text${NewLine}${NewLine}${stringResource(Res.string.error_message)}:${NewLine}${exception.cause?.type ?: exception.type} ${exception.message}"
     }
+
+    var showStacktrace by remember { mutableStateOf(false) }
 
 
     AlertDialog(
-        text = { Text(effectiveText, Modifier.verticalScroll()) },
+        text = {
+            // show stacktrace only for developers
+            if (exception?.stackTrace == null || net.codinux.kotlin.platform.Environment().isRunningInDebugMode == false) {
+                Text(effectiveText, Modifier.verticalScroll())
+            } else {
+                Column(Modifier.fillMaxWidth()) {
+                    Text(effectiveText, Modifier.verticalScroll())
+
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        TextButton({ showStacktrace = !!!showStacktrace }) {
+                            Text("Show Stacktrace", color = Colors.HighlightedTextColor)
+                        }
+                    }
+
+                    if (showStacktrace) {
+                        Text(exception.stackTrace ?: "", Modifier.fillMaxHeight(0.6f).verticalScroll())
+                    }
+                }
+            }
+        },
         title = { title?.let {
             HeaderText(stringResource(title), Modifier.fillMaxWidth(), TextAlign.Center)
         } },
-        modifier = Modifier.let { if (exception != null) it.fillMaxWidth(0.95f) else it },
+        modifier = Modifier.applyIf(exception != null) { it.fillMaxWidth(0.95f) },
         properties = if (exception == null) DialogProperties() else DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = { onDismiss?.invoke() },
         confirmButton = {

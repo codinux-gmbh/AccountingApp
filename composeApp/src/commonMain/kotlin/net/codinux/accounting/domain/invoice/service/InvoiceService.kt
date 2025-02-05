@@ -192,7 +192,7 @@ class InvoiceService(
             val xmlFile = saveCreatedInvoiceFile(invoice, xml.encodeToByteArray(), "xml")
             xml to xmlFile
         } ?: run {
-            // TODO: show error
+            showCouldNotCreateInvoiceError(result.error)
             null to null
         }
     }
@@ -204,14 +204,15 @@ class InvoiceService(
         if (xml != null) {
             val pdfBytes = pdfFile.readBytes() // as it's not possible to read and write from/to the same file at the same time, read PDF first (what PDFBox does anyway) before overwriting it
 
-            val resultPdfBytes = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, format).value // TODO: show error
+            val attachResult = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, format)
+            val resultPdfBytes = attachResult.value
             if (resultPdfBytes != null) {
                 fileHandler.savePdfWithAttachedXml(pdfFile, resultPdfBytes)
+            } else {
+                showCouldNotCreateInvoiceError(attachResult.error)
             }
 
             // TODO: detach XML from created PDF and return that one
-        } else {
-            // TODO: show error message
         }
 
         return xml to xmlFile
@@ -223,14 +224,13 @@ class InvoiceService(
         val xml = xmlResult.first
         invoiceXmlCreated?.invoke(xml)
         if (xml == null) {
-            // TODO: show error message
             return null
         }
 
         val pdfResult = pdfCreator.createFacturXPdf(xml, format)
-        val pdfBytes = pdfResult.value // TODO: show error
+        val pdfBytes = pdfResult.value
         if (pdfBytes == null) {
-            // TODO: show error message
+            showCouldNotCreateInvoiceError(pdfResult.error)
             return GeneratedInvoices(xml, xmlResult.second, null, null)
         }
 
@@ -241,6 +241,12 @@ class InvoiceService(
         val filename = invoice.shortDescription + "." + type
 
         return fileHandler.saveCreatedInvoiceFile(invoice, fileContent, filename)
+    }
+
+    fun showCouldNotCreateInvoiceError(error: Throwable?) {
+        log.error(error) { "Could not create or save eInvoice" }
+
+        uiState.errorOccurred(ErroneousAction.CreateInvoice, Res.string.error_message_could_not_create_invoice, error)
     }
 
 

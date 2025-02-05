@@ -28,7 +28,7 @@ fun ViewInvoiceTab() {
             }
 
             if (invoice != null) {
-                Row(Modifier.padding(top = 32.dp)) {
+                Row(Modifier.padding(top = 24.dp)) {
                     InvoiceView(invoice, selectedInvoice?.readPdfResult, selectedInvoiceXml, false)
                 }
             }

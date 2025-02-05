@@ -23,12 +23,17 @@ import org.jetbrains.compose.resources.stringResource
 
 private val formatUtil = DI.formatUtil
 
+private val AmountLabelWidth = 60.dp
+private val AmountLabelAndValueSpacing = 4.dp
+private val AmountValueWidth = 126.dp
+private val SeparatorWidth = AmountLabelWidth + AmountValueWidth // don't know why but adding AmountLabelAndValueSpacing would be too much
+
 @Composable
 fun TotalAmountsView(currency: Currency, totals: TotalAmounts, showSeparatorFromPreviousElement: Boolean) {
     if (showSeparatorFromPreviousElement) {
         Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
             Spacer(Modifier.weight(1f))
-            Divider(Modifier.width(185.dp), Colors.ItemDividerColor)
+            Divider(Modifier.width(SeparatorWidth), Colors.ItemDividerColor)
         }
     }
 
@@ -37,7 +42,7 @@ fun TotalAmountsView(currency: Currency, totals: TotalAmounts, showSeparatorFrom
 
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
-        Divider(Modifier.width(185.dp), Color.Black, 1.5.dp)
+        Divider(Modifier.width(SeparatorWidth), Color.Black, 1.5.dp)
     }
 
     AmountRow(Res.string.total_amount, totals.duePayableAmount, currency)
@@ -48,8 +53,8 @@ private fun AmountRow(label: StringResource, amount: BigDecimal, currency: Curre
     Row(Modifier.fillMaxWidth().padding(top = 6.dp), Arrangement.End, Alignment.CenterVertically) {
         Spacer(Modifier.weight(1f))
 
-        Text(stringResource(label), Modifier.width(70.dp), Colors.FormLabelTextColor, Style.LabelledValueFontSize, maxLines = 1)
+        Text(stringResource(label), Modifier.width(AmountLabelWidth).padding(end = AmountLabelAndValueSpacing), Colors.FormLabelTextColor, Style.LabelledValueFontSize, maxLines = 1)
 
-        Text(formatUtil.formatAmountOfMoney(amount, currency), Modifier.width(115.dp).padding(start = 4.dp), Colors.FormValueTextColor, Style.LabelledValueFontSize, fontFamily = FontFamily.Monospace, textAlign = TextAlign.End, maxLines = 1)
+        Text(formatUtil.formatAmountOfMoney(amount, currency), Modifier.width(AmountValueWidth), Colors.FormValueTextColor, Style.LabelledValueFontSize, fontFamily = FontFamily.Monospace, textAlign = TextAlign.End, maxLines = 1)
     }
 }

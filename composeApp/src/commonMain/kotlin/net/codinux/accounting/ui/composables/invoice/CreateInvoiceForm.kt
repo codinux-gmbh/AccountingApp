@@ -285,13 +285,14 @@ private fun SaveButtons(
 ) {
     val invoiceFilename = invoice.shortDescription
 
-    TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) }, contentPadding = PaddingValues(0.dp)) {
-        Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
-    }
-
-    createdPdfBytes?.let {
+    if (createdPdfBytes == null) { // only created XML
+        TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) }, contentPadding = PaddingValues(0.dp)) {
+            Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
+        }
+    } else {
         TextButton(onClick = { saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) }) {
             Text(stringResource(Res.string.save_pdf), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
         }
     }
+
 }

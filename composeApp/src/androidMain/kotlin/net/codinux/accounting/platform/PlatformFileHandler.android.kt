@@ -46,7 +46,7 @@ actual class PlatformFileHandler(
             log.error(e) { "Could not open file '${file.uri}" }
 
             if (e is ActivityNotFoundException || e.message?.startsWith("No Activity found to handle Intent") == true) {
-                DI.uiState.errorOccurred(ErroneousAction.ShowEInvoice, Res.string.error_message_no_application_found_to_show_file_of_type, null, file.extension.uppercase())
+                DI.uiState.errorOccurred(ErroneousAction.ShowEInvoice, Res.string.error_message_no_application_found_to_show_file_of_type, file.extension.uppercase())
             } else {
                 // TODO: it's may not always the created invoice
                 DI.uiState.errorOccurred(ErroneousAction.ShowEInvoice, Res.string.error_message_created_invoice_cannot_be_displayed, e)

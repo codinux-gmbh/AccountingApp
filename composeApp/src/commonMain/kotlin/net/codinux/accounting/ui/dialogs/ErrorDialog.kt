@@ -14,6 +14,7 @@ import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Config.NewLine
 import net.codinux.accounting.ui.extensions.verticalScroll
+import net.codinux.invoicing.model.dto.SerializableException
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -21,7 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 fun ErrorDialog(
     text: String,
     title: StringResource? = null,
-    exception: Throwable? = null,
+    exception: SerializableException? = null,
     confirmButtonText: String = stringResource(Res.string.ok),
     onDismiss: (() -> Unit)? = null
 ) {

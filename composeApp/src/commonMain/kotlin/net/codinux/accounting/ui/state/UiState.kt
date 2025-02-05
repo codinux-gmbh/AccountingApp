@@ -8,6 +8,7 @@ import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.domain.ui.model.MainScreenTab
+import net.codinux.invoicing.model.dto.SerializableException
 import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
@@ -35,9 +36,14 @@ class UiState : ViewModel() {
 
     val applicationErrors = MutableStateFlow<List<ApplicationError>>(emptyList())
 
-    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, exception: Throwable? = null, vararg errorMessageArguments: Any) {
-        errorOccurred(ApplicationError(erroneousAction, errorMessage, exception, errorMessageArguments.toList()))
-    }
+    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, errorMessageArguments: Any? = null) =
+        errorOccurred(erroneousAction, errorMessage, null as? SerializableException, errorMessageArguments)
+
+    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, exception: Throwable? = null, errorMessageArguments: Any? = null) =
+        errorOccurred(erroneousAction, errorMessage, exception?.let { SerializableException(it) }, errorMessageArguments)
+
+    fun errorOccurred(erroneousAction: ErroneousAction, errorMessage: StringResource, exception: SerializableException? = null, errorMessageArguments: Any? = null) =
+        errorOccurred(ApplicationError(erroneousAction, errorMessage, exception, errorMessageArguments?.let { listOf(it) }.orEmpty()))
 
     fun errorOccurred(error: ApplicationError) {
         applicationErrors.value += error

@@ -158,7 +158,7 @@ class JvmMailService(
             val checkCredentialsResult = emailsFetcher.checkCredentials(account.receiveEmailConfiguration ?: account.sendEmailConfiguration!!)
             if (checkCredentialsResult != CheckCredentialsResult.Ok) {
                 // TODO: translate checkCredentialsResult
-                uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_checking_email_account_credentials_failed, null, listOf(checkCredentialsResult))
+                uiState.errorOccurred(ErroneousAction.FetchEmails, Res.string.error_message_checking_email_account_credentials_failed, checkCredentialsResult)
 
                 return false
             }

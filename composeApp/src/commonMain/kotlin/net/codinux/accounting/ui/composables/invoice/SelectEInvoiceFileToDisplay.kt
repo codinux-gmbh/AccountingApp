@@ -83,8 +83,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
             else -> Res.string.error_message_could_not_read_e_invoice
         }
 
-//        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, result.path)
-        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, null, lastSelectedInvoiceFile?.path ?: result.filename)
+        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, lastSelectedInvoiceFile?.path ?: result.filename)
     }
 
     lastExtractedEInvoice?.let { result ->
@@ -104,7 +103,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
                     ReadEInvoicePdfResultType.Success -> null // should never come to here
                 }
                 if (stringResource != null) {
-                    DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource)
+                    DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, pdfResult.readError)
                 }
             } else if (xmlResult != null) {
                 showReadXmlError(result, xmlResult)

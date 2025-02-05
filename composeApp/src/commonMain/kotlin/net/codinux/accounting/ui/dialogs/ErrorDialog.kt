@@ -13,7 +13,6 @@ import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.composables.HeaderText
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.Config.NewLine
-import net.codinux.accounting.ui.extensions.applyIf
 import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.dto.SerializableException
 import net.codinux.invoicing.web.WebClientException
@@ -48,6 +47,19 @@ fun ErrorDialog(
 
 
     AlertDialog(
+        title = { title?.let {
+            HeaderText(stringResource(title), Modifier.fillMaxWidth(), TextAlign.Center)
+        } },
+        modifier = Modifier.fillMaxWidth(0.95f),
+        properties = DialogProperties(usePlatformDefaultWidth = exception == null),
+        onDismissRequest = { onDismiss?.invoke() },
+        confirmButton = {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                TextButton({ onDismiss?.invoke() }, Modifier.fillMaxWidth()) {
+                    Text(confirmButtonText, color = Colors.HighlightedTextColor, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center)
+                }
+            }
+        },
         text = {
             // show stacktrace only for developers
             if (exception?.stackTrace == null || net.codinux.kotlin.platform.Environment().isRunningInDebugMode == false) {
@@ -62,25 +74,12 @@ fun ErrorDialog(
                         }
                     }
 
-                    if (showStacktrace) {
+                    if (showStacktrace) { // whatever you try to restrict stacktrace's text field height, on Android the alert dialog will break
                         Text(exception.stackTrace ?: "", Modifier.fillMaxHeight(0.6f).verticalScroll())
                     }
                 }
             }
         },
-        title = { title?.let {
-            HeaderText(stringResource(title), Modifier.fillMaxWidth(), TextAlign.Center)
-        } },
-        modifier = Modifier.applyIf(exception != null) { it.fillMaxWidth(0.95f) },
-        properties = if (exception == null) DialogProperties() else DialogProperties(usePlatformDefaultWidth = false),
-        onDismissRequest = { onDismiss?.invoke() },
-        confirmButton = {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton({ onDismiss?.invoke() }, Modifier.fillMaxWidth()) {
-                    Text(confirmButtonText, color = Colors.HighlightedTextColor, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center)
-                }
-            }
-        }
     )
 
 }

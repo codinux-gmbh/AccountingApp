@@ -16,6 +16,7 @@ import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.state.UiState
 import net.codinux.i18n.Region
 import net.codinux.invoicing.creation.*
+import net.codinux.invoicing.format.EInvoiceFormat
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
@@ -185,7 +186,7 @@ class InvoiceService(
 
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoiceXml(invoice: Invoice, format: EInvoiceXmlFormat): Pair<String?, PlatformFile?> {
+    suspend fun createEInvoiceXml(invoice: Invoice, format: EInvoiceFormat): Pair<String?, PlatformFile?> {
         val result = xmlCreator.createInvoiceXml(invoice, format)
 
         return result.value?.let {
@@ -199,13 +200,13 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceXmlFormat, pdfFile: PlatformFile): Pair<String?, PlatformFile?> {
+    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile): Pair<String?, PlatformFile?> {
         val (xml, xmlFile) = createEInvoiceXml(invoice, format)
 
         if (xml != null) {
             val pdfBytes = pdfFile.readBytes() // as it's not possible to read and write from/to the same file at the same time, read PDF first (what PDFBox does anyway) before overwriting it
 
-            val attachResult = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, format)
+            val attachResult = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, EInvoiceXmlFormat.valueOf(format.name))
             val resultPdfBytes = attachResult.value
             if (resultPdfBytes != null) {
                 fileHandler.savePdfWithAttachedXml(pdfFile, resultPdfBytes)
@@ -220,7 +221,7 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceXmlFormat, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
         val xmlResult = createEInvoiceXml(invoice, format)
         val xml = xmlResult.first
         invoiceXmlCreated?.invoke(xml)
@@ -228,7 +229,7 @@ class InvoiceService(
             return null
         }
 
-        val pdfResult = pdfCreator.createFacturXPdf(xml, format)
+        val pdfResult = pdfCreator.createFacturXPdf(xml, EInvoiceXmlFormat.valueOf(format.name))
         val pdfBytes = pdfResult.value
         if (pdfBytes == null) {
             showCouldNotCreateInvoiceError(pdfResult.error, Res.string.error_message_could_not_create_invoice_pdf)

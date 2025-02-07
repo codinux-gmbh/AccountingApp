@@ -12,7 +12,7 @@ import net.codinux.accounting.domain.invoice.model.ServiceDateOptions
 import net.codinux.accounting.domain.serialization.InMemoryDataStorage
 import net.codinux.accounting.domain.test.InvoiceAsserter
 import net.codinux.accounting.domain.testdata.DataGenerator
-import net.codinux.invoicing.model.EInvoiceXmlFormat
+import net.codinux.invoicing.format.EInvoiceFormat
 import kotlin.test.Test
 
 class JsonInvoiceRepositoryTest {
@@ -25,7 +25,7 @@ class JsonInvoiceRepositoryTest {
         val settings = CreateInvoiceSettings(
             DataGenerator.createInvoice(),
             true, true, true,
-            ServiceDateOptions.ServicePeriodMonth, EInvoiceXmlFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
+            ServiceDateOptions.ServicePeriodMonth, EInvoiceFormat.XRechnung, CreateEInvoiceOptions.CreateXmlAndPdf, false,
             "/path1", "/path2", "/path3"
         )
 
@@ -42,7 +42,7 @@ class JsonInvoiceRepositoryTest {
         assertThat(result.showAllBankDetailsFields).isEqualTo(settings.showAllBankDetailsFields)
 
         assertThat(result.selectedServiceDateOption).isEqualByComparingTo(settings.selectedServiceDateOption)
-        assertThat(result.selectedEInvoiceXmlFormat).isEqualByComparingTo(settings.selectedEInvoiceXmlFormat)
+        assertThat(result.selectedEInvoiceFormat).isEqualByComparingTo(settings.selectedEInvoiceFormat)
         assertThat(result.selectedCreateEInvoiceOption).isEqualByComparingTo(settings.selectedCreateEInvoiceOption)
         assertThat(result.showGeneratedEInvoiceXml).isEqualTo(settings.showGeneratedEInvoiceXml)
 

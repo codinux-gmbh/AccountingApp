@@ -4,7 +4,7 @@ import net.codinux.accounting.domain.invoice.model.*
 import net.codinux.accounting.domain.persistence.SqldelightMapper
 import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
-import net.codinux.invoicing.model.EInvoiceXmlFormat
+import net.codinux.invoicing.format.EInvoiceFormat
 
 class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonSerializer, private val mapper: SqldelightMapper) : InvoiceRepository {
 
@@ -30,7 +30,7 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
     override suspend fun loadCreateInvoiceSettings(): CreateInvoiceSettings? =
         queries.getCreateInvoiceSettings { _, lastCreatedInvoice,
                                            showAllSupplierFields, showAllCustomerFields,
-                                           selectedServiceDateOption, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
+                                           selectedServiceDateOption, selectedEInvoiceFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
                                            lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenFileDirectory ->
             CreateInvoiceSettings(
                 lastCreatedInvoice?.let { serializer.decode(it) },
@@ -38,7 +38,7 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
                 showAllSupplierFields, showAllCustomerFields, false, // TODO: save and restore showAllBankDetailsFields
 
                 mapper.mapToEnum(selectedServiceDateOption, ServiceDateOptions.entries),
-                mapper.mapToEnum(selectedEInvoiceXmlFormat, EInvoiceXmlFormat.entries),
+                mapper.mapToEnum(selectedEInvoiceFormat, EInvoiceFormat.entries),
                 mapper.mapToEnum(selectedCreateEInvoiceOption, CreateEInvoiceOptions.entries),
                 showGeneratedEInvoiceXml,
 
@@ -53,7 +53,7 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
 
             settings.showAllSupplierFields, settings.showAllCustomerFields, // TODO: save and restore showAllBankDetailsFields
 
-            mapper.mapEnum(settings.selectedServiceDateOption), mapper.mapEnum(settings.selectedEInvoiceXmlFormat),
+            mapper.mapEnum(settings.selectedServiceDateOption), mapper.mapEnum(settings.selectedEInvoiceFormat),
             mapper.mapEnum(settings.selectedCreateEInvoiceOption), settings.showGeneratedEInvoiceXml,
 
             settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory

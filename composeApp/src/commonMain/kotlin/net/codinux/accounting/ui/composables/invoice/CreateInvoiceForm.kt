@@ -36,6 +36,7 @@ import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.*
 import net.codinux.accounting.ui.extensions.extension
+import net.codinux.invoicing.format.EInvoiceFormat
 import net.codinux.invoicing.model.*
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.stringResource
@@ -46,6 +47,8 @@ private val VerticalRowPadding = Style.FormVerticalRowPadding
 private val createEInvoiceOptions = CreateEInvoiceOptions.entries
 
 private val invoiceService = DI.invoiceService
+
+private val selectableEInvoiceFormats = listOf(EInvoiceFormat.FacturX, EInvoiceFormat.XRechnung)
 
 @Composable
 fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
@@ -68,7 +71,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     }
 
 
-    var selectedEInvoiceXmlFormat by remember(settings) { mutableStateOf(settings.selectedEInvoiceXmlFormat) }
+    var selectedEInvoiceFormat by remember(settings) { mutableStateOf(settings.selectedEInvoiceFormat) }
 
     var selectedCreateEInvoiceOption by remember(settings) { mutableStateOf(settings.selectedCreateEInvoiceOption) }
 
@@ -116,9 +119,9 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
 
     @Composable
-    fun getLabel(format: EInvoiceXmlFormat): String = when (format) {
-        EInvoiceXmlFormat.FacturX -> stringResource(Res.string.e_invoice_xml_format_factur_x)
-        EInvoiceXmlFormat.XRechnung -> stringResource(Res.string.e_invoice_xml_format_x_rechnung)
+    fun getLabel(format: EInvoiceFormat): String = when (format) {
+        EInvoiceFormat.FacturX, EInvoiceFormat.Zugferd -> stringResource(Res.string.e_invoice_xml_format_factur_x)
+        EInvoiceFormat.XRechnung -> stringResource(Res.string.e_invoice_xml_format_x_rechnung)
     }
 
     @Composable
@@ -147,7 +150,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
     suspend fun saveCreateInvoiceSettings(createInvoice: Invoice) {
         val newSettings = CreateInvoiceSettings(createInvoice, settings.showAllSupplierFields, settings.showAllCustomerFields, settings.showAllBankDetailsFields,
-            descriptionOfServices.serviceDateOption.value, selectedEInvoiceXmlFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
+            descriptionOfServices.serviceDateOption.value, selectedEInvoiceFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
             settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory)
 
         invoiceService.saveCreateInvoiceSettings(newSettings)
@@ -161,9 +164,9 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 val invoice = createInvoice()
 
                 val xmlToFile = when (selectedCreateEInvoiceOption) {
-                    CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceXmlFormat)
-                    CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceXmlFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceXmlFormat, { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdfBytes, pdf) ->
+                    CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceFormat)
+                    CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!)
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdfBytes, pdf) ->
                         if (pdf != null && pdfBytes != null && pdfBytes.size > 0) {
                             createdPdfFile = pdf
                             createdPdfBytes = pdfBytes
@@ -217,7 +220,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     }
 
     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding), verticalAlignment = Alignment.CenterVertically) {
-        Select(Res.string.e_invoice_xml_format, EInvoiceXmlFormat.entries, selectedEInvoiceXmlFormat, { selectedEInvoiceXmlFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
+        Select(Res.string.e_invoice_xml_format, selectableEInvoiceFormats, selectedEInvoiceFormat, { selectedEInvoiceFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
 
         Spacer(Modifier.width(1.dp).weight(1f))
 

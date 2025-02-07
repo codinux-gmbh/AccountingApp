@@ -1,7 +1,7 @@
 package net.codinux.accounting.domain.invoice.model
 
 import kotlinx.serialization.Serializable
-import net.codinux.invoicing.model.EInvoiceXmlFormat
+import net.codinux.invoicing.format.EInvoiceFormat
 import net.codinux.invoicing.model.Invoice
 
 @Serializable
@@ -13,7 +13,7 @@ data class CreateInvoiceSettings(
     var showAllBankDetailsFields: Boolean = false,
 
     val selectedServiceDateOption: ServiceDateOptions = ServiceDateOptions.ServiceDate,
-    val selectedEInvoiceXmlFormat: EInvoiceXmlFormat = EInvoiceXmlFormat.FacturX,
+    val selectedEInvoiceFormat: EInvoiceFormat = EInvoiceFormat.FacturX,
     val selectedCreateEInvoiceOption: CreateEInvoiceOptions = CreateEInvoiceOptions.XmlOnly,
     val showGeneratedEInvoiceXml: Boolean = true,
 

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerType
 import io.github.vinceglb.filekit.core.PlatformFile
@@ -72,7 +73,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
 
     lastSelectedInvoiceFile?.let { selectedFile ->
         Row(Modifier.fillMaxWidth().padding(top = 36.dp).padding(horizontal = 18.dp).clickable { openExistingInvoiceFileLauncher.launch() }, Arrangement.Center, Alignment.CenterVertically) {
-            Text(selectedFile.name, Modifier.fillMaxWidth(), textAlign = TextAlign.Center, overflow = TextOverflow.Clip, maxLines = 1)
+            Text(selectedFile.name, Modifier.fillMaxWidth(), fontSize = 17.sp, textAlign = TextAlign.Center, overflow = TextOverflow.Clip, maxLines = 1)
         }
     }
 

@@ -1,5 +1,6 @@
 package net.codinux.accounting.ui.composables.invoice
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -70,7 +71,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
     }
 
     lastSelectedInvoiceFile?.let { selectedFile ->
-        Row(Modifier.fillMaxWidth().padding(top = 36.dp).padding(horizontal = 18.dp), Arrangement.Center, Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().padding(top = 36.dp).padding(horizontal = 18.dp).clickable { openExistingInvoiceFileLauncher.launch() }, Arrangement.Center, Alignment.CenterVertically) {
             Text(selectedFile.name, Modifier.fillMaxWidth(), textAlign = TextAlign.Center, overflow = TextOverflow.Clip, maxLines = 1)
         }
     }

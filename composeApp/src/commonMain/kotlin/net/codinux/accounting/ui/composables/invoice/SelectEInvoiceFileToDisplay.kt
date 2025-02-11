@@ -100,6 +100,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
                         ReadEInvoicePdfResultType.NotAPdf -> Res.string.error_message_file_is_not_a_pdf
                         ReadEInvoicePdfResultType.NoAttachments -> Res.string.error_message_pdf_has_no_attachments
                         ReadEInvoicePdfResultType.NoXmlAttachments -> Res.string.error_message_pdf_has_no_xml_attachments
+                        ReadEInvoicePdfResultType.UnsupportedInvoiceFormat -> Res.string.error_message_invoice_format_is_not_supported
                         ReadEInvoicePdfResultType.InvalidXml -> Res.string.error_message_file_is_not_a_valid_xml
                         ReadEInvoicePdfResultType.InvalidInvoiceData -> Res.string.error_message_xml_file_contains_invalid_invoice_data
                         ReadEInvoicePdfResultType.Success -> null // should never come to here

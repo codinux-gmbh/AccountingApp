@@ -84,6 +84,8 @@
 
     <string name="invoice_contains_errors">Incorrect invoice data</string>
     <string name="error_message_invoice_contains_errors">The invoice data could be read, but they contain the following errors:</string>
+    <string name="invoice_errors_data_missing_or_incorrect">Missing or wrong data</string>
+    <string name="invoice_errors_violated_business_rules">Violated business rules</string>
     <string name="invoice_field_invoice_date">Invoice date</string>
     <string name="invoice_field_invoice_number">Invoice number</string>
     <string name="invoice_field_currency">Currency</string>

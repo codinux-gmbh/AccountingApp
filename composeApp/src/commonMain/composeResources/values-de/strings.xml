@@ -84,6 +84,8 @@
 
     <string name="invoice_contains_errors">Rechnungsdaten fehlerhaft</string>
     <string name="error_message_invoice_contains_errors">Die Rechnungsdaten konnten gelesen werden, aber sie enthalten folgende Fehler:</string>
+    <string name="invoice_errors_data_missing_or_incorrect">Daten, die fehlen oder falsch sind</string>
+    <string name="invoice_errors_violated_business_rules">Regeln, die nicht eingehalten wurden (Fehlermeldungen meistens in Englisch)</string>
     <string name="invoice_field_invoice_date">Rechnungsdatum</string>
     <string name="invoice_field_invoice_number">Rechnungsnummer</string>
     <string name="invoice_field_currency">Währung</string>

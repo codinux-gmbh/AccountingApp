@@ -21,8 +21,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
+import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.accounting.ui.composables.AvoidCutOffAtEndOfScreen
@@ -37,6 +39,8 @@ import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.reader.ReadEInvoicePdfResult
+import net.codinux.invoicing.validation.InvoiceXmlValidationResult
+import net.codinux.invoicing.validation.ValidationError
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -55,10 +59,22 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
     val settings = DI.uiState.viewInvoiceSettings.collectAsState().value
 
+    var xmlValidationResult by remember { mutableStateOf<Result<InvoiceXmlValidationResult>?>(null) }
+
+    LaunchedEffect(xml) {
+        xmlValidationResult = null // new XML -> reset
+
+        if (xml != null) {
+            launch(Dispatchers.IoOrDefault) {
+                xmlValidationResult = invoiceService.validateInvoiceXml(xml)
+            }
+        }
+    }
+
 
     SelectionContainer(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().applyIf(enableVerticalScrolling) { it.verticalScroll() }) {
-            if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
+            if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.isValid == false) {
                 Section(Res.string.invoice_contains_errors) {
                     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding, bottom = 6.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
@@ -68,8 +84,18 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
                         Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
                     }
 
-                    mapInvoiceResult.invoiceDataErrors.forEach { dataError ->
-                        InvoiceDataErrorListItem(dataError)
+                    if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
+                        HeaderText(stringResource(Res.string.invoice_errors_data_missing_or_incorrect), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+
+                        mapInvoiceResult.invoiceDataErrors.forEach { dataError ->
+                            InvoiceDataErrorListItem(dataError)
+                        }
+                    }
+
+                    xmlValidationResult?.value?.errors?.let { xmlValidationErrors ->
+                        HeaderText(stringResource(Res.string.invoice_errors_violated_business_rules), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+
+                        xmlValidationErrors.forEach { XmlValidationErrorListItem(it) }
                     }
                 }
             }
@@ -298,4 +324,9 @@ private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
     }
 
     HorizontalLabelledValue(fieldName, stringResource(errorMessage, dataError.erroneousValue ?: ""))
+}
+
+@Composable
+private fun XmlValidationErrorListItem(error: ValidationError) {
+    Text(error.message, Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp), maxLines = 3) // padding = same values as in HorizontalLabelledValue
 }

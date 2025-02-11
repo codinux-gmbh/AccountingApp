@@ -21,9 +21,12 @@ import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
+import net.codinux.invoicing.model.dto.SerializableException
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
+import net.codinux.invoicing.validation.EInvoiceXmlValidator
+import net.codinux.invoicing.validation.InvoiceXmlValidationResult
 import net.codinux.log.logger
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -37,6 +40,7 @@ class InvoiceService(
     private val pdfCreator: EInvoicePdfCreator = EInvoicePdfCreator(),
     private val pdfAttacher: EInvoiceXmlToPdfAttacher = EInvoiceXmlToPdfAttacher(),
     private val xmlCreator: EInvoiceXmlCreator = EInvoiceXmlCreator(),
+    private val xmlValidator: EInvoiceXmlValidator = EInvoiceXmlValidator(),
     private val localizationService: LocalizationService = LocalizationService()
 ) {
 
@@ -221,7 +225,8 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, invoiceLanguage: InvoiceLanguage = InvoiceLanguage.English,
+                                  invoiceLogoUrl: String? = null, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
         val xmlResult = createEInvoiceXml(invoice, format)
         val xml = xmlResult.first
         invoiceXmlCreated?.invoke(xml)
@@ -255,6 +260,16 @@ class InvoiceService(
 
         uiState.errorOccurred(ErroneousAction.CreateInvoice, message ?: Res.string.error_message_could_not_create_invoice, error)
     }
+
+    fun showCouldNotCreateInvoiceError(error: SerializableException?, message: StringResource? = null) {
+        log.error { "Could not create or save eInvoice: $error" }
+
+        uiState.errorOccurred(ErroneousAction.CreateInvoice, message ?: Res.string.error_message_could_not_create_invoice, error)
+    }
+
+
+    suspend fun validateInvoiceXml(invoiceXml: String): Result<InvoiceXmlValidationResult> =
+        xmlValidator.validateEInvoiceXml(invoiceXml)
 
 
     fun generateEpcQrCode(details: BankDetails, invoice: Invoice, accountHolderName: String, heightAndWidth: Int = 500): ByteArray? =

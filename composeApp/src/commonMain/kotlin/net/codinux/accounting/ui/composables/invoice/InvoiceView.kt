@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Attachment
+import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +44,8 @@ private val invoiceService = DI.invoiceService
 
 private val formatUtil = DI.formatUtil
 
+private val WarningSignColor = net.codinux.accounting.ui.extensions.Color("#FDCF0C")
+
 @Composable
 fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoicePdfResult? = null, invoiceXml: String? = null, enableVerticalScrolling: Boolean = true) {
 
@@ -57,8 +60,12 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
         Column(Modifier.fillMaxWidth().applyIf(enableVerticalScrolling) { it.verticalScroll() }) {
             if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
                 Section(Res.string.invoice_contains_errors) {
-                    Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding, bottom = 6.dp).padding(horizontal = 12.dp)) {
-                        Text(stringResource(Res.string.error_message_invoice_contains_errors), textAlign = TextAlign.Center)
+                    Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding, bottom = 6.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
+
+                        Text(stringResource(Res.string.error_message_invoice_contains_errors), Modifier.padding(horizontal = 4.dp).weight(1f), textAlign = TextAlign.Center)
+
+                        Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
                     }
 
                     mapInvoiceResult.invoiceDataErrors.forEach { dataError ->

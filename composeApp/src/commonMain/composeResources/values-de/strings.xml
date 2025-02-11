@@ -83,7 +83,7 @@
     <string name="file_attachments">Dateianhänge</string>
 
     <string name="invoice_contains_errors">Rechnungsdaten fehlerhaft</string>
-    <string name="error_message_invoice_contains_errors">⚠️ Die Rechnungsdaten konnten gelesen werden, aber sie enthalten folgende Fehler:</string>
+    <string name="error_message_invoice_contains_errors">Die Rechnungsdaten konnten gelesen werden, aber sie enthalten folgende Fehler:</string>
     <string name="invoice_field_invoice_date">Rechnungsdatum</string>
     <string name="invoice_field_invoice_number">Rechnungsnummer</string>
     <string name="invoice_field_currency">Währung</string>

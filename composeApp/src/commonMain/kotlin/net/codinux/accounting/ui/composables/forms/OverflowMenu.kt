@@ -3,7 +3,7 @@ package net.codinux.accounting.ui.composables.forms
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ fun OverflowMenu(items: Collection<MenuItem>, buttonWidth: Dp = 48.dp, buttonHei
             onClick = { showMenu = true },
             modifier = Modifier.width(buttonWidth).height(buttonHeight).align(Alignment.Center)
         ) {
-            Icon(Icons.Default.MoreVert, "Show menu with more options", tint = iconColor)
+            Icon(Icons.Outlined.MoreVert, "Show menu with more options", tint = iconColor)
         }
 
         DropdownMenu(

@@ -50,6 +50,11 @@ private val invoiceService = DI.invoiceService
 
 private val selectableEInvoiceFormats = listOf(EInvoiceFormat.FacturX, EInvoiceFormat.XRechnung)
 
+private val createButtonWidth = 150.dp
+
+private val createButtonPaddingStart = 6.dp
+
+@OptIn(FlowPreview::class)
 @Composable
 fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
 
@@ -84,6 +89,8 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     var createdXmlFile by remember { mutableStateOf<PlatformFile?>(null) }
 
     var showGeneratedEInvoiceXml by remember(settings) { mutableStateOf(settings.showGeneratedEInvoiceXml) }
+
+    val screenWidthDp = DI.uiState.screenSize.collectAsState().value.widthDp
 
 
     val clipboardManager = LocalClipboardManager.current
@@ -220,16 +227,19 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     }
 
     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding), verticalAlignment = Alignment.CenterVertically) {
-        Select(Res.string.e_invoice_xml_format, selectableEInvoiceFormats, selectedEInvoiceFormat, { selectedEInvoiceFormat = it }, { getLabel(it) }, Modifier.width(200.dp))
+        val remainingScreenWidth = screenWidthDp - createButtonWidth - createButtonPaddingStart
 
-        Spacer(Modifier.width(1.dp).weight(1f))
+        Select(Res.string.e_invoice_xml_format, selectableEInvoiceFormats, selectedEInvoiceFormat,
+            { selectedEInvoiceFormat = it }, { getLabel(it) }, Modifier.let { if (remainingScreenWidth >= 300.dp) it.widthIn(250.dp, 300.dp) else it.width(remainingScreenWidth) })
+
+        Spacer(Modifier.width(createButtonPaddingStart).weight(1f))
 
         if (isCreatingEInvoice) {
             CircularProgressIndicator(Modifier.padding(end = 12.dp).size(36.dp), color = Colors.HighlightedTextColor)
         }
 
         TextButton({ createEInvoice() }, contentPadding = PaddingValues(0.dp), enabled = isValid) {
-            Text(stringResource(Res.string.create), Modifier.applyIf(isCreatingEInvoice == false) { it.width(150.dp) },
+            Text(stringResource(Res.string.create), Modifier.applyIf(isCreatingEInvoice == false) { it.width(createButtonWidth) },
                 color = if (isValid) Colors.HighlightedTextColor else Colors.HighlightedTextColorDisabled,
                 fontWeight = if (isValid) FontWeight.SemiBold else FontWeight.Normal, textAlign = TextAlign.End)
         }

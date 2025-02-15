@@ -29,17 +29,14 @@ fun InvoiceForm() {
 
     val lastCreatedInvoice = settings.lastCreatedInvoice
 
-    val coroutineScope = rememberCoroutineScope()
+    val settingsViewModel by remember(settings) { mutableStateOf(CreateInvoiceSettingsViewModel(settings)) }
+
+    val showAllSupplierFields = settingsViewModel.showAllSupplierFields.collectAsState().value
+    val showAllCustomerFields = settingsViewModel.showAllCustomerFields.collectAsState().value
+    val showAllBankDetailsFields = settingsViewModel.showAllBankDetailsFields.collectAsState().value
 
 
-    fun invoiceDataChanged(settings: CreateInvoiceSettings) {
-        coroutineScope.launch {
-            DI.invoiceService.saveCreateInvoiceSettings(settings)
-        }
-    }
-
-
-    val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
+    val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details, { })) }
 
     val supplier by remember(settings) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.supplier)) }
 
@@ -62,30 +59,30 @@ fun InvoiceForm() {
                 InvoiceDetailsForm(details)
             }
 
-            Section(Res.string.supplier, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllSupplierFields) {
-                invoiceDataChanged(settings.copy(showAllSupplierFields = it)) } }
+            Section(Res.string.supplier, true, additionalElementAtEnd = { toggleShowAllFields(showAllSupplierFields) {
+                settingsViewModel.showAllSupplierFieldsChanged(it) } }
             ) {
-                InvoicePartyForm(supplier, true, isCompactScreen, settings.showAllSupplierFields)
+                InvoicePartyForm(supplier, true, isCompactScreen, showAllSupplierFields)
             }
 
-            Section(Res.string.customer, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllCustomerFields) {
-                invoiceDataChanged(settings.copy(showAllCustomerFields = it)) } }
+            Section(Res.string.customer, true, additionalElementAtEnd = { toggleShowAllFields(showAllCustomerFields) {
+                settingsViewModel.showAllCustomerFieldsChanged(it) } }
             ) {
-                InvoicePartyForm(customer, false, isCompactScreen, settings.showAllCustomerFields)
+                InvoicePartyForm(customer, false, isCompactScreen, showAllCustomerFields)
             }
 
             Section(Res.string.description_of_services) {
                 DescriptionOfServicesForm(descriptionOfServices, isCompactScreen)
             }
 
-            Section(Res.string.bank_details, true, additionalElementAtEnd = { toggleShowAllFields(settings.showAllBankDetailsFields) {
-                invoiceDataChanged(settings.copy(showAllBankDetailsFields = it)) } }
+            Section(Res.string.bank_details, true, additionalElementAtEnd = { toggleShowAllFields(showAllBankDetailsFields) {
+                settingsViewModel.showAllBankDetailsFieldsChanged(it) } }
             ) {
-                BankDetailsForm(bankDetails, settings.showAllBankDetailsFields)
+                BankDetailsForm(bankDetails, showAllBankDetailsFields)
             }
 
             Section(Res.string.create) {
-                CreateInvoiceForm(settings, details, supplier, customer, descriptionOfServices, bankDetails, isCompactScreen)
+                CreateInvoiceForm(settings, details, supplier, customer, descriptionOfServices, bankDetails, settingsViewModel, isCompactScreen)
             }
 
             AvoidCutOffAtEndOfScreen()

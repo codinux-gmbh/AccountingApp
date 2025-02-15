@@ -58,7 +58,7 @@ private val createButtonPaddingStart = 6.dp
 
 @OptIn(FlowPreview::class)
 @Composable
-fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, isCompactScreen: Boolean) {
+fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, settingsViewModel: CreateInvoiceSettingsViewModel, isCompactScreen: Boolean) {
 
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
@@ -108,9 +108,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent ?: settings.lastOpenFileDirectory) { selectedFile ->
         if (selectedFile != null) {
             pdfToAttachXmlTo = selectedFile
-            coroutineScope.launch {
-                invoiceService.saveCreateInvoiceSettings(settings.copy(lastOpenFileDirectory = selectedFile.parent))
-            }
+            settingsViewModel.lastOpenFileDirectoryChanged(selectedFile.parent)
         }
     }
 
@@ -118,9 +116,9 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         if (file != null) {
             coroutineScope.launch {
                 if (file.extension.lowercase() == "xml") {
-                    invoiceService.saveCreateInvoiceSettings(settings.copy(lastXmlSaveDirectory = file.parent))
+                    settingsViewModel.lastXmlSaveDirectoryChanged(file.parent)
                 } else if (file.extension.lowercase() == "pdf") {
-                    invoiceService.saveCreateInvoiceSettings(settings.copy(lastPdfSaveDirectory = file.parent))
+                    settingsViewModel.lastPdfSaveDirectoryChanged(file.parent)
                 }
             }
         }
@@ -158,9 +156,12 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     }
 
     suspend fun saveCreateInvoiceSettings(createInvoice: Invoice) {
-        val newSettings = CreateInvoiceSettings(createInvoice, settings.showAllSupplierFields, settings.showAllCustomerFields, settings.showAllBankDetailsFields,
-            descriptionOfServices.serviceDateOption.value, selectedEInvoiceFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
-            settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory)
+        val newSettings = CreateInvoiceSettings(createInvoice, settingsViewModel.showAllSupplierFields.value,
+            settingsViewModel.showAllCustomerFields.value, settingsViewModel.showAllBankDetailsFields.value,
+            descriptionOfServices.serviceDateOption.value, selectedEInvoiceFormat, selectedCreateEInvoiceOption,
+            pdfTemplateViewModel.language.value, pdfTemplateViewModel.logoUrl.value, showGeneratedEInvoiceXml,
+            settingsViewModel.lastXmlSaveDirectory.value, settingsViewModel.lastPdfSaveDirectory.value,
+            settingsViewModel.lastOpenFileDirectory.value)
 
         invoiceService.saveCreateInvoiceSettings(newSettings)
     }
@@ -258,7 +259,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 Text(stringResource(Res.string.copy), Modifier.width(95.dp), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
             }
 
-            SaveButtons(saveFileLauncher, createdInvoice!!, invoiceXml, createdPdfBytes, settings, if (isCompactScreen) 120.dp else 130.dp)
+            SaveButtons(saveFileLauncher, createdInvoice!!, invoiceXml, createdPdfBytes, settingsViewModel, if (isCompactScreen) 120.dp else 130.dp)
 
             Spacer(Modifier.weight(1f))
 
@@ -282,16 +283,19 @@ private fun SaveButtons(
     invoice: Invoice,
     generatedEInvoiceXml: String,
     createdPdfBytes: ByteArray?,
-    settings: CreateInvoiceSettings,
+    settingsViewModel: CreateInvoiceSettingsViewModel,
     buttonWidth: Dp
 ) {
     val invoiceFilename = invoice.shortDescription
+
+    val lastXmlSaveDirectory = settingsViewModel.lastXmlSaveDirectory.collectAsState().value
+    val lastPdfSaveDirectory = settingsViewModel.lastPdfSaveDirectory.collectAsState().value
 
     var showMenu by remember { mutableStateOf(false) }
 
 
     if (createdPdfBytes == null) { // only created XML
-        TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) }, contentPadding = PaddingValues(0.dp)) {
+        TextButton(onClick = { saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", lastXmlSaveDirectory) }, contentPadding = PaddingValues(0.dp)) {
             Text(stringResource(Res.string.save_xml), Modifier.width(buttonWidth), Colors.HighlightedTextColor, textAlign = TextAlign.Center)
         }
     } else {
@@ -311,11 +315,11 @@ private fun SaveButtons(
                 modifier = Modifier.align(Alignment.BottomEnd)
             ) {
                 DropdownMenuItem(
-                    onClick = { showMenu = false; saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", settings.lastPdfSaveDirectory) },
+                    onClick = { showMenu = false; saveFileLauncher.launch(createdPdfBytes, invoiceFilename, "pdf", lastPdfSaveDirectory) },
                     content = { Text(stringResource(Res.string.save_pdf), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center) }
                 )
                 DropdownMenuItem(
-                    onClick = { showMenu = false; saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", settings.lastXmlSaveDirectory) },
+                    onClick = { showMenu = false; saveFileLauncher.launch(generatedEInvoiceXml.encodeToByteArray(), invoiceFilename, "xml", lastXmlSaveDirectory) },
                     content = { Text(stringResource(Res.string.save_xml), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center) }
                 )
             }

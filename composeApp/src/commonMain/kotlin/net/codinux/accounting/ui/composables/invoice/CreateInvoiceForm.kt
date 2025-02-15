@@ -36,6 +36,8 @@ import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.config.Style
 import net.codinux.accounting.ui.extensions.*
 import net.codinux.accounting.ui.extensions.extension
+import net.codinux.i18n.Language
+import net.codinux.i18n.LanguageTag
 import net.codinux.invoicing.format.EInvoiceFormat
 import net.codinux.invoicing.model.*
 import net.codinux.log.Log
@@ -229,8 +231,13 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding), verticalAlignment = Alignment.CenterVertically) {
         val remainingScreenWidth = screenWidthDp - createButtonWidth - createButtonPaddingStart
 
+        val dropDownWidth = if (remainingScreenWidth >= 310.dp) null
+                    else if (LanguageTag.current.language == Language.German && remainingScreenWidth <= 275.dp) 275.dp
+                    else 310.dp
+
         Select(Res.string.e_invoice_xml_format, selectableEInvoiceFormats, selectedEInvoiceFormat,
-            { selectedEInvoiceFormat = it }, { getLabel(it) }, Modifier.let { if (remainingScreenWidth >= 300.dp) it.widthIn(250.dp, 300.dp) else it.width(remainingScreenWidth) })
+            { selectedEInvoiceFormat = it }, { getLabel(it) }, Modifier.let { if (remainingScreenWidth >= 300.dp) it.widthIn(250.dp, 300.dp) else it.width(remainingScreenWidth) },
+            dropDownWidth = dropDownWidth)
 
         Spacer(Modifier.width(createButtonPaddingStart).weight(1f))
 

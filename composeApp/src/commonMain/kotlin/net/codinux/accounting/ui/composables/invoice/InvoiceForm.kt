@@ -3,8 +3,7 @@ package net.codinux.accounting.ui.composables.invoice
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Remove
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -99,7 +98,7 @@ fun toggleShowAllFields(showAllFields: Boolean, showAllFieldsChanged: (Boolean) 
 
     TextButton({ showAllFieldsChanged(!showAllFields) }, Modifier.height(28.dp).width(36.dp), contentPadding = PaddingValues(0.dp)) {
         Column(Modifier.fillMaxSize(), Arrangement.Center, horizontalAlignment = Alignment.End) {
-            Icon(if (showAllFields) Icons.Outlined.Remove else Icons.Outlined.Add, "Toggle show all or only most common fields",
+            Icon(if (showAllFields) Icons.Outlined.ArrowDropUp else Icons.Outlined.ArrowDropDown, "Toggle show all or only most common fields",
                 Modifier.size(24.dp), tint = Colors.FormValueTextColor)
         }
     }

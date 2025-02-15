@@ -25,8 +25,7 @@ import net.codinux.invoicing.model.dto.SerializableException
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
-import net.codinux.invoicing.validation.EInvoiceXmlValidator
-import net.codinux.invoicing.validation.InvoiceXmlValidationResult
+import net.codinux.invoicing.validation.*
 import net.codinux.log.logger
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -41,6 +40,7 @@ class InvoiceService(
     private val pdfAttacher: EInvoiceXmlToPdfAttacher = EInvoiceXmlToPdfAttacher(),
     private val xmlCreator: EInvoiceXmlCreator = EInvoiceXmlCreator(),
     private val xmlValidator: EInvoiceXmlValidator = EInvoiceXmlValidator(),
+    private val pdfValidator: EInvoicePdfValidator = EInvoicePdfValidator(),
     private val localizationService: LocalizationService = LocalizationService()
 ) {
 
@@ -270,6 +270,9 @@ class InvoiceService(
 
     suspend fun validateInvoiceXml(invoiceXml: String): Result<InvoiceXmlValidationResult> =
         xmlValidator.validateEInvoiceXml(invoiceXml)
+
+    suspend fun validateInvoicePdf(pdfBytes: ByteArray): Result<PdfValidationResult> =
+        pdfValidator.validateEInvoicePdf(pdfBytes)
 
 
     fun generateEpcQrCode(details: BankDetails, invoice: Invoice, accountHolderName: String, heightAndWidth: Int = 500): ByteArray? =

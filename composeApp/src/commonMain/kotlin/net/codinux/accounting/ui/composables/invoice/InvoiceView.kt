@@ -39,8 +39,7 @@ import net.codinux.accounting.ui.extensions.verticalScroll
 import net.codinux.invoicing.model.*
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.reader.ReadEInvoicePdfResult
-import net.codinux.invoicing.validation.InvoiceXmlValidationResult
-import net.codinux.invoicing.validation.ValidationError
+import net.codinux.invoicing.validation.*
 import org.jetbrains.compose.resources.stringResource
 
 
@@ -51,7 +50,7 @@ private val formatUtil = DI.formatUtil
 private val WarningSignColor = net.codinux.accounting.ui.extensions.Color("#FDCF0C")
 
 @Composable
-fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoicePdfResult? = null, invoiceXml: String? = null, enableVerticalScrolling: Boolean = true) {
+fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoicePdfResult? = null, invoiceXml: String? = null, pdfBytes: ByteArray? = null, enableVerticalScrolling: Boolean = true) {
 
     val invoice = mapInvoiceResult.invoice
 
@@ -61,11 +60,18 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
     var xmlValidationResult by remember { mutableStateOf<Result<InvoiceXmlValidationResult>?>(null) }
 
-    LaunchedEffect(xml) {
-        xmlValidationResult = null // new XML -> reset
+    var pdfValidationResult by remember { mutableStateOf<Result<PdfValidationResult>?>(null) }
 
-        if (xml != null) {
-            launch(Dispatchers.IoOrDefault) {
+
+    LaunchedEffect(xml, pdfBytes) {
+        xmlValidationResult = null // new XML -> reset
+        pdfValidationResult = null
+
+        launch(Dispatchers.IoOrDefault) {
+            if (pdfBytes != null) {
+                pdfValidationResult = invoiceService.validateInvoicePdf(pdfBytes)
+                xmlValidationResult = pdfValidationResult?.value?.xmlValidationResult
+            } else if (xml != null) {
                 xmlValidationResult = invoiceService.validateInvoiceXml(xml)
             }
         }
@@ -74,7 +80,7 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
     SelectionContainer(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().applyIf(enableVerticalScrolling) { it.verticalScroll() }) {
-            if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.isValid == false) {
+            if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.isValid == false || pdfValidationResult?.value?.isValid == false) {
                 Section(Res.string.invoice_contains_errors) {
                     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding, bottom = 6.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
@@ -92,10 +98,26 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
                         }
                     }
 
-                    xmlValidationResult?.value?.errors?.let { xmlValidationErrors ->
-                        HeaderText(stringResource(Res.string.invoice_errors_violated_business_rules), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+                    xmlValidationResult?.value?.resultItems?.let { resultItems ->
+                        if (resultItems.isNotEmpty()) {
+                            HeaderText(stringResource(Res.string.invoice_errors_violated_business_rules), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
 
-                        xmlValidationErrors.forEach { XmlValidationErrorListItem(it) }
+                            resultItems.forEach { XmlValidationErrorListItem(it) }
+                        }
+                    }
+
+                    pdfValidationResult?.value?.let { pdfValidationResult ->
+                        if (pdfValidationResult.isValid == false) {
+                            HeaderText("PDF ist keine gültige PDF/A-3 Datei. Rechtlich ist dies aber auch nicht erforderlich", Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+
+                            if (pdfValidationResult.isPdfA) {
+                                HorizontalLabelledValue(Res.string.city, pdfValidationResult.pdfAFlavor.name)
+                            } else {
+                                Text("Ist keine PDF/A Datei")
+                            }
+
+                            pdfValidationResult.validationErrors.forEach { PdfValidationErrorListItem(it) }
+                        }
                     }
                 }
             }
@@ -329,6 +351,13 @@ private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
 }
 
 @Composable
-private fun XmlValidationErrorListItem(error: ValidationError) {
+private fun XmlValidationErrorListItem(error: ValidationResultItem) {
+    // TODO: get invoice field from BT (if available) or maybe location or test
     Text(error.message, Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp), maxLines = 3) // padding = same values as in HorizontalLabelledValue
+}
+
+@Composable
+private fun PdfValidationErrorListItem(error: PdfValidationError) {
+    Text("${error.category} ${error.test}, ${error.rule}: ${error.englishMessage}",
+        Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp)/*, maxLines = 3*/) // padding = same values as in HorizontalLabelledValue
 }

@@ -30,7 +30,7 @@ import org.jetbrains.compose.resources.stringResource
 private val invoiceService = DI.invoiceService
 
 @Composable
-fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?, String?) -> Unit) {
+fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?, String?, ByteArray?) -> Unit) {
 
     var lastSelectedInvoiceFile by remember { mutableStateOf<PlatformFile?>(null) }
 
@@ -53,8 +53,11 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
                 lastExtractedEInvoice = invoiceService.readEInvoice(it)
 
                 lastExtractedEInvoice?.let { selectedInvoice ->
-                    val xml = if (selectedFile.extension.lowercase() == "xml") selectedFile.readBytes().decodeToString() else null
-                    selectedInvoiceChanged(selectedInvoice, xml)
+                    val fileBytes = selectedFile.readBytes()
+                    val fileExtension = selectedFile.extension.lowercase()
+                    val xml = if (fileExtension == "xml") fileBytes.decodeToString() else null
+                    val pdfBytes = if (fileExtension == "pdf") fileBytes else null
+                    selectedInvoiceChanged(selectedInvoice, xml, pdfBytes)
                 }
 
                 invoiceService.saveViewInvoiceSettings(settings)

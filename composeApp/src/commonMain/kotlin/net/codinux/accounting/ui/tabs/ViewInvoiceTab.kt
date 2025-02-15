@@ -17,19 +17,22 @@ fun ViewInvoiceTab() {
 
     var selectedInvoiceXml by remember { mutableStateOf<String?>(null) }
 
+    var selectedInvoicePdfBytes by remember { mutableStateOf<ByteArray?>(null) }
+
 
     Column(Modifier.fillMaxSize().verticalScroll(), verticalArrangement = Arrangement.Center) {
         val invoice = selectedInvoice?.mapInvoiceResult
 
         ComposableOfMaxWidth(600.dp) {
-            SelectEInvoiceFileToDisplay { invoice, xml ->
+            SelectEInvoiceFileToDisplay { invoice, xml, pdfBytes ->
                 selectedInvoice = invoice
                 selectedInvoiceXml = xml
+                selectedInvoicePdfBytes = pdfBytes
             }
 
             if (invoice != null) {
                 Row(Modifier.padding(top = 24.dp)) {
-                    InvoiceView(invoice, selectedInvoice?.readPdfResult, selectedInvoiceXml, false)
+                    InvoiceView(invoice, selectedInvoice?.readPdfResult, selectedInvoiceXml, selectedInvoicePdfBytes, false)
                 }
             }
         }

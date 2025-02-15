@@ -166,13 +166,13 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 val xmlToFile = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdfBytes, pdf) ->
-                        if (pdf != null && pdfBytes != null && pdfBytes.size > 0) {
-                            createdPdfFile = pdf
-                            createdPdfBytes = pdfBytes
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, selectedInvoiceLanguage, invoiceLogoUrl, { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdf, pdfFile) ->
+                        if (pdfFile != null && pdf != null && pdf.bytes.isNotEmpty()) {
+                            createdPdfFile = pdfFile
+                            createdPdfBytes = pdf.bytes
 
                             coroutineScope.launch(Dispatchers.IoOrDefault) {
-                                DI.fileHandler.openFileInDefaultViewer(pdf, "application/pdf")
+                                DI.fileHandler.openFileInDefaultViewer(pdfFile, "application/pdf")
                             }
                         }
                         xml to xmlFile

@@ -299,8 +299,10 @@ private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
         InvoiceField.Currency -> Res.string.invoice_field_currency
 
         InvoiceField.Supplier -> Res.string.invoice_field_supplier
+        InvoiceField.SupplierName -> Res.string.invoice_field_supplier_name
         InvoiceField.SupplierCountry -> Res.string.invoice_field_supplier_country
         InvoiceField.Customer -> Res.string.invoice_field_customer
+        InvoiceField.CustomerName -> Res.string.invoice_field_customer_name
         InvoiceField.CustomerCountry -> Res.string.invoice_field_customer_country
 
         InvoiceField.Items -> Res.string.invoice_field_items

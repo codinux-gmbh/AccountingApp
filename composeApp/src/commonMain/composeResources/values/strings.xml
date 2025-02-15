@@ -90,8 +90,10 @@
     <string name="invoice_field_invoice_number">Invoice number</string>
     <string name="invoice_field_currency">Currency</string>
     <string name="invoice_field_supplier">Supplier</string>
+    <string name="invoice_field_supplier_name">Supplier name</string>
     <string name="invoice_field_supplier_country">Supplier country</string>
     <string name="invoice_field_customer">Customer</string>
+    <string name="invoice_field_country_name">Customer name</string>
     <string name="invoice_field_customer_country">Customer country</string>
     <string name="invoice_field_items">Items</string>
     <string name="invoice_field_item_name">Item name</string>

@@ -234,14 +234,14 @@ class InvoiceService(
             return null
         }
 
-        val pdfResult = pdfCreator.createFacturXPdf(xml, EInvoiceXmlFormat.valueOf(format.name))
-        val pdfBytes = pdfResult.value
-        if (pdfBytes == null) {
+        val pdfResult = pdfCreator.createFacturXPdf(xml, InvoicePdfConfig(EInvoiceXmlFormat.valueOf(format.name), invoiceLanguage, invoiceLogoUrl))
+        val pdf = pdfResult.value
+        if (pdf == null) {
             showCouldNotCreateInvoiceError(pdfResult.error, Res.string.error_message_could_not_create_invoice_pdf)
             return GeneratedInvoices(xml, xmlResult.second, null, null)
         }
 
-        return GeneratedInvoices(xml, xmlResult.second, pdfBytes, saveCreatedInvoiceFile(invoice, pdfBytes, "pdf"))
+        return GeneratedInvoices(xml, xmlResult.second, pdf, saveCreatedInvoiceFile(invoice, pdf.bytes, "pdf"))
     }
 
     private fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, type: String): PlatformFile? =

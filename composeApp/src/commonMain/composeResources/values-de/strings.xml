@@ -90,8 +90,10 @@
     <string name="invoice_field_invoice_number">Rechnungsnummer</string>
     <string name="invoice_field_currency">Währung</string>
     <string name="invoice_field_supplier">Leistungserbringer</string>
+    <string name="invoice_field_supplier_name">Name des Leistungserbringer</string>
     <string name="invoice_field_supplier_country">Land des Leistungserbringer</string>
     <string name="invoice_field_customer">Leistungsempfänger</string>
+    <string name="invoice_field_customer_name">Name des Leistungsempfänger</string>
     <string name="invoice_field_customer_country">Land des Leistungsempfänger</string>
     <string name="invoice_field_items">Rechnungsposten</string>
     <string name="invoice_field_item_name">Name des Rechnungspostens</string>

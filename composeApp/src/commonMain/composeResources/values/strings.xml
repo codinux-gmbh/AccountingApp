@@ -184,7 +184,7 @@
 
     <string name="create_only_xml">Create only XML</string>
     <string name="create_xml_and_attach_to_existing_pdf">Create XML and attach to existing PDF</string>
-    <string name="create_xml_and_pdf">Create XML and PDF</string>
+    <string name="create_xml_and_pdf">Create PDF with attached XML</string>
     <string name="select_existing_pdf_to_attach_e_invoice_xml_to">Select PDF to attach eInvoice XML to ...</string>
     <string name="show_xml">Show XML</string>
     <string name="save_xml">Save XML</string>

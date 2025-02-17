@@ -23,7 +23,7 @@ object Style {
 
     val HeaderTextColor: Color = Color.Black // TODO: find a better one like a dark gray
 
-    val HeaderFontWeight: FontWeight = FontWeight.Bold
+    val HeaderFontWeight: FontWeight = FontWeight.SemiBold
 
 
     val FormCardPadding = 8.dp

@@ -30,6 +30,10 @@ fun InvoiceValidationErrorsView(
     pdfValidationResult: Result<PdfValidationResult>?
 ) {
 
+    val businessRulesValidationErrors = xmlValidationResult?.value?.resultItems.orEmpty()
+        .filter { it.severity == ValidationResultItemSeverity.Error }
+
+
     @Composable
     fun getPdfAVersion(pdfValidationResult: PdfValidationResult): String =
         if (pdfValidationResult.isPdfA == false) stringResource(Res.string.not_a_pdf_a_file)
@@ -39,7 +43,7 @@ fun InvoiceValidationErrorsView(
         }
 
 
-    if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.resultItems?.isNotEmpty() == true) {
+    if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || businessRulesValidationErrors.isNotEmpty()) {
         Section(Res.string.incorrect_invoice_data) {
             if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
                 HeaderText(Res.string.invoice_errors_data_missing_or_incorrect, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
@@ -49,12 +53,10 @@ fun InvoiceValidationErrorsView(
                 }
             }
 
-            xmlValidationResult?.value?.resultItems?.let { resultItems ->
-                if (resultItems.isNotEmpty()) {
-                    HeaderText(Res.string.invoice_errors_violated_business_rules, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+            if (businessRulesValidationErrors.isNotEmpty()) {
+                HeaderText(Res.string.invoice_errors_violated_business_rules, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
 
-                    resultItems.forEach { XmlValidationErrorListItem(it) }
-                }
+                businessRulesValidationErrors.forEach { XmlValidationErrorListItem(it) }
             }
         }
     }

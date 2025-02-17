@@ -9,7 +9,7 @@ object AccountingSqlPersistence {
 
     private val schema = AccountingDb.Schema
 
-    private val sqlDriver = AccountingPersistenceNonWeb.createSqlDriver("Accounting.db", schema, 2L)
+    private val sqlDriver = AccountingPersistenceNonWeb.createSqlDriver("Accounting.db", schema)
 
     private val database = AccountingDb(sqlDriver)
 

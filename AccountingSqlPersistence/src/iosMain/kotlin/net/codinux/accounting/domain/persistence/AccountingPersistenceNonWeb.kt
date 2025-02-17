@@ -8,7 +8,7 @@ import app.cash.sqldelight.driver.native.NativeSqliteDriver
 
 internal actual object AccountingPersistenceNonWeb {
 
-    actual fun createSqlDriver(dbName: String, schema: SqlSchema<QueryResult.AsyncValue<Unit>>, version: Long): SqlDriver =
+    actual fun createSqlDriver(dbName: String, schema: SqlSchema<QueryResult.AsyncValue<Unit>>): SqlDriver =
         NativeSqliteDriver(schema.synchronous(), dbName)
 
 }

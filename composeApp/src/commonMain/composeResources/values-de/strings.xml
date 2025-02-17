@@ -85,10 +85,6 @@
     <string name="show_pdf_details">PDF Details anzeigen</string>
     <string name="file_attachments">Dateianhänge</string>
 
-    <string name="invoice_contains_errors">Rechnungsdaten fehlerhaft</string>
-    <string name="error_message_invoice_contains_errors">Die Rechnungsdaten konnten gelesen werden, aber sie enthalten folgende Fehler:</string>
-    <string name="invoice_errors_data_missing_or_incorrect">Daten, die fehlen oder falsch sind</string>
-    <string name="invoice_errors_violated_business_rules">Regeln, die nicht eingehalten wurden (Fehlermeldungen meistens in Englisch)</string>
     <string name="invoice_field_invoice_date">Rechnungsdatum</string>
     <string name="invoice_field_invoice_number">Rechnungsnummer</string>
     <string name="invoice_field_currency">Währung</string>
@@ -108,11 +104,17 @@
     <string name="invoice_field_tax_basis_total_amount">Zu versteuernder Betrag</string>
     <string name="invoice_field_grand_total_amount">Gesamtbetrag</string>
     <string name="invoice_field_due_payable_amount">Zu zahlender Betrag</string>
+
+    <string name="invoice_contains_errors">Rechnungsdaten fehlerhaft</string>
+    <string name="error_message_invoice_contains_errors">Die Rechnungsdaten konnten gelesen werden, aber sie enthalten Fehler, siehe unten, unterhalb der Rechnungsdaten.</string>
+    <string name="incorrect_invoice_data">Fehlerhafte Rechnungsdaten</string>
+    <string name="invoice_errors_data_missing_or_incorrect">Daten, die fehlen oder falsch sind</string>
+    <string name="invoice_errors_violated_business_rules">Regeln, die nicht eingehalten wurden (Fehlermeldungen meistens in Englisch)</string>
     <string name="invoice_data_error_value_not_set">Wert ist nicht gesetzt.</string>
     <string name="invoice_data_error_value_not_uppercase">Wert ist nicht gemäß Spezifikation in Großbuchstaben.</string>
     <string name="invoice_data_error_value_invalid">Ungültiger Wert '%1$s'</string>
     <string name="invoice_data_error_calculated_amounts_are_invalid">Rechnungsbeträge sind falsch berechnet.</string>
-    <string name="invoice_field_unnamed_field"> </string>
+    <string name="incorrect_pdf_file">Fehlerhafte PDF Datei</string>
 
     <string name="notification_early_preview_version">Dies ist eine frühe Preview Version der noch Funktionen fehlen, deshalb bitte im milden Licht betrachten</string>
 

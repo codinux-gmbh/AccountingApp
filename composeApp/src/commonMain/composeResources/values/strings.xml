@@ -85,10 +85,6 @@
     <string name="show_pdf_details">Show PDF details</string>
     <string name="file_attachments">File attachments</string>
 
-    <string name="invoice_contains_errors">Incorrect invoice data</string>
-    <string name="error_message_invoice_contains_errors">The invoice data could be read, but they contain the following errors:</string>
-    <string name="invoice_errors_data_missing_or_incorrect">Missing or wrong data</string>
-    <string name="invoice_errors_violated_business_rules">Violated business rules</string>
     <string name="invoice_field_invoice_date">Invoice date</string>
     <string name="invoice_field_invoice_number">Invoice number</string>
     <string name="invoice_field_currency">Currency</string>
@@ -108,11 +104,17 @@
     <string name="invoice_field_tax_basis_total_amount">Tax basis total amount</string>
     <string name="invoice_field_grand_total_amount">Grand total amount</string>
     <string name="invoice_field_due_payable_amount">Due payable amount</string>
+
+    <string name="invoice_contains_errors">Incorrect invoice data</string>
+    <string name="error_message_invoice_contains_errors">The invoice data could be read, but they contain the errors, see below, below invoice data.</string>
+    <string name="incorrect_invoice_data">Incorrect invoice data</string>
+    <string name="invoice_errors_data_missing_or_incorrect">Missing or wrong data</string>
+    <string name="invoice_errors_violated_business_rules">Violated business rules</string>
     <string name="invoice_data_error_value_not_set">Value is not set.</string>
     <string name="invoice_data_error_value_not_uppercase">Value is not as according to specification in capital letters.</string>
     <string name="invoice_data_error_value_invalid">Invalid value '%1$s'</string>
     <string name="invoice_data_error_calculated_amounts_are_invalid">Invoice amounts are incorrectly calculated.</string>
-    <string name="invoice_field_unnamed_field"> </string>
+    <string name="incorrect_pdf_file">Incorrect PDF file</string>
 
     <string name="notification_early_preview_version">This is an early preview version that is still missing features, so please be lenient in your judgment.</string>
 

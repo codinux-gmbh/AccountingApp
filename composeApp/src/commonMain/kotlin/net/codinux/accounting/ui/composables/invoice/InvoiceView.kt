@@ -62,6 +62,10 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
     var pdfValidationResult by remember { mutableStateOf<Result<PdfValidationResult>?>(null) }
 
+    val containsValidationError by remember(mapInvoiceResult, xmlValidationResult, pdfValidationResult) {
+        mutableStateOf(mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.isValid == false || pdfValidationResult?.value?.isValid == false)
+    }
+
 
     LaunchedEffect(xml, pdfBytes) {
         xmlValidationResult = null // new XML -> reset
@@ -80,7 +84,7 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
 
     SelectionContainer(Modifier.fillMaxSize()) {
         Column(Modifier.fillMaxWidth().applyIf(enableVerticalScrolling) { it.verticalScroll() }) {
-            if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.isValid == false || pdfValidationResult?.value?.isValid == false) {
+            if (containsValidationError) {
                 Section(Res.string.invoice_contains_errors) {
                     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding, bottom = 6.dp).padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
@@ -88,36 +92,6 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
                         Text(stringResource(Res.string.error_message_invoice_contains_errors), Modifier.padding(horizontal = 4.dp).weight(1f), textAlign = TextAlign.Center)
 
                         Icon(Icons.Outlined.Warning, "warning sign", Modifier.size(24.dp), WarningSignColor)
-                    }
-
-                    if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
-                        HeaderText(stringResource(Res.string.invoice_errors_data_missing_or_incorrect), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
-
-                        mapInvoiceResult.invoiceDataErrors.forEach { dataError ->
-                            InvoiceDataErrorListItem(dataError)
-                        }
-                    }
-
-                    xmlValidationResult?.value?.resultItems?.let { resultItems ->
-                        if (resultItems.isNotEmpty()) {
-                            HeaderText(stringResource(Res.string.invoice_errors_violated_business_rules), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
-
-                            resultItems.forEach { XmlValidationErrorListItem(it) }
-                        }
-                    }
-
-                    pdfValidationResult?.value?.let { pdfValidationResult ->
-                        if (pdfValidationResult.isValid == false) {
-                            HeaderText("PDF ist keine gültige PDF/A-3 Datei. Rechtlich ist dies aber auch nicht erforderlich", Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
-
-                            if (pdfValidationResult.isPdfA) {
-                                HorizontalLabelledValue(Res.string.city, pdfValidationResult.pdfAFlavor.name)
-                            } else {
-                                Text("Ist keine PDF/A Datei")
-                            }
-
-                            pdfValidationResult.validationErrors.forEach { PdfValidationErrorListItem(it) }
-                        }
                     }
                 }
             }
@@ -156,6 +130,8 @@ fun InvoiceView(mapInvoiceResult: MapInvoiceResult, readPdfResult: ReadEInvoiceP
             }
 
             invoice.supplier.bankDetails?.let { BankDetailsView(it, invoice, settings) }
+
+            InvoiceValidationErrorsView(mapInvoiceResult, xmlValidationResult, pdfValidationResult)
 
             if (xml != null) {
                 Section(Res.string.invoice_file_details) {
@@ -310,54 +286,4 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
             }
         }
     }
-}
-
-@Composable
-private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
-    val fieldName = when (dataError.field) {
-        InvoiceField.InvoiceDate -> Res.string.invoice_field_invoice_date
-        InvoiceField.InvoiceNumber -> Res.string.invoice_field_invoice_number
-
-        InvoiceField.Currency -> Res.string.invoice_field_currency
-
-        InvoiceField.Supplier -> Res.string.invoice_field_supplier
-        InvoiceField.SupplierName -> Res.string.invoice_field_supplier_name
-        InvoiceField.SupplierCountry -> Res.string.invoice_field_supplier_country
-        InvoiceField.Customer -> Res.string.invoice_field_customer
-        InvoiceField.CustomerName -> Res.string.invoice_field_customer_name
-        InvoiceField.CustomerCountry -> Res.string.invoice_field_customer_country
-
-        InvoiceField.Items -> Res.string.invoice_field_items
-        InvoiceField.ItemName -> Res.string.invoice_field_item_name
-        InvoiceField.ItemQuantity -> Res.string.invoice_field_item_quantity
-        InvoiceField.ItemUnit -> Res.string.invoice_field_item_unit
-        InvoiceField.ItemUnitPrice -> Res.string.invoice_field_item_unit_price
-
-        InvoiceField.TotalAmount -> Res.string.invoice_field_total_amounts
-        InvoiceField.LineTotalAmount -> Res.string.invoice_field_line_total_amount
-        InvoiceField.TaxBasisTotalAmount -> Res.string.invoice_field_tax_basis_total_amount
-        InvoiceField.GrandTotalAmount -> Res.string.invoice_field_grand_total_amount
-        InvoiceField.DuePayableAmount -> Res.string.invoice_field_due_payable_amount
-    }
-
-    val errorMessage = when (dataError.errorType) {
-        InvoiceDataErrorType.ValueNotSet -> Res.string.invoice_data_error_value_not_set
-        InvoiceDataErrorType.ValueNotUpperCase -> Res.string.invoice_data_error_value_not_uppercase
-        InvoiceDataErrorType.ValueIsInvalid -> Res.string.invoice_data_error_value_invalid
-        InvoiceDataErrorType.CalculatedAmountsAreInvalid -> Res.string.invoice_data_error_calculated_amounts_are_invalid
-    }
-
-    HorizontalLabelledValue(fieldName, stringResource(errorMessage, dataError.erroneousValue ?: ""))
-}
-
-@Composable
-private fun XmlValidationErrorListItem(error: ValidationResultItem) {
-    // TODO: get invoice field from BT (if available) or maybe location or test
-    Text(error.message, Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp), maxLines = 3) // padding = same values as in HorizontalLabelledValue
-}
-
-@Composable
-private fun PdfValidationErrorListItem(error: PdfValidationError) {
-    Text("${error.category} ${error.test}, ${error.rule}: ${error.englishMessage}",
-        Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp)/*, maxLines = 3*/) // padding = same values as in HorizontalLabelledValue
 }

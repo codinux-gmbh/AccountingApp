@@ -1,0 +1,63 @@
+CREATE TABLE IF NOT EXISTS InvoicePdfTemplateSettings (
+    id INTEGER PRIMARY KEY,
+
+    template Text NOT NULL,
+
+    language TEXT,
+
+    logoUrl TEXT,
+
+    fontFamily Text,
+    fontSize Text,
+
+    textColor Text,
+
+    lineItemColumnsToShow Text,
+
+    headerColor Text,
+    footerColor Text
+);
+
+
+getInvoicePdfTemplateSettings:
+SELECT * FROM InvoicePdfTemplateSettings WHERE id = 1;
+
+upsertInvoicePdfTemplateSettings:
+INSERT OR REPLACE INTO InvoicePdfTemplateSettings(
+    id,
+
+    template,
+
+    language,
+
+    logoUrl,
+
+    fontFamily,
+    fontSize,
+
+    textColor,
+
+    lineItemColumnsToShow,
+
+    headerColor,
+    footerColor
+)
+VALUES (
+    1,
+
+    ?,
+
+    ?,
+
+    ?,
+
+    ?,
+    ?,
+
+    ?,
+
+    ?,
+
+    ?,
+    ?
+);

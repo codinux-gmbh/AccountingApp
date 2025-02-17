@@ -21,6 +21,8 @@ actual class PlatformDependencies actual constructor(
 
     actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 
+    actual val invoicePdfTemplateSettingsRepository = AccountingSqlPersistence.sqlInvoicePdfTemplateSettingsRepository
+
     actual val epcQrCodeGenerator: EpcQrCodeGenerator? = EpcQrCodeGenerator()
 
     actual val mailService: MailService? = null

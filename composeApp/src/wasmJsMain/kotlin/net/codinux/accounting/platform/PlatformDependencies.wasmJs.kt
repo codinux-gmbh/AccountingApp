@@ -25,6 +25,9 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
 
     actual val invoiceRepository: InvoiceRepository = JsonInvoiceRepository(serializer, dataStorage)
 
+    actual val invoicePdfTemplateSettingsRepository: InvoicePdfTemplateSettingsRepository =
+        JsonInvoicePdfTemplateSettingsRepository(serializer, dataStorage)
+
     actual val epcQrCodeGenerator: EpcQrCodeGenerator? = null
 
     actual val mailService: MailService? = null

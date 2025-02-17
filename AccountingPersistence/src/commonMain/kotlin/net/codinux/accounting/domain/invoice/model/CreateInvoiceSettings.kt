@@ -11,17 +11,18 @@ data class CreateInvoiceSettings(
     var showAllSupplierFields: Boolean = false,
     var showAllCustomerFields: Boolean = false,
     var showAllBankDetailsFields: Boolean = false,
+    var showAllPdfSettingsFields: Boolean = false,
 
     val selectedServiceDateOption: ServiceDateOptions = ServiceDateOptions.ServiceDate,
     val selectedEInvoiceFormat: EInvoiceFormat = EInvoiceFormat.FacturX,
     val selectedCreateEInvoiceOption: CreateEInvoiceOptions = CreateEInvoiceOptions.XmlOnly,
     val showGeneratedEInvoiceXml: Boolean = true,
 
-    // TODO: currently not used
     val lastXmlSaveDirectory: String? = null,
     val lastPdfSaveDirectory: String? = null,
 
-    val lastOpenFileDirectory: String? = null,
+    val lastOpenPdfDirectory: String? = null,
+    val lastOpenLogoDirectory: String? = null,
 ) {
     override fun toString() = "$lastCreatedInvoice"
 }

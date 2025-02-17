@@ -205,6 +205,7 @@
     <string name="error_message_created_invoice_cannot_be_displayed">Created invoice cannot be displayed</string>
     <string name="error_message_could_not_load_invoices">Could not load invoice data from database</string>
     <string name="error_message_could_not_persist_create_invoice_settings">Could not persist create invoice settings</string>
+    <string name="error_message_could_not_persist_invoice_pdf_template_settings">Could not persist invoice PDF template settings</string>
 
 
     <!-- PDF invoice data -->

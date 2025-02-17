@@ -60,6 +60,8 @@ private val createButtonPaddingStart = 6.dp
 @Composable
 fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, settingsViewModel: CreateInvoiceSettingsViewModel, isCompactScreen: Boolean) {
 
+    val templateSettings = DI.uiState.invoicePdfTemplateSettings.collectAsState().value
+
     val areInvoiceDetailsValid by details.isValid.collectAsState()
 
     val isSupplierValid by supplier.isValid.collectAsState()
@@ -82,7 +84,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
     var selectedCreateEInvoiceOption by remember(settings) { mutableStateOf(settings.selectedCreateEInvoiceOption) }
 
-    val pdfTemplateViewModel by remember(settings) { mutableStateOf(PdfTemplateViewModel(null)) } // TODO: persist and load InvoicePdfTemplateSettings
+    val pdfTemplateViewModel by remember(templateSettings, settings) { mutableStateOf(PdfTemplateViewModel(templateSettings, settings)) }
 
     var isCreatingEInvoice by remember { mutableStateOf(false) }
 
@@ -107,10 +109,10 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     // PlatformFile.readBytes() is a suspend function, so we cannot call it on behalf in non-suspend function when 'Save PDF' is clicked
     var createdPdfBytes by remember { mutableStateOf<ByteArray?>(null) } // -> do it right after creating PDF and store PDF bytes in createdPdfBytes
 
-    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent ?: settings.lastOpenFileDirectory) { selectedFile ->
+    val openExistingPdfFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf")), stringResource(Res.string.select_existing_pdf_to_attach_e_invoice_xml_to), pdfToAttachXmlTo?.parent ?: settings.lastOpenPdfDirectory) { selectedFile ->
         if (selectedFile != null) {
             pdfToAttachXmlTo = selectedFile
-            settingsViewModel.lastOpenFileDirectoryChanged(selectedFile.parent)
+            settingsViewModel.lastOpenPdfDirectoryChanged(selectedFile.parent)
         }
     }
 
@@ -160,12 +162,17 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
     suspend fun saveCreateInvoiceSettings(createInvoice: Invoice) {
         val newSettings = CreateInvoiceSettings(createInvoice, settingsViewModel.showAllSupplierFields.value,
             settingsViewModel.showAllCustomerFields.value, settingsViewModel.showAllBankDetailsFields.value,
+            false,
             descriptionOfServices.serviceDateOption.value, selectedEInvoiceFormat, selectedCreateEInvoiceOption,
             showGeneratedEInvoiceXml,
             settingsViewModel.lastXmlSaveDirectory.value, settingsViewModel.lastPdfSaveDirectory.value,
-            settingsViewModel.lastOpenFileDirectory.value)
+            settingsViewModel.lastOpenPdfDirectory.value, pdfTemplateViewModel.lastOpenLogoDirectory.value)
 
         invoiceService.saveCreateInvoiceSettings(newSettings)
+    }
+
+    suspend fun saveInvoicePdfTemplateSettings() {
+        invoiceService.saveInvoicePdfTemplateSettings(pdfTemplateViewModel.toTemplateSettings())
     }
 
     fun createEInvoice() {
@@ -201,6 +208,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 isCreatingEInvoice = false
 
                 saveCreateInvoiceSettings(invoice)
+                saveInvoicePdfTemplateSettings()
             } catch (e: Throwable) {
                 invoiceService.showCouldNotCreateInvoiceError(e)
             }

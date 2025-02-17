@@ -6,6 +6,7 @@ import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.common.model.localization.DisplayName
 import net.codinux.accounting.domain.common.model.localization.PrioritizedDisplayNames
 import net.codinux.accounting.domain.common.service.LocalizationService
+import net.codinux.accounting.domain.invoice.dataaccess.InvoicePdfTemplateSettingsRepository
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.domain.invoice.model.GeneratedInvoices
@@ -36,6 +37,7 @@ class InvoiceService(
     private val uiState: UiState,
     private val reader: EInvoiceReader,
     private val repository: InvoiceRepository,
+    private val invoicePdfTemplateSettingsRepository: InvoicePdfTemplateSettingsRepository,
     private val fileHandler: PlatformFileHandler,
     private val epcQrCodeGenerator: EpcQrCodeGenerator?,
     private val pdfCreator: EInvoicePdfCreator = EInvoicePdfCreator(),
@@ -113,6 +115,8 @@ class InvoiceService(
             uiState.viewInvoiceSettings.value = getViewInvoiceSettings()
 
             uiState.createInvoiceSettings.value = getCreateInvoiceSettings()
+
+            uiState.invoicePdfTemplateSettings.value = getInvoicePdfTemplateSettings()
         } catch (e: Throwable) {
             log.error(e) { "Could not initialize persisted InvoiceSettings" }
 
@@ -183,6 +187,25 @@ class InvoiceService(
             log.error(e) { "Could not persist CreateInvoiceSettings" }
 
             uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_create_invoice_settings, e)
+        }
+    }
+
+
+    // errors handled by init()
+    private fun getInvoicePdfTemplateSettings(): InvoicePdfTemplateSettings {
+        return invoicePdfTemplateSettingsRepository.loadInvoicePdfTemplateSettings()
+            ?: InvoicePdfTemplateSettings()
+    }
+
+    suspend fun saveInvoicePdfTemplateSettings(settings: InvoicePdfTemplateSettings) {
+        try {
+            invoicePdfTemplateSettingsRepository.saveInvoicePdfTemplateSettings(settings)
+
+            uiState.invoicePdfTemplateSettings.value = settings
+        } catch (e: Throwable) {
+            log.error(e) { "Could not persist InvoicePdfTemplateSettings" }
+
+            uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_invoice_pdf_template_settings, e)
         }
     }
 

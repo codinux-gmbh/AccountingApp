@@ -29,20 +29,20 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
 
     override suspend fun loadCreateInvoiceSettings(): CreateInvoiceSettings? =
         queries.getCreateInvoiceSettings { _, lastCreatedInvoice,
-                                           showAllSupplierFields, showAllCustomerFields,
+                                           showAllSupplierFields, showAllCustomerFields, showAllBankDetailsFields, showAllPdfSettingsFields,
                                            selectedServiceDateOption, selectedEInvoiceFormat, selectedCreateEInvoiceOption, showGeneratedEInvoiceXml,
-                                           lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenFileDirectory ->
+                                           lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenPdfDirectory, lastOpenLogoDirectory ->
             CreateInvoiceSettings(
                 lastCreatedInvoice?.let { serializer.decode(it) },
 
-                showAllSupplierFields, showAllCustomerFields, false, // TODO: save and restore showAllBankDetailsFields
+                showAllSupplierFields, showAllCustomerFields, showAllBankDetailsFields, showAllPdfSettingsFields,
 
                 mapper.mapToEnum(selectedServiceDateOption, ServiceDateOptions.entries),
                 mapper.mapToEnum(selectedEInvoiceFormat, EInvoiceFormat.entries),
                 mapper.mapToEnum(selectedCreateEInvoiceOption, CreateEInvoiceOptions.entries),
                 showGeneratedEInvoiceXml,
 
-                lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenFileDirectory
+                lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenPdfDirectory, lastOpenLogoDirectory
             )
         }.executeAsOneOrNull()
 
@@ -51,12 +51,14 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
         queries.upsertCreateInvoiceSettings(
             serializer.encodeNullable(settings.lastCreatedInvoice),
 
-            settings.showAllSupplierFields, settings.showAllCustomerFields, // TODO: save and restore showAllBankDetailsFields
+            settings.showAllSupplierFields, settings.showAllCustomerFields,
+            settings.showAllBankDetailsFields, settings.showAllPdfSettingsFields,
 
             mapper.mapEnum(settings.selectedServiceDateOption), mapper.mapEnum(settings.selectedEInvoiceFormat),
             mapper.mapEnum(settings.selectedCreateEInvoiceOption), settings.showGeneratedEInvoiceXml,
 
-            settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory, settings.lastOpenFileDirectory
+            settings.lastXmlSaveDirectory, settings.lastPdfSaveDirectory,
+            settings.lastOpenPdfDirectory, settings.lastOpenLogoDirectory
         )
     }
 

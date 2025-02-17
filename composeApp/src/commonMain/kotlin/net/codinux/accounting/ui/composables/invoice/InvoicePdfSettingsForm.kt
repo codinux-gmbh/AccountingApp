@@ -24,6 +24,7 @@ import net.codinux.accounting.ui.composables.invoice.model.PdfTemplateViewModel
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.extensions.ImeNext
 import net.codinux.accounting.ui.extensions.extension
+import net.codinux.accounting.ui.extensions.parent
 import net.codinux.invoicing.model.InvoiceLanguage
 import org.jetbrains.compose.resources.stringResource
 
@@ -35,6 +36,8 @@ fun InvoicePdfSettingsForm(viewModel: PdfTemplateViewModel, isCompactScreen: Boo
     val selectedInvoiceLanguage by viewModel.language.collectAsState()
 
     val invoiceLogoUrl by viewModel.logoUrl.collectAsState()
+
+    val lastOpenLogoDirectory by viewModel.lastOpenLogoDirectory.collectAsState()
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -49,10 +52,12 @@ fun InvoicePdfSettingsForm(viewModel: PdfTemplateViewModel, isCompactScreen: Boo
         else -> null
     }
 
-    val openLogoFileFileLauncher = rememberFilePickerLauncher(PickerType.File(supportedImageFiles), stringResource(Res.string.select_company_logo_for_invoice), invoiceLogoUrl) { selectedFile ->
+    val openLogoFileFileLauncher = rememberFilePickerLauncher(PickerType.File(supportedImageFiles), stringResource(Res.string.select_company_logo_for_invoice), lastOpenLogoDirectory) { selectedFile ->
         if (selectedFile != null) {
             coroutineScope.launch {
                 viewModel.logoUrlChanged(selectedFile.path, selectedFile.readBytes(), getMimeType(selectedFile.extension))
+
+                viewModel.lastOpenLogoDirectoryChanged(selectedFile.parent)
             }
         }
     }

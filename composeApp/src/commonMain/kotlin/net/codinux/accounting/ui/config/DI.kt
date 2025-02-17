@@ -29,7 +29,9 @@ object DI {
 
     val calculationService = CalculationService()
 
-    val invoiceService = InvoiceService(uiState, invoiceReader, platformDependencies.invoiceRepository, fileHandler, platformDependencies.epcQrCodeGenerator)
+    val invoiceService = InvoiceService(uiState, invoiceReader,
+        platformDependencies.invoiceRepository, platformDependencies.invoicePdfTemplateSettingsRepository,
+        fileHandler, platformDependencies.epcQrCodeGenerator)
 
 
     val mailService = platformDependencies.mailService

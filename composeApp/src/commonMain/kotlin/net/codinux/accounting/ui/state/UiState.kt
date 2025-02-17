@@ -9,6 +9,7 @@ import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.domain.ui.model.MainScreenTab
 import net.codinux.invoicing.model.dto.SerializableException
+import net.codinux.invoicing.pdf.InvoicePdfTemplateSettings
 import org.jetbrains.compose.resources.StringResource
 
 class UiState : ViewModel() {
@@ -29,6 +30,8 @@ class UiState : ViewModel() {
     val viewInvoiceSettings = MutableStateFlow(ViewInvoiceSettings())
 
     val createInvoiceSettings = MutableStateFlow(CreateInvoiceSettings())
+
+    val invoicePdfTemplateSettings = MutableStateFlow(InvoicePdfTemplateSettings())
 
 
     val emails = EmailsUiState()

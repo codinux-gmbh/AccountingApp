@@ -1,6 +1,7 @@
 package net.codinux.accounting.platform
 
 import kotlinx.coroutines.Dispatchers
+import net.codinux.accounting.domain.invoice.dataaccess.InvoicePdfTemplateSettingsRepository
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
 import net.codinux.accounting.domain.invoice.service.EpcQrCodeGenerator
 import net.codinux.accounting.domain.mail.service.MailService
@@ -16,6 +17,8 @@ expect class PlatformDependencies constructor(uiState: UiState, invoiceReader: E
     val uiStateRepository: UiStateRepository
 
     val invoiceRepository: InvoiceRepository
+
+    val invoicePdfTemplateSettingsRepository: InvoicePdfTemplateSettingsRepository
 
     val epcQrCodeGenerator: EpcQrCodeGenerator?
 

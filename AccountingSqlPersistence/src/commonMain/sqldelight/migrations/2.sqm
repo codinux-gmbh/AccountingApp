@@ -1,0 +1,31 @@
+import kotlin.Boolean;
+
+
+CREATE TABLE IF NOT EXISTS InvoicePdfTemplateSettings (
+    id INTEGER PRIMARY KEY,
+
+    template Text NOT NULL,
+
+    language TEXT,
+
+    logoUrl TEXT,
+
+    fontFamily Text,
+    fontSize Text,
+
+    textColor Text,
+
+    lineItemColumnsToShow Text,
+
+    headerColor Text,
+    footerColor Text
+);
+
+
+ALTER TABLE CreateInvoiceSettings RENAME COLUMN lastOpenFileDirectory TO lastOpenPdfDirectory;
+
+ALTER TABLE CreateInvoiceSettings ADD COLUMN showAllBankDetailsFields INTEGER AS Boolean NOT NULL DEFAULT 0;
+
+ALTER TABLE CreateInvoiceSettings ADD COLUMN showAllPdfSettingsFields INTEGER AS Boolean NOT NULL DEFAULT 0;
+
+ALTER TABLE CreateInvoiceSettings ADD COLUMN lastOpenLogoDirectory TEXT;

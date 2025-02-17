@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS CreateInvoiceSettings (
 
     showAllSupplierFields INTEGER AS Boolean NOT NULL,
     showAllCustomerFields INTEGER AS Boolean NOT NULL,
+    showAllBankDetailsFields INTEGER AS Boolean NOT NULL,
+    showAllPdfSettingsFields INTEGER AS Boolean NOT NULL,
 
     selectedServiceDateOption TEXT NOT NULL,
     selectedEInvoiceXmlFormat TEXT NOT NULL,
@@ -16,7 +18,8 @@ CREATE TABLE IF NOT EXISTS CreateInvoiceSettings (
 
     lastXmlSaveDirectory TEXT,
     lastPdfSaveDirectory TEXT,
-    lastOpenFileDirectory TEXT
+    lastOpenPdfDirectory TEXT,
+    lastOpenLogoDirectory TEXT
 );
 
 
@@ -31,6 +34,8 @@ INSERT OR REPLACE INTO CreateInvoiceSettings (
 
     showAllSupplierFields,
     showAllCustomerFields,
+    showAllBankDetailsFields,
+    showAllPdfSettingsFields,
 
     selectedServiceDateOption,
     selectedEInvoiceXmlFormat,
@@ -39,7 +44,8 @@ INSERT OR REPLACE INTO CreateInvoiceSettings (
 
     lastXmlSaveDirectory,
     lastPdfSaveDirectory,
-    lastOpenFileDirectory
+    lastOpenPdfDirectory,
+    lastOpenLogoDirectory
 )
 VALUES (
     1,
@@ -48,12 +54,15 @@ VALUES (
 
     ?,
     ?,
-
-    ?,
-    ?,
     ?,
     ?,
 
+    ?,
+    ?,
+    ?,
+    ?,
+
+    ?,
     ?,
     ?,
     ?

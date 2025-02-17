@@ -1,7 +1,6 @@
 package net.codinux.accounting.domain.persistence
 
-import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
-import net.codinux.accounting.domain.invoice.dataaccess.SqlInvoiceRepository
+import net.codinux.accounting.domain.invoice.dataaccess.*
 import net.codinux.accounting.domain.ui.dataaccess.SqlUiStateRepository
 import net.codinux.accounting.domain.ui.dataaccess.UiStateRepository
 import net.codinux.accounting.persistence.AccountingDb
@@ -22,5 +21,8 @@ object AccountingSqlPersistence {
     val sqlUiStateRepository: UiStateRepository = SqlUiStateRepository(database, mapper)
 
     val sqlInvoiceRepository: InvoiceRepository = SqlInvoiceRepository(database, serializer, mapper)
+
+    val sqlInvoicePdfTemplateSettingsRepository: InvoicePdfTemplateSettingsRepository =
+        SqlInvoicePdfTemplateSettingsRepository(database, mapper)
 
 }

@@ -36,6 +36,8 @@ actual class PlatformDependencies actual constructor(uiState: UiState, invoiceRe
 
     actual val invoiceRepository: InvoiceRepository = AccountingSqlPersistence.sqlInvoiceRepository
 
+    actual val invoicePdfTemplateSettingsRepository = AccountingSqlPersistence.sqlInvoicePdfTemplateSettingsRepository
+
     actual val epcQrCodeGenerator: EpcQrCodeGenerator? = EpcQrCodeGenerator()
 
     actual val mailService: MailService? = JvmMailService(uiState, EmailsFetcher(invoiceReader), MailRepository(jsonMapper, JvmPersistence.databaseDirectory))

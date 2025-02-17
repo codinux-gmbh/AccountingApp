@@ -44,11 +44,11 @@ class CreateInvoiceSettingsViewModel(settings: CreateInvoiceSettings): ViewModel
         _lastPdfSaveDirectory.value = newValue
     }
 
-    private val _lastOpenFileDirectory = MutableStateFlow(settings.lastOpenFileDirectory)
-    val lastOpenFileDirectory: StateFlow<String?> = _lastOpenFileDirectory.asStateFlow()
+    private val _lastOpenPdfDirectory = MutableStateFlow(settings.lastOpenPdfDirectory)
+    val lastOpenPdfDirectory: StateFlow<String?> = _lastOpenPdfDirectory.asStateFlow()
 
-    fun lastOpenFileDirectoryChanged(newValue: String?) {
-        _lastOpenFileDirectory.value = newValue
+    fun lastOpenPdfDirectoryChanged(newValue: String?) {
+        _lastOpenPdfDirectory.value = newValue
     }
 
 }

@@ -82,6 +82,8 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
     var selectedCreateEInvoiceOption by remember(settings) { mutableStateOf(settings.selectedCreateEInvoiceOption) }
 
+    val pdfTemplateViewModel by remember(settings) { mutableStateOf(PdfTemplateViewModel(null)) } // TODO: persist and load InvoicePdfTemplateSettings
+
     var isCreatingEInvoice by remember { mutableStateOf(false) }
 
     var createdInvoice by remember { mutableStateOf<Invoice?>(null) }
@@ -159,7 +161,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         val newSettings = CreateInvoiceSettings(createInvoice, settingsViewModel.showAllSupplierFields.value,
             settingsViewModel.showAllCustomerFields.value, settingsViewModel.showAllBankDetailsFields.value,
             descriptionOfServices.serviceDateOption.value, selectedEInvoiceFormat, selectedCreateEInvoiceOption,
-            pdfTemplateViewModel.language.value, pdfTemplateViewModel.logoUrl.value, showGeneratedEInvoiceXml,
+            showGeneratedEInvoiceXml,
             settingsViewModel.lastXmlSaveDirectory.value, settingsViewModel.lastPdfSaveDirectory.value,
             settingsViewModel.lastOpenFileDirectory.value)
 
@@ -176,7 +178,8 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 val xmlToFile = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!)
-                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, selectedInvoiceLanguage, invoiceLogoUrl, { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdf, pdfFile) ->
+                    CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, pdfTemplateViewModel.toTemplateSettings(),
+                        { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdf, pdfFile) ->
                         if (pdfFile != null && pdf != null && pdf.bytes.isNotEmpty()) {
                             createdPdfFile = pdfFile
                             createdPdfBytes = pdf.bytes
@@ -227,6 +230,10 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 Text(parentDirAndFilename(pdfToAttachXmlTo) ?: "", Modifier.padding(horizontal = 4.dp))
             }
         }
+    }
+
+    if (selectedCreateEInvoiceOption == CreateEInvoiceOptions.CreateXmlAndPdf) {
+        InvoicePdfSettingsForm(pdfTemplateViewModel, isCompactScreen)
     }
 
     Row(Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding), verticalAlignment = Alignment.CenterVertically) {

@@ -35,6 +35,9 @@
 
     <string name="currency">Währung</string>
 
+    <string name="english">Englisch</string>
+    <string name="german">Deutsch</string>
+
 
     <!-- errors -->
     <string name="error_message">Fehlermeldung</string>
@@ -186,6 +189,9 @@
     <string name="create_xml_and_attach_to_existing_pdf">XML an existierende PDF anhängen</string>
     <string name="create_xml_and_pdf">PDF mit angehängter XML erzeugen</string>
     <string name="select_existing_pdf_to_attach_e_invoice_xml_to">PDF auswählen an die E-Rechnung angehängt werden soll ...</string>
+    <string name="select_company_logo_for_invoice">(Unternehmens-)Logo zum Anzeigen auf Rechnung auswählen ...</string>
+    <string name="invoice_language">Sprache der Rechnung</string>
+    <string name="logo_url">Logo (URL oder Datei)</string>
     <string name="show_xml">XML anzeigen</string>
     <string name="save_xml">XML speichern</string>
     <string name="save_pdf">PDF speichern</string>

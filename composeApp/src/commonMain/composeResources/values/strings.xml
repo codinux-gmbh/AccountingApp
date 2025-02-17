@@ -35,6 +35,9 @@
 
     <string name="currency">Currency</string>
 
+    <string name="english">English</string>
+    <string name="german">German</string>
+
 
     <!-- errors -->
     <string name="error_message">Error message</string>
@@ -186,6 +189,9 @@
     <string name="create_xml_and_attach_to_existing_pdf">Create XML and attach to existing PDF</string>
     <string name="create_xml_and_pdf">Create PDF with attached XML</string>
     <string name="select_existing_pdf_to_attach_e_invoice_xml_to">Select PDF to attach eInvoice XML to ...</string>
+    <string name="select_company_logo_for_invoice">Select (company) logo to display on invoice ...</string>
+    <string name="invoice_language">Invoice language</string>
+    <string name="logo_url">Logo (URL or file)</string>
     <string name="show_xml">Show XML</string>
     <string name="save_xml">Save XML</string>
     <string name="save_pdf">Save PDF</string>

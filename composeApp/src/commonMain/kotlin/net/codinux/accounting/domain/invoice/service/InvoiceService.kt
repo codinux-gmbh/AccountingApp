@@ -22,6 +22,8 @@ import net.codinux.invoicing.model.codes.Country
 import net.codinux.invoicing.model.codes.Currency
 import net.codinux.invoicing.model.codes.UnitOfMeasure
 import net.codinux.invoicing.model.dto.SerializableException
+import net.codinux.invoicing.pdf.InvoicePdfSettings
+import net.codinux.invoicing.pdf.InvoicePdfTemplateSettings
 import net.codinux.invoicing.reader.EInvoiceReader
 import net.codinux.invoicing.reader.ReadEInvoiceFileResult
 import net.codinux.invoicing.reader.extractFromFile
@@ -225,8 +227,7 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, invoiceLanguage: InvoiceLanguage = InvoiceLanguage.English,
-                                  invoiceLogoUrl: String? = null, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, templateSettings: InvoicePdfTemplateSettings?, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
         val xmlResult = createEInvoiceXml(invoice, format)
         val xml = xmlResult.first
         invoiceXmlCreated?.invoke(xml)
@@ -234,7 +235,7 @@ class InvoiceService(
             return null
         }
 
-        val pdfResult = pdfCreator.createFacturXPdf(xml, InvoicePdfConfig(EInvoiceXmlFormat.valueOf(format.name), invoiceLanguage, invoiceLogoUrl))
+        val pdfResult = pdfCreator.createFacturXPdf(xml, InvoicePdfSettings(EInvoiceXmlFormat.valueOf(format.name), templateSettings))
         val pdf = pdfResult.value
         if (pdf == null) {
             showCouldNotCreateInvoiceError(pdfResult.error, Res.string.error_message_could_not_create_invoice_pdf)

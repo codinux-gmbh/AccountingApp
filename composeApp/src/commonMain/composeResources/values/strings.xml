@@ -115,6 +115,10 @@
     <string name="invoice_data_error_value_invalid">Invalid value '%1$s'</string>
     <string name="invoice_data_error_calculated_amounts_are_invalid">Invoice amounts are incorrectly calculated.</string>
     <string name="incorrect_pdf_file">Incorrect PDF file</string>
+    <string name="pdf_a_version">PDF/A version</string>
+    <string name="not_a_pdf_a_file">- Not a PDF/A -</string>
+    <string name="pdf_file_error_not_a_pdf_a3">PDF is not a valid PDF/A-3 file. The EU standard EN 16931 does not require this, but it is recommended for compliance with the GoBD (Germany).</string>
+    <string name="pdf_file_errors">PDF has these errors:</string>
 
     <string name="notification_early_preview_version">This is an early preview version that is still missing features, so please be lenient in your judgment.</string>
 

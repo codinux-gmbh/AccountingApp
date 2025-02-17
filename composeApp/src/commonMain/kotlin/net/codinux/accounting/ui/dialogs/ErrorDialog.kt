@@ -48,7 +48,7 @@ fun ErrorDialog(
 
     AlertDialog(
         title = { title?.let {
-            HeaderText(stringResource(title), Modifier.fillMaxWidth(), TextAlign.Center)
+            HeaderText(title, Modifier.fillMaxWidth(), TextAlign.Center)
         } },
         modifier = Modifier.fillMaxWidth(0.95f),
         properties = DialogProperties(usePlatformDefaultWidth = exception == null),

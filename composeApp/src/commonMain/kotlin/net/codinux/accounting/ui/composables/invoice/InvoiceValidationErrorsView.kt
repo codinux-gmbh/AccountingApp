@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.Res
-import net.codinux.accounting.resources.city
 import net.codinux.accounting.resources.invoice_errors_data_missing_or_incorrect
 import net.codinux.accounting.resources.invoice_errors_violated_business_rules
 import net.codinux.accounting.ui.composables.HeaderText
@@ -21,6 +20,9 @@ import net.codinux.invoicing.model.*
 import net.codinux.invoicing.validation.*
 import org.jetbrains.compose.resources.stringResource
 
+
+private val ErrorListItemHorizontalPadding = 8.dp
+
 @Composable
 fun InvoiceValidationErrorsView(
     mapInvoiceResult: MapInvoiceResult,
@@ -28,11 +30,19 @@ fun InvoiceValidationErrorsView(
     pdfValidationResult: Result<PdfValidationResult>?
 ) {
 
+    @Composable
+    fun getPdfAVersion(pdfValidationResult: PdfValidationResult): String =
+        if (pdfValidationResult.isPdfA == false) stringResource(Res.string.not_a_pdf_a_file)
+        else when (pdfValidationResult.pdfAFlavor) {
+            PdfAFlavour.WCAG2_1, PdfAFlavour.WCAG2_2 -> pdfValidationResult.pdfAFlavor.name.replace("WCAG2_", "WCAG 2.")
+            else -> pdfValidationResult.pdfAFlavor.name.replace("PDFA_", "PDF/A-").replace("PDFUA_", "PDF/UA-").replace("_", "")
+        }
+
 
     if (mapInvoiceResult.invoiceDataErrors.isNotEmpty() || xmlValidationResult?.value?.resultItems?.isNotEmpty() == true) {
         Section(Res.string.incorrect_invoice_data) {
             if (mapInvoiceResult.invoiceDataErrors.isNotEmpty()) {
-                HeaderText(stringResource(Res.string.invoice_errors_data_missing_or_incorrect), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+                HeaderText(Res.string.invoice_errors_data_missing_or_incorrect, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
 
                 mapInvoiceResult.invoiceDataErrors.forEach { dataError ->
                     InvoiceDataErrorListItem(dataError)
@@ -41,7 +51,7 @@ fun InvoiceValidationErrorsView(
 
             xmlValidationResult?.value?.resultItems?.let { resultItems ->
                 if (resultItems.isNotEmpty()) {
-                    HeaderText(stringResource(Res.string.invoice_errors_violated_business_rules), Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+                    HeaderText(Res.string.invoice_errors_violated_business_rules, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
 
                     resultItems.forEach { XmlValidationErrorListItem(it) }
                 }
@@ -52,15 +62,17 @@ fun InvoiceValidationErrorsView(
     pdfValidationResult?.value?.let { pdfValidationResult ->
         if (pdfValidationResult.isValid == false) {
             Section(Res.string.incorrect_pdf_file) {
-                HeaderText("PDF ist keine gültige PDF/A-3 Datei. Rechtlich ist dies aber auch nicht erforderlich", Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2), textAlign = TextAlign.Center, fontSize = 15.sp)
+                HorizontalLabelledValue(Res.string.pdf_a_version, getPdfAVersion(pdfValidationResult))
 
-                if (pdfValidationResult.isPdfA) {
-                    HorizontalLabelledValue(Res.string.city, pdfValidationResult.pdfAFlavor.name)
-                } else {
-                    Text("Ist keine PDF/A Datei")
+                HeaderText(Res.string.pdf_file_error_not_a_pdf_a3, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2),
+                    textAlign = TextAlign.Center, fontSize = 15.sp)
+
+                if (pdfValidationResult.validationErrors.isNotEmpty()) {
+                    HeaderText(Res.string.pdf_file_errors, Modifier.fillMaxWidth().padding(top = Style.SectionTopPadding * 2),
+                        textAlign = TextAlign.Center, fontSize = 15.sp)
+
+                    pdfValidationResult.validationErrors.forEach { PdfValidationErrorListItem(it) }
                 }
-
-                pdfValidationResult.validationErrors.forEach { PdfValidationErrorListItem(it) }
             }
         }
     }
@@ -107,11 +119,12 @@ private fun InvoiceDataErrorListItem(dataError: InvoiceDataError) {
 @Composable
 private fun XmlValidationErrorListItem(error: ValidationResultItem) {
     // TODO: get invoice field from BT (if available) or maybe location or test
-    Text(error.message, Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp), maxLines = 3) // padding = same values as in HorizontalLabelledValue
+    Text(error.message, Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp) // padding = same values as in HorizontalLabelledValue
+        .padding(horizontal = ErrorListItemHorizontalPadding), maxLines = 3)
 }
 
 @Composable
 private fun PdfValidationErrorListItem(error: PdfValidationError) {
     Text("${error.category} ${error.test}, ${error.rule}: ${error.englishMessage}",
-        Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp)/*, maxLines = 3*/) // padding = same values as in HorizontalLabelledValue
+        Modifier.padding(top = Style.SectionTopPadding, bottom = 4.dp).padding(horizontal = ErrorListItemHorizontalPadding)) // padding = same values as in HorizontalLabelledValue
 }

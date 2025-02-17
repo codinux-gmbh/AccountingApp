@@ -251,7 +251,7 @@ private fun InvoiceFileDetails(xml: String, readPdfResult: ReadEInvoicePdfResult
 
         if (showPdfDetails) {
             Column(Modifier.fillMaxWidth().padding(top = Style.FormVerticalRowPadding, bottom = 12.dp).rememberHorizontalScroll()) {
-                HeaderText(stringResource(Res.string.file_attachments), fontSize = 15.sp)
+                HeaderText(Res.string.file_attachments, fontSize = 15.sp)
 
                 readPdfResult.attachmentExtractionResult.attachments.forEach { attachment ->
                     RoundedCornersCard(Modifier.padding(top = 12.dp)) {

@@ -30,7 +30,7 @@ fun InvoiceValidationErrorsView(
     pdfValidationResult: Result<PdfValidationResult>?
 ) {
 
-    val businessRulesValidationErrors = xmlValidationResult?.value?.resultItems.orEmpty()
+    val businessRulesValidationErrors = xmlValidationResult?.value?.businessRulesValidationResult.orEmpty()
         .filter { it.severity == ValidationResultItemSeverity.Error }
 
 

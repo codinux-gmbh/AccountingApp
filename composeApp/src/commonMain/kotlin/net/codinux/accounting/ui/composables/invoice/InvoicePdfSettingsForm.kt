@@ -28,7 +28,7 @@ import net.codinux.accounting.ui.extensions.parent
 import net.codinux.invoicing.model.InvoiceLanguage
 import org.jetbrains.compose.resources.stringResource
 
-private val supportedImageFiles = listOf("png", "jpg", "jpeg", "gif", "tif", "tiff", "bmp", "svg")
+private val supportedImageFiles = listOf("png", "jpg", "jpeg", "gif", "tif", "tiff", "bmp"/*, "svg"*/)
 
 @Composable
 fun InvoicePdfSettingsForm(viewModel: PdfTemplateViewModel, isCompactScreen: Boolean) {

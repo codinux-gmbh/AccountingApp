@@ -56,7 +56,6 @@ private val createButtonWidth = 150.dp
 
 private val createButtonPaddingStart = 6.dp
 
-@OptIn(FlowPreview::class)
 @Composable
 fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, settingsViewModel: CreateInvoiceSettingsViewModel, isCompactScreen: Boolean) {
 

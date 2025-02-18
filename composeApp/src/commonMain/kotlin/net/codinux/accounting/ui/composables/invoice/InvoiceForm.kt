@@ -36,7 +36,7 @@ fun InvoiceForm() {
     val showAllBankDetailsFields = settingsViewModel.showAllBankDetailsFields.collectAsState().value
 
 
-    val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details, { })) }
+    val details by remember(settings) { mutableStateOf(InvoiceDetailsViewModel(lastCreatedInvoice?.details)) }
 
     val supplier by remember(settings) { mutableStateOf(PartyViewModel(lastCreatedInvoice?.supplier)) }
 

@@ -257,7 +257,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         Spacer(Modifier.width(createButtonPaddingStart).weight(1f))
 
         if (isCreatingEInvoice) {
-            CircularProgressIndicator(Modifier.padding(end = 12.dp).size(36.dp), color = Colors.HighlightedTextColor)
+            CircularProgressIndicator(Modifier.padding(start = 6.dp, end = 12.dp).size(36.dp), color = Colors.HighlightedTextColor)
         }
 
         TextButton({ createEInvoice() }, contentPadding = PaddingValues(0.dp), enabled = isValid) {

@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS InvoicePdfTemplateSettings (
 );
 
 
-ALTER TABLE CreateInvoiceSettings RENAME COLUMN lastOpenFileDirectory TO lastOpenPdfDirectory;
+-- renaming a column is an absolute desaster in SQLDelight, i didn't find a way that it works for both,
+-- a fresh installation and for migration from previous db version.
 
 ALTER TABLE CreateInvoiceSettings ADD COLUMN showAllBankDetailsFields INTEGER AS Boolean NOT NULL DEFAULT 0;
 

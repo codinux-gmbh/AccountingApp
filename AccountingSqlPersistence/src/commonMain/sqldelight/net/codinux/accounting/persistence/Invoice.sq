@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS CreateInvoiceSettings (
 
     lastXmlSaveDirectory TEXT,
     lastPdfSaveDirectory TEXT,
-    lastOpenPdfDirectory TEXT,
+    lastOpenFileDirectory TEXT,
     lastOpenLogoDirectory TEXT
 );
 
@@ -44,7 +44,7 @@ INSERT OR REPLACE INTO CreateInvoiceSettings (
 
     lastXmlSaveDirectory,
     lastPdfSaveDirectory,
-    lastOpenPdfDirectory,
+    lastOpenFileDirectory,
     lastOpenLogoDirectory
 )
 VALUES (

@@ -34,12 +34,13 @@ internal actual object AccountingPersistenceNonWeb {
                 QueryResult.Value(if (cursor.next().value) cursor.getLong(0) else null)
             }
 
-            val currentVersion =
-                driver.executeQuery(null, "PRAGMA user_version", mapper, 0, null).value ?: 0L
+            val currentVersion = driver.executeQuery(null, "PRAGMA user_version", mapper, 0, null).value ?: 0L
 
             log.debug { "DB: currentVersion = $currentVersion, newVersion = $newVersion" }
 
-            schema.migrate(driver, currentVersion, newVersion)
+            if (currentVersion > 1) {
+                schema.migrate(driver, currentVersion, newVersion)
+            }
 
             if (currentVersion < newVersion) {
                 driver.execute(null, "PRAGMA user_version=$newVersion", 0, null)

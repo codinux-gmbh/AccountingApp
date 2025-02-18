@@ -8,6 +8,8 @@ import java.io.File
 
 internal actual object AccountingPersistenceNonWeb {
 
+    private val sqliteHelper: SqliteHelper = SqliteHelper()
+
     private val log by logger()
 
 
@@ -30,11 +32,7 @@ internal actual object AccountingPersistenceNonWeb {
         try {
             val newVersion = schema.version
 
-            val mapper = { cursor: SqlCursor ->
-                QueryResult.Value(if (cursor.next().value) cursor.getLong(0) else null)
-            }
-
-            val currentVersion = driver.executeQuery(null, "PRAGMA user_version", mapper, 0, null).value ?: 0L
+            val currentVersion = sqliteHelper.getUserVersion(driver) ?: 0L
 
             log.debug { "DB: currentVersion = $currentVersion, newVersion = $newVersion" }
 
@@ -43,7 +41,7 @@ internal actual object AccountingPersistenceNonWeb {
             }
 
             if (currentVersion < newVersion) {
-                driver.execute(null, "PRAGMA user_version=$newVersion", 0, null)
+                sqliteHelper.setUserVersion(driver, newVersion)
             }
         } catch (e: Throwable) {
             log.error(e) { "Migrating database failed" }

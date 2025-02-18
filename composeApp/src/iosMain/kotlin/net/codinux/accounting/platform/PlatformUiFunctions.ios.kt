@@ -10,9 +10,10 @@ import androidx.compose.ui.graphics.toComposeImageBitmap
 import kotlinx.cinterop.ExperimentalForeignApi
 import net.codinux.accounting.ui.state.ScreenSizeInfo
 import org.jetbrains.skia.Image
-import platform.CoreGraphics.CGRect
 import platform.UIKit.UIScreen
 import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGRectGetHeight
+import platform.CoreGraphics.CGRectGetWidth
 import platform.Foundation.NSNotificationCenter
 import platform.UIKit.UIApplication
 import platform.UIKit.UIKeyboardDidShowNotification
@@ -27,9 +28,9 @@ actual object PlatformUiFunctions {
     @Composable
     actual fun rememberScreenSize(): ScreenSizeInfo {
         val density = LocalDensity.current
-        val screenBounds: CGRect = UIScreen.mainScreen.bounds.useContents { this }
-        val screenWidth = screenBounds.size.width
-        val screenHeight = screenBounds.size.height
+        val screenBounds = UIScreen.mainScreen.bounds
+        val screenWidth = CGRectGetWidth(screenBounds)
+        val screenHeight = CGRectGetHeight(screenBounds)
 
         return remember(density, screenWidth, screenHeight) {
             ScreenSizeInfo(

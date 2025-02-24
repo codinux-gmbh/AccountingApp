@@ -2,8 +2,11 @@ package net.codinux.accounting.ui.composables.invoice
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,16 +21,21 @@ import io.github.vinceglb.filekit.core.extension
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
+import net.codinux.accounting.domain.invoice.model.RecentlyViewedInvoice
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.platform.IoOrDefault
+import net.codinux.accounting.ui.composables.forms.DropdownMenuBox
 import net.codinux.accounting.ui.composables.forms.Section
 import net.codinux.accounting.ui.config.Colors
 import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.parent
+import net.codinux.accounting.ui.extensions.parentDirAndFilename
 import net.codinux.invoicing.reader.*
 import org.jetbrains.compose.resources.stringResource
 
 private val invoiceService = DI.invoiceService
+
+private val uiState = DI.uiState
 
 @Composable
 fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?, String?, ByteArray?) -> Unit) {
@@ -36,7 +44,9 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
 
     var lastExtractedEInvoice by remember { mutableStateOf<ReadEInvoiceFileResult?>(null) }
 
-    val settings = DI.uiState.viewInvoiceSettings.collectAsState().value
+    val recentlyViewedInvoices = uiState.recentlyViewedInvoices.collectAsState().value
+
+    val settings = uiState.viewInvoiceSettings.collectAsState().value
 
     val initialDirectory = lastSelectedInvoiceFile?.parent ?: settings.lastSelectedInvoiceFile?.let { DI.fileHandler.fromPath(it).parent }
 

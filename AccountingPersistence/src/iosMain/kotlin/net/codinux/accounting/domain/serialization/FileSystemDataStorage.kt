@@ -1,8 +1,10 @@
 package net.codinux.accounting.domain.serialization
 
+import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.refTo
+import kotlinx.io.IOException
 import platform.Foundation.*
 
 open class FileSystemDataStorage(protected val storageDirectory: NSURL) : DataStorage {
@@ -11,10 +13,11 @@ open class FileSystemDataStorage(protected val storageDirectory: NSURL) : DataSt
         writeToFile(storageDirectory, key, value)
     }
 
+    @OptIn(BetaInteropApi::class)
     override fun get(key: String): String? {
         val filePath = getFileForKey(key)
 
-        val data = NSData.dataWithContentsOfFile(filePath)
+        val data = NSData.dataWithContentsOfURL(filePath)
             ?: throw IOException("File not found: $filePath")
 
         val content = NSString.create(data, NSUTF8StringEncoding)
@@ -49,7 +52,7 @@ open class FileSystemDataStorage(protected val storageDirectory: NSURL) : DataSt
     protected open fun getFileForKey(key: String): NSURL = getFileInDirectory(storageDirectory, key)
 
     protected open fun getFileInDirectory(directory: NSURL, filename: String): NSURL {
-        val fileComponents = directory?.pathComponents?.plus(filename)
+        val fileComponents = directory.pathComponents?.plus(filename)
             ?: throw IllegalStateException("Failed to get get file with name '$filename' in directory '$directory'")
 
         return NSURL.fileURLWithPathComponents(fileComponents)
@@ -58,18 +61,15 @@ open class FileSystemDataStorage(protected val storageDirectory: NSURL) : DataSt
 
 }
 
-fun ByteArray?.toNSData(): NSData =
-    if (this == null) NSData()
-    else NSData.dataWithBytes(this.refTo(0), this.size.toULong())
-
-// alternatively:
-/*
-fun ByteArray?.toNSData(): NSData = memScoped {
-    if (this == null) NSData()
-    else {
-        NSData.dataWithBytes(
-            bytes = this.refTo(0).getPointer(this),
-            length = this.size.toULong()
-        )
+@OptIn(ExperimentalForeignApi::class)
+fun ByteArray?.toNSData(): NSData = this.let { bytes ->
+    memScoped {
+        if (bytes == null) NSData()
+        else {
+            NSData.dataWithBytes(
+                bytes = bytes.refTo(0).getPointer(this),
+                length = bytes.size.toULong()
+            )
+        }
     }
- */
+}

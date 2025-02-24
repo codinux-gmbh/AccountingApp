@@ -5,9 +5,14 @@ import app.cash.sqldelight.db.QueryResult
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
+import kotlinx.cinterop.ExperimentalForeignApi
+import net.codinux.accounting.domain.serialization.DataStorage
+import net.codinux.accounting.domain.serialization.FileSystemDataStorage
+import platform.Foundation.*
 
 internal actual object AccountingPersistenceNonWeb {
 
+    @OptIn(ExperimentalForeignApi::class)
     val jsonDataDir by lazy {
         NSFileManager.defaultManager.URLForDirectory(
             NSApplicationSupportDirectory,
@@ -15,7 +20,7 @@ internal actual object AccountingPersistenceNonWeb {
             null,
             true,
             null
-        )?.path ?: throw IllegalStateException("Could not resolve Application Support directory")
+        ) ?: throw IllegalStateException("Could not resolve Application Support directory")
     }
 
     actual fun getStorageForJsonDataFiles(): DataStorage = FileSystemDataStorage(jsonDataDir)

@@ -8,9 +8,7 @@ import net.codinux.accounting.domain.common.model.localization.PrioritizedDispla
 import net.codinux.accounting.domain.common.service.LocalizationService
 import net.codinux.accounting.domain.invoice.dataaccess.InvoicePdfTemplateSettingsRepository
 import net.codinux.accounting.domain.invoice.dataaccess.InvoiceRepository
-import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
-import net.codinux.accounting.domain.invoice.model.GeneratedInvoices
-import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.*
 import net.codinux.accounting.platform.PlatformFileHandler
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.ui.extensions.parent
@@ -301,5 +299,18 @@ class InvoiceService(
 
     fun generateEpcQrCode(details: BankDetails, invoice: Invoice, accountHolderName: String, heightAndWidth: Int = 500): ByteArray? =
         epcQrCodeGenerator?.generateEpcQrCode(details, invoice, accountHolderName, heightAndWidth)
+
+
+    fun addRecentlyViewedInvoice(invoiceFilePath: String?, selectedInvoice: ReadEInvoiceFileResult) {
+        invoiceFilePath?.let {
+            try {
+                repository.addRecentlyViewedInvoice(RecentlyViewedInvoice(invoiceFilePath, selectedInvoice.invoice))
+
+                uiState.recentlyViewedInvoices.value = getRecentlyViewedInvoices()
+            } catch (e: Throwable) {
+                log.error(e) { "Could not add RecentlyViewedInvoice" }
+            }
+        }
+    }
 
 }

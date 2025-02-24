@@ -1,6 +1,7 @@
 package net.codinux.accounting.domain.invoice.dataaccess
 
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.RecentlyViewedInvoice
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 
 interface InvoiceRepository {
@@ -13,5 +14,10 @@ interface InvoiceRepository {
     suspend fun loadCreateInvoiceSettings(): CreateInvoiceSettings?
 
     suspend fun saveCreateInvoiceSettings(settings: CreateInvoiceSettings)
+
+
+    fun loadRecentlyViewedInvoices(): List<RecentlyViewedInvoice>
+
+    fun addRecentlyViewedInvoice(viewedInvoice: RecentlyViewedInvoice, countMaxStoredRecentlyViewedInvoices: Int = 50)
 
 }

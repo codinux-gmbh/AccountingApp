@@ -6,7 +6,12 @@ import net.codinux.accounting.domain.serialization.JsonSerializer
 import net.codinux.accounting.persistence.AccountingDb
 import net.codinux.invoicing.format.EInvoiceFormat
 
-class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonSerializer, private val mapper: SqldelightMapper) : InvoiceRepository {
+class SqlInvoiceRepository(
+    database: AccountingDb,
+    private val serializer: JsonSerializer,
+    private val mapper: SqldelightMapper,
+    private val jsonInvoiceRepository: JsonInvoiceRepository
+) : InvoiceRepository {
 
     private val queries = database.invoiceQueries
 
@@ -61,5 +66,13 @@ class SqlInvoiceRepository(database: AccountingDb, private val serializer: JsonS
             settings.lastOpenPdfDirectory, settings.lastOpenLogoDirectory
         )
     }
+
+
+    /*      we store non-mass data now in JSON files        */
+
+    override fun loadRecentlyViewedInvoices() = jsonInvoiceRepository.loadRecentlyViewedInvoices()
+
+    override fun addRecentlyViewedInvoice(viewedInvoice: RecentlyViewedInvoice, countMaxStoredRecentlyViewedInvoices: Int) =
+        jsonInvoiceRepository.addRecentlyViewedInvoice(viewedInvoice, countMaxStoredRecentlyViewedInvoices)
 
 }

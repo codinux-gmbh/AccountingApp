@@ -15,6 +15,8 @@ object JvmPersistence {
 
     val databaseDirectory = ensureDirectory(applicationDataDirectory, "db")
 
+    val jsonDataDirectory = ensureDirectory(applicationDataDirectory, "jsonData")
+
 
     // TODO: move to common JVM and Android code
     private fun ensureDirectory(parentDir: File, directoryName: String): File = File(parentDir, directoryName).also {

@@ -3,6 +3,8 @@ package net.codinux.accounting.domain.persistence
 import app.cash.sqldelight.async.coroutines.synchronous
 import app.cash.sqldelight.db.*
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import net.codinux.accounting.domain.serialization.DataStorage
+import net.codinux.accounting.domain.serialization.FileSystemDataStorage
 import net.codinux.log.logger
 import java.io.File
 
@@ -12,6 +14,8 @@ internal actual object AccountingPersistenceNonWeb {
 
     private val log by logger()
 
+
+    actual fun getStorageForJsonDataFiles(): DataStorage = FileSystemDataStorage(JvmPersistence.jsonDataDirectory)
 
     actual fun createSqlDriver(dbName: String, schema: SqlSchema<QueryResult.AsyncValue<Unit>>): SqlDriver {
         val dbDir = JvmPersistence.databaseDirectory

@@ -18,9 +18,14 @@ object AccountingSqlPersistence {
     private val mapper = SqldelightMapper()
 
 
+    val jsonDataStore = AccountingPersistenceNonWeb.getStorageForJsonDataFiles()
+
+    val jsonInvoiceRepository = JsonInvoiceRepository(serializer, jsonDataStore)
+
+
     val sqlUiStateRepository: UiStateRepository = SqlUiStateRepository(database, mapper)
 
-    val sqlInvoiceRepository: InvoiceRepository = SqlInvoiceRepository(database, serializer, mapper)
+    val sqlInvoiceRepository: InvoiceRepository = SqlInvoiceRepository(database, serializer, mapper, jsonInvoiceRepository)
 
     val sqlInvoicePdfTemplateSettingsRepository: InvoicePdfTemplateSettingsRepository =
         SqlInvoicePdfTemplateSettingsRepository(database, mapper)

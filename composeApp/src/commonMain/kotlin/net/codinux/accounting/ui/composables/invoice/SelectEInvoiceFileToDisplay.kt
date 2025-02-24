@@ -43,25 +43,46 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
     val coroutineScope = rememberCoroutineScope()
 
 
+    fun getDisplayText(recentlyViewedInvoice: RecentlyViewedInvoice): String {
+        val file = DI.fileHandler.fromPath(recentlyViewedInvoice.path)
+        val filename = file.parentDirAndFilename
+
+        return "$filename${recentlyViewedInvoice.invoiceSummary?.let { " ($it)" } ?: ""}"
+    }
+
+    fun showSelectedFile(selectedFile: PlatformFile, addToRecentlyViewedInvoices: Boolean) {
+        lastSelectedInvoiceFile = selectedFile
+        settings.lastSelectedInvoiceFile = selectedFile.path
+
+        coroutineScope.launch(Dispatchers.IoOrDefault) {
+            lastExtractedEInvoice = invoiceService.readEInvoice(selectedFile)
+
+            lastExtractedEInvoice?.let { selectedInvoice ->
+                val fileBytes = selectedFile.readBytes()
+                val fileExtension = selectedFile.extension.lowercase()
+                val xml = if (fileExtension == "xml") fileBytes.decodeToString() else null
+                val pdfBytes = if (fileExtension == "pdf") fileBytes else null
+                selectedInvoiceChanged(selectedInvoice, xml, pdfBytes)
+
+                if (addToRecentlyViewedInvoices) {
+                    invoiceService.addRecentlyViewedInvoice(DI.fileHandler.getRestorablePath(selectedFile), selectedInvoice)
+                }
+            }
+
+            invoiceService.saveViewInvoiceSettings(settings)
+        }
+    }
+
+    fun showRecentlyViewedInvoice(recentlyViewedInvoice: RecentlyViewedInvoice) {
+        val file = DI.fileHandler.fromPath(recentlyViewedInvoice.path)
+
+        showSelectedFile(file, false)
+    }
+
     val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf", "xml")),
         stringResource(Res.string.select_e_invoice_file), initialDirectory) { selectedFile ->
         selectedFile?.let {
-            lastSelectedInvoiceFile = it
-            settings.lastSelectedInvoiceFile = it.path
-
-            coroutineScope.launch(Dispatchers.IoOrDefault) {
-                lastExtractedEInvoice = invoiceService.readEInvoice(it)
-
-                lastExtractedEInvoice?.let { selectedInvoice ->
-                    val fileBytes = selectedFile.readBytes()
-                    val fileExtension = selectedFile.extension.lowercase()
-                    val xml = if (fileExtension == "xml") fileBytes.decodeToString() else null
-                    val pdfBytes = if (fileExtension == "pdf") fileBytes else null
-                    selectedInvoiceChanged(selectedInvoice, xml, pdfBytes)
-                }
-
-                invoiceService.saveViewInvoiceSettings(settings)
-            }
+            showSelectedFile(selectedFile, true)
         }
     }
 
@@ -70,6 +91,16 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
         Row(Modifier.fillMaxWidth().padding(top = 6.dp), verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = { openExistingInvoiceFileLauncher.launch() }, Modifier.fillMaxWidth().height(70.dp)) {
                 Text(stringResource(Res.string.select_e_invoice_file), Modifier.fillMaxWidth(), Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
+            }
+        }
+
+        DropdownMenuBox(recentlyViewedInvoices, { showRecentlyViewedInvoice(it) }, { getDisplayText(it) }) {
+            Row(Modifier.fillMaxWidth().height(48.dp).padding(top = 6.dp), Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                TextButton({ }) {
+                    Text(stringResource(Res.string.recently_viewed_e_invoice_files), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
+                }
+
+                Icon(Icons.Outlined.ArrowDropDown, "Show list with recently viewed invoice files", Modifier.width(48.dp), tint = Colors.FormValueTextColor)
             }
         }
     }
@@ -88,7 +119,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
             else -> Res.string.error_message_could_not_read_e_invoice
         }
 
-        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, lastSelectedInvoiceFile?.path ?: result.filename)
+        uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, xmlResult.readError, lastSelectedInvoiceFile?.path ?: result.filename)
     }
 
 
@@ -111,7 +142,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
                         ReadEInvoicePdfResultType.Success -> null // should never come to here
                     }
                     if (stringResource != null) {
-                        DI.uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, pdfResult.readError)
+                        uiState.errorOccurred(ErroneousAction.ReadEInvoice, stringResource, pdfResult.readError)
                     }
                 } else if (xmlResult != null) {
                     showReadXmlError(result, xmlResult)

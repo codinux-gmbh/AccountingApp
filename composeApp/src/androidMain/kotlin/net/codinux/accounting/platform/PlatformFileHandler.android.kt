@@ -25,6 +25,14 @@ actual class PlatformFileHandler(
 
     actual fun fromPath(path: String) = PlatformFile(Uri.parse(path), applicationContext)
 
+    actual fun getRestorablePath(file: PlatformFile): String? = file.uri.let { uri ->
+        if (uri.scheme == "content") {
+            applicationContext.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        uri.toString()
+    }
+
 
     fun getOutputStream(file: PlatformFile): OutputStream? =
         applicationContext.contentResolver.openOutputStream(file.uri)

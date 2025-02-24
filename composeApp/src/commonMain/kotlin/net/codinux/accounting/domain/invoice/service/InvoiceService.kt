@@ -112,6 +112,9 @@ class InvoiceService(
         try {
             uiState.viewInvoiceSettings.value = getViewInvoiceSettings()
 
+            uiState.recentlyViewedInvoices.value = getRecentlyViewedInvoices()
+
+
             uiState.createInvoiceSettings.value = getCreateInvoiceSettings()
 
             uiState.invoicePdfTemplateSettings.value = getInvoicePdfTemplateSettings()
@@ -168,6 +171,9 @@ class InvoiceService(
 //            uiState.errorOccurred(ErroneousAction.SaveToDatabase, Res.string.error_message_could_not_persist_create_invoice_settings, e)
         }
     }
+
+    // errors handled by init()
+    private fun getRecentlyViewedInvoices() = repository.loadRecentlyViewedInvoices()
 
 
     // errors handled by init()

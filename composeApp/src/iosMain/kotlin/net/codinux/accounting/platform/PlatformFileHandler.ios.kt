@@ -12,6 +12,9 @@ actual class PlatformFileHandler {
     actual fun fromPath(path: String): PlatformFile =
         PlatformFile(NSURL(fileURLWithPath = path))
 
+    actual fun getRestorablePath(file: PlatformFile): String? = file.path
+
+
     actual fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String?) {
 
     }

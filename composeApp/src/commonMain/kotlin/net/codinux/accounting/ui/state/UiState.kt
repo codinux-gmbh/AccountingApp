@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import net.codinux.accounting.domain.common.model.error.ApplicationError
 import net.codinux.accounting.domain.common.model.error.ErroneousAction
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.RecentlyViewedInvoice
 import net.codinux.accounting.domain.invoice.model.ViewInvoiceSettings
 import net.codinux.accounting.domain.ui.model.MainScreenTab
 import net.codinux.invoicing.model.dto.SerializableException
@@ -28,6 +29,9 @@ class UiState : ViewModel() {
 
 
     val viewInvoiceSettings = MutableStateFlow(ViewInvoiceSettings())
+
+    val recentlyViewedInvoices = MutableStateFlow<List<RecentlyViewedInvoice>>(emptyList())
+
 
     val createInvoiceSettings = MutableStateFlow(CreateInvoiceSettings())
 

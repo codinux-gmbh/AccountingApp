@@ -124,6 +124,7 @@
 
     <string name="show_e_invoice_file">Show eInvoice file</string>
     <string name="select_e_invoice_file">Select eInvoice file ...</string>
+    <string name="recently_viewed_e_invoice_files">Recently viewed files</string>
 
     <string name="validation_message_create_invoice_not_all_required_fields_have_been_filled_out">Cannot create e-invoice, not all fields marked with * have been filled out.</string>
     <string name="error_message_could_not_read_e_invoice">Could not read eInvoice from file %1$s</string>

@@ -19,6 +19,8 @@ actual class PlatformFileHandler(
 
     actual fun fromPath(path: String) = PlatformFile(File(path))
 
+    actual fun getRestorablePath(file: PlatformFile): String? = file.file.absolutePath
+
 
     fun getOutputStream(file: PlatformFile): OutputStream = file.file.outputStream()
 

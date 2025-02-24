@@ -28,6 +28,9 @@ actual class PlatformFileHandler {
         return PlatformFile(file)
     }
 
+    actual fun getRestorablePath(file: PlatformFile): String? = file.path
+
+
     actual fun openFileInDefaultViewer(file: PlatformFile, fallbackMimeType: String?) {
     }
 

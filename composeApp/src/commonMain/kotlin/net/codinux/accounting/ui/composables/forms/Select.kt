@@ -19,7 +19,7 @@ fun <T> Select(
     selectedItem: T,
     onSelectedItemChanged: (T) -> Unit,
     getItemDisplayText: @Composable (T) -> String,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.fillMaxWidth(),
     required: Boolean = false,
     textColor: Color? = null,
     textStyle: TextStyle? = null,
@@ -35,7 +35,7 @@ fun <T> Select(
         if (textColor != null) it.copy(textColor) else it
     }
 
-    ExposedDropdownMenuBox(showDropDownMenu, { isExpanded -> showDropDownMenu = isExpanded }, modifier.fillMaxWidth()) {
+    DropdownMenuBox(items, onSelectedItemChanged, getItemDisplayText, modifier, { showDropDownMenu = it }, dropDownWidth, addSeparatorAfterItem, dropDownItemContent) {
         OutlinedTextField(
             value = getItemDisplayText(selectedItem),
             onValueChange = { },
@@ -49,32 +49,6 @@ fun <T> Select(
             leadingIcon = leadingIcon,
             backgroundColor = backgroundColor
         )
-
-        // due to a bug (still not fixed since 2021) in ExposedDropdownMenu its popup has a maximum width of 800 pixel / 320dp which is too less to fit
-        // TextField's width, see https://issuetracker.google.com/issues/205589613
-        DropdownMenu(showDropDownMenu, { showDropDownMenu = false }, Modifier.let { if (dropDownWidth != null) it.width(dropDownWidth) else it.exposedDropdownSize(true) }) {
-            items.forEachIndexed { index, item ->
-                DropdownMenuItem(
-                    onClick = {
-                        showDropDownMenu = false
-                        onSelectedItemChanged(item)
-                    }
-                ) {
-                    if (addSeparatorAfterItem == null) {
-                        dropDownItemContent?.invoke(item) ?: Text(getItemDisplayText(item))
-                    } else {
-                        Column {
-                            dropDownItemContent?.invoke(item) ?: Text(getItemDisplayText(item))
-
-                            if (index == addSeparatorAfterItem - 1) { // index is 0-based, addSeparatorAfterItem 1-based
-                                Spacer(Modifier.padding(top = 12.dp))
-                                ItemDivider(thickness = 2.dp)
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 
 }

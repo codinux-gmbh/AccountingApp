@@ -28,6 +28,8 @@ actual class PlatformFileHandler {
         return PlatformFile(file)
     }
 
+    // TODO: file.path is always null in JS Browser (for security reasons). But what could be done:
+    //   Create an object that contains file's bytes, display file name and when clicked using read file's bytes
     actual fun getRestorablePath(file: PlatformFile): String? = file.path
 
 

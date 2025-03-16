@@ -104,13 +104,15 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
             }
         }
 
-        DropdownMenuBox(recentlyViewedInvoices, { showRecentlyViewedInvoice(it) }, { getDisplayText(it) }) {
-            Row(Modifier.fillMaxWidth().height(48.dp).padding(top = 6.dp), Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-                TextButton({ }) {
-                    Text(stringResource(Res.string.recently_viewed_e_invoice_files), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
-                }
+        if (recentlyViewedInvoices.isNotEmpty()) {
+            DropdownMenuBox(recentlyViewedInvoices, { showRecentlyViewedInvoice(it) }, { getDisplayText(it) }) {
+                Row(Modifier.fillMaxWidth().height(48.dp).padding(top = 6.dp), Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                    TextButton({ }) {
+                        Text(stringResource(Res.string.recently_viewed_e_invoice_files), color = Colors.HighlightedTextColor, textAlign = TextAlign.Center, maxLines = 1)
+                    }
 
-                Icon(Icons.Outlined.ArrowDropDown, "Show list with recently viewed invoice files", Modifier.width(48.dp), tint = Colors.FormValueTextColor)
+                    Icon(Icons.Outlined.ArrowDropDown, "Show list with recently viewed invoice files", Modifier.width(48.dp), tint = Colors.FormValueTextColor)
+                }
             }
         }
     }

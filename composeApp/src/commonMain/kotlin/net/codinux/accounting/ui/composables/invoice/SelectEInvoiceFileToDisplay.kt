@@ -31,6 +31,8 @@ import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.extensions.parentDirAndFilename
 import net.codinux.invoicing.reader.*
+import net.codinux.kotlin.Platform
+import net.codinux.kotlin.PlatformType
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.stringResource
 
@@ -115,7 +117,7 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
             }
         }
 
-        if (recentlyViewedInvoices.isNotEmpty()) {
+        if (recentlyViewedInvoices.isNotEmpty() && Platform.type != PlatformType.iOS) { // cannot restore external paths on iOS
             DropdownMenuBox(recentlyViewedInvoices, { showRecentlyViewedInvoice(it) }, { getDisplayText(it) }) {
                 Row(Modifier.fillMaxWidth().height(48.dp).padding(top = 6.dp), Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                     TextButton({ }) {

@@ -219,24 +219,27 @@ class InvoiceService(
 
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoiceXml(invoice: Invoice, format: EInvoiceFormat): Pair<String?, PlatformFile?> {
+    suspend fun createEInvoiceXml(invoice: Invoice, format: EInvoiceFormat): GeneratedInvoices? {
         val result = xmlCreator.createInvoiceXml(invoice, format)
 
         return result.value?.let {
             val xml = it
             val xmlFile = saveCreatedInvoiceFile(invoice, xml.encodeToByteArray(), "xml")
-            xml to xmlFile
+            GeneratedInvoices(xml, xmlFile, null, null)
         } ?: run {
             showCouldNotCreateInvoiceError(result.error, Res.string.error_message_could_not_create_invoice_pdf)
-            null to null
+            null
         }
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile, invoiceXmlCreated: ((String?) -> Unit)? = null): Pair<String?, PlatformFile?> {
-        val (xml, xmlFile) = createEInvoiceXml(invoice, format)
+    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+        val createXmlResult = createEInvoiceXml(invoice, format)
 
-        if (xml != null) {
+        return if (createXmlResult == null) {
+            createXmlResult
+        } else {
+            val xml = createXmlResult.xml
             invoiceXmlCreated?.invoke(xml)
 
             val pdfBytes = pdfFile.readBytes() // as it's not possible to read and write from/to the same file at the same time, read PDF first (what PDFBox does anyway) before overwriting it
@@ -244,21 +247,21 @@ class InvoiceService(
             val attachResult = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, EInvoiceXmlFormat.valueOf(format.name))
             val resultPdfBytes = attachResult.value
             if (resultPdfBytes != null) {
-                fileHandler.savePdfWithAttachedXml(pdfFile, resultPdfBytes)
+                val savedPdf = saveCreatedInvoiceFile(invoice, resultPdfBytes, "pdf")
+                GeneratedInvoices(createXmlResult.xml, createXmlResult.xmlFile, Pdf(resultPdfBytes), savedPdf)
             } else {
                 showCouldNotCreateInvoiceError(attachResult.error, Res.string.error_message_could_not_attach_invoice_xml_to_pdf)
+                createXmlResult
             }
 
             // TODO: detach XML from created PDF and return that one
         }
-
-        return xml to xmlFile
     }
 
     // errors handled by InvoiceForm.createEInvoice()
     suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, templateSettings: InvoicePdfTemplateSettings?, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
         val xmlResult = createEInvoiceXml(invoice, format)
-        val xml = xmlResult.first
+        val xml = xmlResult?.xml
         invoiceXmlCreated?.invoke(xml)
         if (xml == null) {
             return null
@@ -268,10 +271,10 @@ class InvoiceService(
         val pdf = pdfResult.value
         if (pdf == null) {
             showCouldNotCreateInvoiceError(pdfResult.error, Res.string.error_message_could_not_create_invoice_pdf)
-            return GeneratedInvoices(xml, xmlResult.second, null, null)
+            return GeneratedInvoices(xml, xmlResult.xmlFile, null, null)
         }
 
-        return GeneratedInvoices(xml, xmlResult.second, pdf, saveCreatedInvoiceFile(invoice, pdf.bytes, "pdf"))
+        return GeneratedInvoices(xml, xmlResult.xmlFile, pdf, saveCreatedInvoiceFile(invoice, pdf.bytes, "pdf"))
     }
 
     private fun saveCreatedInvoiceFile(invoice: Invoice, fileContent: ByteArray, type: String): PlatformFile? =

@@ -181,27 +181,26 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
             try {
                 val invoice = createInvoice()
 
-                val xmlToFile = when (selectedCreateEInvoiceOption) {
+                val result = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!) { createdInvoice = invoice; generatedEInvoiceXml = it }
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, pdfTemplateViewModel.toTemplateSettings(),
-                        { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdf, pdfFile) ->
-                        if (pdfFile != null && pdf != null && pdf.bytes.isNotEmpty()) {
-                            createdPdfFile = pdfFile
-                            createdPdfBytes = pdf.bytes
-
-                            coroutineScope.launch(Dispatchers.IoOrDefault) {
-                                DI.fileHandler.openFileInDefaultViewer(pdfFile, "application/pdf")
-                            }
-                        }
-                        xml to xmlFile
-                    }
+                        { createdInvoice = invoice; generatedEInvoiceXml = it })
                 }
 
-                if (xmlToFile?.first != null) {
+                if (result != null) {
                     createdInvoice = invoice
-                    generatedEInvoiceXml = xmlToFile.first
-                    createdXmlFile = xmlToFile.second
+                    generatedEInvoiceXml = result.xml
+                    createdXmlFile = result.xmlFile
+
+                    createdPdfBytes = result.pdf?.bytes
+                    createdPdfFile = result.pdfFile
+
+                    result.pdfFile?.let { pdfFile ->
+                        coroutineScope.launch(Dispatchers.IoOrDefault) {
+                            DI.fileHandler.openFileInDefaultViewer(pdfFile, "application/pdf")
+                        }
+                    }
                 }
 
                 isCreatingEInvoice = false

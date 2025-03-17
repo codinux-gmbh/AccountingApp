@@ -31,6 +31,7 @@ import net.codinux.accounting.ui.config.DI
 import net.codinux.accounting.ui.extensions.parent
 import net.codinux.accounting.ui.extensions.parentDirAndFilename
 import net.codinux.invoicing.reader.*
+import net.codinux.log.Log
 import org.jetbrains.compose.resources.stringResource
 
 private val invoiceService = DI.invoiceService
@@ -65,28 +66,38 @@ fun SelectEInvoiceFileToDisplay(selectedInvoiceChanged: (ReadEInvoiceFileResult?
         settings.lastSelectedInvoiceFile = selectedFile.path
 
         coroutineScope.launch(Dispatchers.IoOrDefault) {
-            lastExtractedEInvoice = invoiceService.readEInvoice(selectedFile)
+            try {
+                lastExtractedEInvoice = invoiceService.readEInvoice(selectedFile)
 
-            lastExtractedEInvoice?.let { selectedInvoice ->
-                val fileBytes = selectedFile.readBytes()
-                val fileExtension = selectedFile.extension.lowercase()
-                val xml = if (fileExtension == "xml") fileBytes.decodeToString() else null
-                val pdfBytes = if (fileExtension == "pdf") fileBytes else null
-                selectedInvoiceChanged(selectedInvoice, xml, pdfBytes)
+                lastExtractedEInvoice?.let { selectedInvoice ->
+                    val fileBytes = selectedFile.readBytes()
+                    val fileExtension = selectedFile.extension.lowercase()
+                    val xml = if (fileExtension == "xml") fileBytes.decodeToString() else null
+                    val pdfBytes = if (fileExtension == "pdf") fileBytes else null
+                    selectedInvoiceChanged(selectedInvoice, xml, pdfBytes)
 
-                if (addToRecentlyViewedInvoices) {
-                    invoiceService.addRecentlyViewedInvoice(DI.fileHandler.getRestorablePath(selectedFile), selectedInvoice)
+                    if (addToRecentlyViewedInvoices) {
+                        invoiceService.addRecentlyViewedInvoice(DI.fileHandler.getRestorablePath(selectedFile), selectedInvoice)
+                    }
                 }
-            }
 
-            invoiceService.saveViewInvoiceSettings(settings)
+                invoiceService.saveViewInvoiceSettings(settings)
+            } catch (e: Throwable) {
+                Log.error(e) { "Could not show selected file '$selectedFile'" }
+                uiState.errorOccurred(ErroneousAction.ShowSelectedEInvoice, Res.string.error_message_could_not_read_selected_e_invoice, e, selectedFile.path)
+            }
         }
     }
 
     fun showRecentlyViewedInvoice(recentlyViewedInvoice: RecentlyViewedInvoice) {
-        val file = DI.fileHandler.fromPath(recentlyViewedInvoice.path)
+        try {
+            val file = DI.fileHandler.fromPath(recentlyViewedInvoice.path)
 
-        showSelectedFile(file, false)
+            showSelectedFile(file, false)
+        } catch (e: Throwable) {
+            Log.error(e) { "Could not show recently viewed invoice '$recentlyViewedInvoice'" }
+            uiState.errorOccurred(ErroneousAction.ShowSelectedEInvoice, Res.string.error_message_could_not_read_selected_e_invoice, e, recentlyViewedInvoice.path)
+        }
     }
 
     val openExistingInvoiceFileLauncher = rememberFilePickerLauncher(PickerType.File(listOf("pdf", "xml")),

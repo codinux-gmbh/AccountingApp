@@ -41,8 +41,9 @@
 
     <!-- errors -->
     <string name="error_message">Fehlermeldung</string>
-    <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
+    <string name="error_show_selected_e_invoice">Could not show selected eInvoice</string>
     <string name="error_read_e_invoice">E-Rechnung konnte nicht gelesen werden</string>
+    <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
     <string name="error_show_e_invoice_in_external_viewer">E-Rechnung konnte nicht angezeigt werden</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
     <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
@@ -127,6 +128,7 @@
     <string name="recently_viewed_e_invoice_files">Zuletzt betrachtete Dateien</string>
 
     <string name="validation_message_create_invoice_not_all_required_fields_have_been_filled_out">E-Rechnung kann nicht erstellt werden, es wurden nicht alle mit * markierten Felder ausgefüllt.</string>
+    <string name="error_message_could_not_read_selected_e_invoice">Ausgewählte E-Rechnung konnte nicht aus Datei %1$s gelesen werden</string>
     <string name="error_message_could_not_read_e_invoice">E-Rechnung konnte nicht aus Datei %1$s gelesen werden</string>
     <string name="error_message_file_is_not_a_pdf">Datei ist keine PDF Datei</string>
     <string name="error_message_pdf_has_no_attachments">PDF hat keine Anhänge</string>

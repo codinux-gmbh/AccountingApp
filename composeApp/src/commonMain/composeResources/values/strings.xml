@@ -43,7 +43,7 @@
     <string name="error_message">Error message</string>
     <string name="error_create_invoice">Invoice could not be created</string>
     <string name="error_read_e_invoice">Could not read eInvoice</string>
-    <string name="error_show_e_invoice">Could not show eInvoice</string>
+    <string name="error_show_e_invoice_in_external_viewer">Could not show eInvoice</string>
     <string name="error_add_email_account">Email account could not be added</string>
     <string name="error_fetch_emails">Failed fetching emails</string>
     <string name="error_listening_for_new_emails">Failed listening for new emails</string>

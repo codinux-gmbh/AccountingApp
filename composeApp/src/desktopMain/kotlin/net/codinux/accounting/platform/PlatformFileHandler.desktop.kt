@@ -35,7 +35,7 @@ actual class PlatformFileHandler(
                 log.error(e) { "Could not open file '${file.file}" }
 
                 // TODO: it's may not always the created invoice
-                DI.uiState.errorOccurred(ErroneousAction.ShowEInvoice, Res.string.error_message_created_invoice_cannot_be_displayed, e)
+                DI.uiState.errorOccurred(ErroneousAction.ShowEInvoiceInExternalViewer, Res.string.error_message_created_invoice_cannot_be_displayed, e)
             }
         }
     }

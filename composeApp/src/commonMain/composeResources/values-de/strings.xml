@@ -43,7 +43,7 @@
     <string name="error_message">Fehlermeldung</string>
     <string name="error_create_invoice">Rechnung konnte nicht erstellt werden</string>
     <string name="error_read_e_invoice">E-Rechnung konnte nicht gelesen werden</string>
-    <string name="error_show_e_invoice">E-Rechnung konnte nicht angezeigt werden</string>
+    <string name="error_show_e_invoice_in_external_viewer">E-Rechnung konnte nicht angezeigt werden</string>
     <string name="error_add_email_account">E-Mail Konto konnte nicht hinzugefügt werden</string>
     <string name="error_fetch_emails">Fehler beim E-Mails Abholen</string>
     <string name="error_listening_for_new_emails">Fehler beim Lauschen auf neue E-Mails</string>

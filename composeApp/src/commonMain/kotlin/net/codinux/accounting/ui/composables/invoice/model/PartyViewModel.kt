@@ -1,9 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.invoicing.model.Party
 import net.codinux.invoicing.model.codes.Country
 
@@ -79,6 +77,11 @@ class PartyViewModel(party: Party?) : ViewModel() {
     fun vatIdChanged(newValue: String) {
         _vatId.value = newValue
         validate()
+    }
+
+
+    val propertyChanged = combine(listOf<StateFlow<Any>>(name, address, additionalAddressLine, postalCode, city, country, email, phone, vatId)) {
+        it.toList()
     }
 
 

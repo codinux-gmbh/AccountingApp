@@ -49,4 +49,9 @@ class DescriptionOfServicesViewModel(selectedServiceDateOption: ServiceDateOptio
             }
     }
 
+
+    val propertyChanged = combine(listOf(serviceDateOption, serviceDate, currency, items)) {
+        it.toList()
+    }
+
 }

@@ -1,9 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 import net.codinux.i18n.Language
 import net.codinux.i18n.LanguageTag
@@ -48,6 +46,11 @@ class PdfTemplateViewModel(templateSettings: InvoicePdfTemplateSettings, createI
 
     fun lastOpenLogoDirectoryChanged(newValue: String?) {
         _lastOpenLogoDirectory.value = newValue
+    }
+
+
+    val propertyChanged = combine(listOf(language, logoUrl, logoBytes, logoMimeType, lastOpenLogoDirectory)) {
+        it.toList()
     }
 
 

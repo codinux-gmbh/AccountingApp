@@ -15,13 +15,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
+import androidx.lifecycle.viewModelScope
 import io.github.vinceglb.filekit.compose.SaverResultLauncher
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.core.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
@@ -43,6 +44,7 @@ import net.codinux.invoicing.format.EInvoiceFormat
 import net.codinux.invoicing.model.*
 import net.codinux.log.Log
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Duration.Companion.seconds
 
 
 private val VerticalRowPadding = Style.FormVerticalRowPadding
@@ -57,6 +59,7 @@ private val createButtonWidth = 150.dp
 
 private val createButtonPaddingStart = 6.dp
 
+@OptIn(FlowPreview::class)
 @Composable
 fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsViewModel, supplier: PartyViewModel, customer: PartyViewModel, descriptionOfServices: DescriptionOfServicesViewModel, bankDetails: BankDetailsViewModel, settingsViewModel: CreateInvoiceSettingsViewModel, isCompactScreen: Boolean) {
 
@@ -126,6 +129,11 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 }
             }
         }
+    }
+
+
+    val invoiceItemsChangedFlow = combine(invoiceItems.map { it.propertyChanged }) {
+        it.flatMap { it }
     }
 
 
@@ -217,6 +225,20 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 invoiceService.showCouldNotCreateInvoiceError(e)
             }
         }
+    }
+
+
+    val anyPropertyChanged = combine(listOf<Flow<Any>>(details.propertyChanged, supplier.propertyChanged, customer.propertyChanged,
+        descriptionOfServices.propertyChanged, invoiceItemsChangedFlow, bankDetails.propertyChanged,
+        pdfTemplateViewModel.propertyChanged, settingsViewModel.propertyChanged)) {
+        it.toList()
+    }
+        .debounce(10.seconds)
+        .collectAsState(emptyList()).value
+
+    LaunchedEffect(anyPropertyChanged) {
+        saveCreateInvoiceSettings(createInvoice())
+        saveInvoicePdfTemplateSettings()
     }
 
 

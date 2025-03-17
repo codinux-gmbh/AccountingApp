@@ -1,9 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.invoicing.calculator.InvoiceItemPrice
 import net.codinux.invoicing.model.BigDecimal
 import net.codinux.invoicing.model.InvoiceItem
@@ -57,6 +55,11 @@ class InvoiceItemViewModel(item: InvoiceItem? = null) : ViewModel() {
     fun descriptionChanged(newValue: String) {
         _description.value = newValue
         validate()
+    }
+
+
+    val propertyChanged = combine(listOf<StateFlow<Any?>>(name, quantity, unit, unitPrice, vatRate, description)) {
+        it.toList()
     }
 
 

@@ -1,9 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.invoicing.model.InvoiceDetails
 import net.codinux.invoicing.model.LocalDate
 
@@ -27,6 +25,10 @@ class InvoiceDetailsViewModel(details: InvoiceDetails?) : ViewModel() {
 
     private val _isValid = MutableStateFlow(false)
     val isValid: StateFlow<Boolean> get() = _isValid
+
+    val propertyChanged = combine(listOf<StateFlow<Any>>(invoiceNumber, invoiceDate)) {
+        it.toList()
+    }
 
 
     fun validate() {

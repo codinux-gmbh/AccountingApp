@@ -1,9 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
 
 class CreateInvoiceSettingsViewModel(settings: CreateInvoiceSettings): ViewModel() {
@@ -49,6 +47,12 @@ class CreateInvoiceSettingsViewModel(settings: CreateInvoiceSettings): ViewModel
 
     fun lastOpenPdfDirectoryChanged(newValue: String?) {
         _lastOpenPdfDirectory.value = newValue
+    }
+
+
+    val propertyChanged = combine(listOf<StateFlow<Any?>>(showAllSupplierFields, showAllCustomerFields, showAllBankDetailsFields,
+        lastXmlSaveDirectory, lastPdfSaveDirectory, lastOpenPdfDirectory)) {
+        it.toList()
     }
 
 }

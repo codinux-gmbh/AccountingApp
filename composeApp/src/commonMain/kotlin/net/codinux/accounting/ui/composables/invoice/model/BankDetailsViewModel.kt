@@ -1,9 +1,7 @@
 package net.codinux.accounting.ui.composables.invoice.model
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import net.codinux.invoicing.model.BankDetails
 
 class BankDetailsViewModel(bankDetails: BankDetails?) : ViewModel() {
@@ -34,6 +32,11 @@ class BankDetailsViewModel(bankDetails: BankDetails?) : ViewModel() {
 
     fun bankCodeChanged(newValue: String) {
         _bankCode.value = newValue
+    }
+
+
+    val propertyChanged = combine(listOf<StateFlow<Any>>(accountHolderName, bankName, accountNumber, bankCode)) {
+        it.toList()
     }
 
 }

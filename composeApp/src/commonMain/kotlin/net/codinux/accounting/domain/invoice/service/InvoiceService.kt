@@ -233,10 +233,12 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile): Pair<String?, PlatformFile?> {
+    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile, invoiceXmlCreated: ((String?) -> Unit)? = null): Pair<String?, PlatformFile?> {
         val (xml, xmlFile) = createEInvoiceXml(invoice, format)
 
         if (xml != null) {
+            invoiceXmlCreated?.invoke(xml)
+
             val pdfBytes = pdfFile.readBytes() // as it's not possible to read and write from/to the same file at the same time, read PDF first (what PDFBox does anyway) before overwriting it
 
             val attachResult = pdfAttacher.attachInvoiceXmlToPdf(invoice, pdfBytes, EInvoiceXmlFormat.valueOf(format.name))

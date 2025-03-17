@@ -183,7 +183,7 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
 
                 val xmlToFile = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceFormat)
-                    CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!)
+                    CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!) { createdInvoice = invoice; generatedEInvoiceXml = it }
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, pdfTemplateViewModel.toTemplateSettings(),
                         { createdInvoice = invoice; generatedEInvoiceXml = it })?.let { (xml, xmlFile, pdf, pdfFile) ->
                         if (pdfFile != null && pdf != null && pdf.bytes.isNotEmpty()) {

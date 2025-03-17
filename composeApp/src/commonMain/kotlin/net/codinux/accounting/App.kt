@@ -8,6 +8,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.codinux.accounting.domain.ui.model.UiStateEntity
 import net.codinux.accounting.platform.IoOrDefault
 import net.codinux.accounting.platform.PlatformUiFunctions
 import net.codinux.accounting.ui.config.Colors
@@ -24,7 +25,7 @@ private val typography = Typography(
 
 @Composable
 @Preview
-fun App() {
+fun App(uiStateInitialized: ((UiStateEntity) -> Unit)? = null) {
     LoggerFactory.config.defaultLoggerName = "net.codinux.accounting"
     LoggerFactory.debugConfig.useCallerMethodIfLoggerNameNotSet = true
 
@@ -32,6 +33,8 @@ fun App() {
         secondary = Colors.Accent, secondaryVariant = Colors.Accent, onSecondary = Color.White)
 
     val screenSize = PlatformUiFunctions.rememberScreenSize()
+
+    var isUiStateInitialized by remember { mutableStateOf(false) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -43,7 +46,10 @@ fun App() {
 
     DisposableEffect(Unit) {
         coroutineScope.launch(Dispatchers.IoOrDefault) {
-            DI.init()
+            DI.init {
+                isUiStateInitialized = true
+                uiStateInitialized?.invoke(it)
+            }
         }
 
         if (Platform.type == PlatformType.iOS) {
@@ -57,7 +63,9 @@ fun App() {
         }
     }
 
-    LaunchedEffect(screenSize) {
-        DI.uiService.windowSizeChanged(screenSize)
+    LaunchedEffect(screenSize, uiStateInitialized) {
+        if (isUiStateInitialized) {
+            DI.uiService.windowSizeChanged(screenSize)
+        }
     }
 }

@@ -23,14 +23,15 @@ class UiService(
 
     private val defaultUiState = UiStateEntity(uiState.selectedMainScreenTab.value)
 
-    private var currentUiState = defaultUiState
+    var currentUiState = defaultUiState
+        private set
 
     private var uiStateInitialized = false
 
     private val log by logger()
 
 
-    suspend fun init() {
+    suspend fun init(uiStateInitialized: ((UiStateEntity) -> Unit)? = null) {
         try {
             this.currentUiState = loadUiState()
 
@@ -42,6 +43,7 @@ class UiService(
         }
 
         this.uiStateInitialized = true
+        uiStateInitialized?.invoke(this.currentUiState)
     }
 
 

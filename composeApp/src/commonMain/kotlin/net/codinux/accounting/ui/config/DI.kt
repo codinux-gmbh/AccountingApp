@@ -2,6 +2,7 @@ package net.codinux.accounting.ui.config
 
 import net.codinux.accounting.domain.invoice.service.CalculationService
 import net.codinux.accounting.domain.invoice.service.InvoiceService
+import net.codinux.accounting.domain.ui.model.UiStateEntity
 import net.codinux.accounting.domain.ui.service.UiService
 import net.codinux.accounting.platform.PlatformDependencies
 import net.codinux.accounting.ui.service.FormatUtil
@@ -37,8 +38,8 @@ object DI {
     val mailService = platformDependencies.mailService
 
 
-    suspend fun init() {
-        uiService.init()
+    suspend fun init(uiStateInitialized: ((UiStateEntity) -> Unit)? = null) {
+        uiService.init(uiStateInitialized)
 
         invoiceService.init()
 

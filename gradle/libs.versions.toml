@@ -7,7 +7,7 @@ kotlinx-serialization = "1.7.3"
 
 jackson = "2.18.2"
 
-invoicing = "0.8.0"
+invoicing = "0.8.1"
 
 kI18n = "0.7.1"
 

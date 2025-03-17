@@ -35,8 +35,6 @@ fun App(uiStateInitialized: ((UiStateEntity) -> Unit)? = null) {
 
     val screenSize = PlatformUiFunctions.rememberScreenSize()
 
-    var isUiStateInitialized by remember { mutableStateOf(false) }
-
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -48,7 +46,6 @@ fun App(uiStateInitialized: ((UiStateEntity) -> Unit)? = null) {
     DisposableEffect(Unit) {
         coroutineScope.launch(Dispatchers.IoOrDefault) {
             DI.init {
-                isUiStateInitialized = true
                 uiStateInitialized?.invoke(it)
             }
         }
@@ -64,9 +61,7 @@ fun App(uiStateInitialized: ((UiStateEntity) -> Unit)? = null) {
         }
     }
 
-    LaunchedEffect(screenSize, uiStateInitialized) {
-        if (isUiStateInitialized) {
-            DI.uiService.windowSizeChanged(screenSize)
-        }
+    LaunchedEffect(screenSize) {
+        DI.uiService.windowSizeChanged(screenSize)
     }
 }

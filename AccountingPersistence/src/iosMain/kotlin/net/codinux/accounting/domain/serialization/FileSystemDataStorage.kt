@@ -18,7 +18,7 @@ open class FileSystemDataStorage(protected val storageDirectory: NSURL) : DataSt
         val filePath = getFileForKey(key)
 
         val data = NSData.dataWithContentsOfURL(filePath)
-            ?: throw IOException("File not found: $filePath")
+            ?: return null // it's totally fine if file does not exist (yet)
 
         val content = NSString.create(data, NSUTF8StringEncoding)
             ?: throw IOException("Failed to decode file: $filePath")

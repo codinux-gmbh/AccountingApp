@@ -233,7 +233,7 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+    suspend fun attachEInvoiceXmlToPdf(invoice: Invoice, format: EInvoiceFormat, pdfFile: PlatformFile, invoiceXmlCreated: ((GeneratedInvoices) -> Unit)? = null): GeneratedInvoices? {
         val createXmlResult = createEInvoiceXml(invoice, format)
 
         if (createXmlResult == null) {
@@ -241,8 +241,7 @@ class InvoiceService(
         }
 
 
-        val xml = createXmlResult.xml
-        invoiceXmlCreated?.invoke(xml)
+        invoiceXmlCreated?.invoke(createXmlResult)
 
         val pdfBytes = pdfFile.readBytes()
 
@@ -259,14 +258,14 @@ class InvoiceService(
     }
 
     // errors handled by InvoiceForm.createEInvoice()
-    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, templateSettings: InvoicePdfTemplateSettings?, invoiceXmlCreated: ((String?) -> Unit)? = null): GeneratedInvoices? {
+    suspend fun createEInvoicePdf(invoice: Invoice, format: EInvoiceFormat, templateSettings: InvoicePdfTemplateSettings?, invoiceXmlCreated: ((GeneratedInvoices) -> Unit)? = null): GeneratedInvoices? {
         val xmlResult = createEInvoiceXml(invoice, format)
         val xml = xmlResult?.xml
         if (xml == null) {
             return null
         }
 
-        invoiceXmlCreated?.invoke(xml)
+        invoiceXmlCreated?.invoke(xmlResult)
 
         val pdfResult = pdfCreator.createFacturXPdf(xml, InvoicePdfSettings(EInvoiceXmlFormat.valueOf(format.name), templateSettings))
         val pdf = pdfResult.value

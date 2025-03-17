@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import net.codinux.accounting.domain.invoice.model.CreateEInvoiceOptions
 import net.codinux.accounting.domain.invoice.model.CreateInvoiceSettings
+import net.codinux.accounting.domain.invoice.model.GeneratedInvoices
 import net.codinux.accounting.resources.*
 import net.codinux.accounting.resources.copy
 import net.codinux.accounting.platform.IoOrDefault
@@ -158,6 +159,12 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
         )
     }
 
+    fun invoiceXmlCreated(invoice: Invoice, createXmlResult: GeneratedInvoices) {
+        createdInvoice = invoice
+        generatedEInvoiceXml = createXmlResult.xml
+        createdXmlFile = createXmlResult.xmlFile
+    }
+
     suspend fun saveCreateInvoiceSettings(createInvoice: Invoice) {
         val newSettings = CreateInvoiceSettings(createInvoice, settingsViewModel.showAllSupplierFields.value,
             settingsViewModel.showAllCustomerFields.value, settingsViewModel.showAllBankDetailsFields.value,
@@ -184,15 +191,13 @@ fun CreateInvoiceForm(settings: CreateInvoiceSettings, details: InvoiceDetailsVi
                 val result = when (selectedCreateEInvoiceOption) {
                     CreateEInvoiceOptions.XmlOnly -> invoiceService.createEInvoiceXml(invoice, selectedEInvoiceFormat)
                     CreateEInvoiceOptions.CreateXmlAndAttachToExistingPdf -> invoiceService.attachEInvoiceXmlToPdf(invoice, selectedEInvoiceFormat, pdfToAttachXmlTo!!)
-                        { createdInvoice = invoice; generatedEInvoiceXml = it }
+                        { invoiceXmlCreated(invoice, it) }
                     CreateEInvoiceOptions.CreateXmlAndPdf -> invoiceService.createEInvoicePdf(invoice, selectedEInvoiceFormat, pdfTemplateViewModel.toTemplateSettings())
-                        { createdInvoice = invoice; generatedEInvoiceXml = it }
+                        { invoiceXmlCreated(invoice, it) }
                 }
 
                 if (result != null) {
-                    createdInvoice = invoice
-                    generatedEInvoiceXml = result.xml
-                    createdXmlFile = result.xmlFile
+                    invoiceXmlCreated(invoice, result)
 
                     createdPdfBytes = result.pdf?.bytes
                     createdPdfFile = result.pdfFile
